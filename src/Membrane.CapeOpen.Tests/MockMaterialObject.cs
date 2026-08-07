@@ -30,6 +30,10 @@ namespace Membrane.CapeOpen.Tests
         /// <summary>Optional per-component fugacity coefficients returned by the property routine (null ⇒ ideal, all 1).</summary>
         public double[]? Fugacity;
 
+        /// <summary>When true, φ_i = 1 − 0.4·x_i (composition-dependent), so it varies along the module —
+        /// used to exercise the FugacityLocal (position-dependent) driving force.</summary>
+        public bool CompositionDependentFugacity;
+
         public int CalcEquilibriumCalls { get; private set; }
 
         public MockMaterialObject(string[] componentIds) => _ids = componentIds;
@@ -86,7 +90,8 @@ namespace Membrane.CapeOpen.Tests
         public int GetNumCompounds() => _ids.Length;
 
         // ---- ICapeThermoMaterial phase access + ICapeThermoPropertyRoutine (enthalpy for the energy layer) ----
-        public object CreateMaterial() => new MockMaterialObject(_ids) { Fugacity = Fugacity };
+        public object CreateMaterial() => new MockMaterialObject(_ids)
+        { Fugacity = Fugacity, CompositionDependentFugacity = CompositionDependentFugacity };
 
         public void GetPresentPhases(ref object phaseLabels, ref object phaseStatus)
         {
@@ -100,7 +105,12 @@ namespace Membrane.CapeOpen.Tests
             _phaseProp["enthalpy"] = new[] { MolarEnthalpy(_t, _p) };
             var phi = new double[_ids.Length];
             for (int i = 0; i < _ids.Length; i++)
-                phi[i] = (Fugacity != null && Fugacity.Length == _ids.Length) ? Fugacity[i] : 1.0;
+            {
+                if (CompositionDependentFugacity)
+                    phi[i] = 1.0 - 0.4 * (i < _composition.Length ? _composition[i] : 0.0);
+                else
+                    phi[i] = (Fugacity != null && Fugacity.Length == _ids.Length) ? Fugacity[i] : 1.0;
+            }
             _phaseProp["fugacityCoefficient"] = phi;
         }
 

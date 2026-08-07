@@ -225,6 +225,45 @@ namespace Membrane.CapeOpen.Tests
         }
 
         [Fact]
+        public void DrivingForce_FugacityLocal_RunsAndDiffersFromConstantFugacity()
+        {
+            double SolveStageCut(string mode)
+            {
+                var feed = MockMaterialObject.Feed(Ids, Tk, Pr, Nf, Feed);
+                feed.CompositionDependentFugacity = true;   // φ_i = 1 − 0.4·x_i, varies along the module
+                var unit = new MembraneUnitOperation();
+                unit.Initialize();
+                var ports = (ICapeCollection)unit.ports;
+                ((ICapeUnitPort)ports.Item("Feed")).Connect(feed);
+                ((ICapeUnitPort)ports.Item("Retentate")).Connect(new MockMaterialObject(Ids));
+                ((ICapeUnitPort)ports.Item("Permeate")).Connect(new MockMaterialObject(Ids));
+                Param(unit.parameters, "PermeatePressure").value = Pp;
+                Param(unit.parameters, "MembraneArea").value = Area;
+                Param(unit.parameters, "DrivingForce").value = mode;
+                string msg = "";
+                unit.Validate(ref msg);
+                Param(unit.parameters, "Permeance_ammonia").value = Perm[0];
+                Param(unit.parameters, "Permeance_hydrogen").value = Perm[1];
+                Param(unit.parameters, "Permeance_nitrogen").value = Perm[2];
+                Assert.True(unit.Validate(ref msg), msg);
+                unit.Calculate();
+                return Convert.ToDouble(Param(unit.parameters, "StageCut").value);
+            }
+
+            double partial = SolveStageCut("PartialPressure");
+            double constFug = SolveStageCut("Fugacity");
+            double localFug = SolveStageCut("FugacityLocal");
+
+            Assert.True(localFug > 0 && localFug < 1, "FugacityLocal produced a valid stage cut");
+            // φ < 1 lowers the driving force, so both fugacity modes give a smaller stage cut than ideal.
+            Assert.True(constFug < partial, $"const-fugacity {constFug} < partial {partial}");
+            Assert.True(localFug < partial, $"local-fugacity {localFug} < partial {partial}");
+            // Position-dependent φ must actually differ from the single feed-evaluated coefficient.
+            Assert.True(System.Math.Abs(localFug - constFug) > 1e-4,
+                $"local {localFug} should differ from constant-feed {constFug}");
+        }
+
+        [Fact]
         public void Calculate_WithNoPortsConnected_ThrowsSolvingError_WithReadableName()
         {
             var unit = new MembraneUnitOperation();

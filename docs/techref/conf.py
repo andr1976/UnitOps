@@ -83,6 +83,10 @@ latex_elements = {
 \DeclareUnicodeCharacter{2082}{\ensuremath{_{2}}}
 \DeclareUnicodeCharacter{2083}{\ensuremath{_{3}}}
 \DeclareUnicodeCharacter{2084}{\ensuremath{_{4}}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
 
 % Custom macros (shared with the GERG-2008 / ThermoCalc references, plus membrane-specific ones)
 \newcommand{\dd}{\mathrm{d}}                            % upright differential
