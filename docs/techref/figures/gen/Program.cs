@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using MembraneCore;
 using MembraneCore.Energy;
+using MembraneCore.Fugacity;
 using MembraneCore.Models;
 
 // Generates CSVs (and a stdout summary) for the technical-reference validation figures,
@@ -166,16 +167,38 @@ for (int k = 0; k < mP.Length; k++)
     // Match MemPy's ideal-gas stage cut at this pressure (design mode) so only the EOS effect differs.
     double areaK = BisectAreaForTheta(c3Feed, c3Flow, c3Perm, Pf, c3Pout, mIG[k]);
     var ig = CrossFlowModel.SolveByArea(c3Feed, c3Flow, c3Perm, Pf, c3Pout, areaK);
+
+    // (1) constant, feed-evaluated phi (the current default).
     double[] a = PrPhi(c3T, Pf, c3Feed, c3Tc, c3Pc, c3W, c3kij);
     double[] bb = PrPhi(c3T, c3Pout, c3Feed, c3Tc, c3Pc, c3W, c3kij);
-    var rg = CrossFlowModel.SolveByArea(c3Feed, c3Flow, c3Perm, Pf, c3Pout, areaK, a: a, b: bb);
-    double ourErr = 100 * (ig.StageCut - rg.StageCut) / rg.StageCut;
-    double memErr = 100 * (mIG[k] - mRG[k]) / mRG[k];
-    c3Rows.Add($"{F(mP[k])},{F(ig.StageCut)},{F(rg.StageCut)},{F(ourErr)},{F(mIG[k])},{F(mRG[k])},{F(memErr)},{F(a[0])}");
+    var rgConst = CrossFlowModel.SolveByArea(c3Feed, c3Flow, c3Perm, Pf, c3Pout, areaK, a: a, b: bb);
+
+    // (2) local phi(theta): PR fugacity coefficients tabulated along the composition trajectory + interpolation.
+    var prof = CrossFlowModel.SolveByArea(c3Feed, c3Flow, c3Perm, Pf, c3Pout, areaK, profilePoints: 40).Profile!;
+    var thetas = new List<double>(); var aRows = new List<double[]>(); var bRows = new List<double[]>();
+    double lastT = -1.0;
+    for (int p = 0; p < prof.Points; p++)
+    {
+        double th = prof.StageCut[p];
+        if (th <= lastT + 1e-4) continue;
+        var xk = new double[] { prof.Retentate[0][p], prof.Retentate[1][p] };
+        var yk = new double[] { prof.PermeateCollected[0][p], prof.PermeateCollected[1][p] };
+        double sy = yk[0] + yk[1]; if (sy > 0) { yk[0] /= sy; yk[1] /= sy; }
+        thetas.Add(th); aRows.Add(PrPhi(c3T, Pf, xk, c3Tc, c3Pc, c3W, c3kij));
+        bRows.Add(PrPhi(c3T, c3Pout, yk, c3Tc, c3Pc, c3W, c3kij)); lastT = th;
+    }
+    var table = new FugacityTable(thetas.ToArray(), aRows.ToArray(), bRows.ToArray());
+    var rgLocal = CrossFlowModel.SolveByArea(c3Feed, c3Flow, c3Perm, Pf, c3Pout, areaK, phiTable: table);
+
+    c3Rows.Add($"{F(mP[k])},{F(ig.StageCut)},{F(rgConst.StageCut)},{F(rgLocal.StageCut)},{F(mIG[k])},{F(mRG[k])},{F(a[0])}");
     if (Math.Abs(mP[k] - 9) < 1e-9)
-        Console.WriteLine($"  9 bar (theta matched to MemPy {F(mIG[k])}): ours RG={F(rg.StageCut)} over-pred={F(ourErr)}% | MemPy RG={F(mRG[k])} over-pred={F(memErr)}%; phi_C3H6={F(a[0])}");
+    {
+        double absMem = 100 * (mIG[k] - mRG[k]), absConst = 100 * (ig.StageCut - rgConst.StageCut), absLocal = 100 * (ig.StageCut - rgLocal.StageCut);
+        Console.WriteLine($"  9 bar (theta_IG={F(mIG[k])}): absolute over-pred [pts]  MemPy={F(absMem)}  const-phi={F(absConst)}  local-phi={F(absLocal)}");
+        Console.WriteLine($"           gap to MemPy closed by local-phi: {F(100 * (absLocal - absConst) / (absMem - absConst))}%");
+    }
 }
-WriteCsv("c3_ig_rg.csv", "Pf_bar,theta_ig_ours,theta_rg_ours,over_pred_ours,theta_ig_mempy,theta_rg_mempy,over_pred_mempy,phiC3H6", c3Rows);
+WriteCsv("c3_ig_rg.csv", "Pf_bar,theta_ig,theta_rg_const,theta_rg_local,theta_ig_mempy,theta_rg_mempy,phiC3H6", c3Rows);
 
 Console.WriteLine("done.");
 

@@ -327,19 +327,27 @@ at roughly **half**: :math:`\sim6` points at 0.9 MPa.
    Ideal-gas stage-cut over-prediction (absolute, percentage points --- DeJaco's
    Fig. 8 convention) vs. feed pressure for the MemPy propane/propylene system,
    at matched stage cut: MemPy's EOS-coupled 2-D model (red, :math:`\sim13`
-   points) and this solver's feed-evaluated-:math:`\varphi` cross-flow (navy,
-   :math:`\sim6` points).
+   points), this solver with constant feed-:math:`\varphi` (navy, :math:`\sim6`
+   points) and with local :math:`\varphi(\theta)` (amber, table + interpolation).
 
-Our first-order correction thus captures the **right sign and trend** and removes
-roughly **40--45 %** of the ideal-gas error, but under-predicts the full effect
-by about a factor of two (:math:`\sim6` vs. :math:`\sim13` points; :math:`\sim7`
-vs. :math:`\sim18\%` relative). The difference is expected: MemPy couples the
-equation of state *locally throughout* the density/velocity balances (and
-resolves a channel pressure drop), whereas the unit applies a single
-feed-evaluated fugacity coefficient to the driving force only. It is a genuine
-screening-level correction --- better than ideal gas, short of a fully
-EOS-coupled 2-D model --- and this factor-of-two shortfall is a documented
-limitation (:ref:`sec-limitations`).
+**Does updating** :math:`\varphi` **along the module close the gap? For this
+system, no.** The local-:math:`\varphi` curve (amber) sits essentially on top of
+the constant-feed-:math:`\varphi` curve --- the two differ by :math:`<0.02`
+points at every pressure. The reason is physical: propane and propylene have
+nearly identical fugacity coefficients (similar :math:`T_c, P_c, \omega`), so the
+mixture :math:`\varphi` barely changes as the composition shifts along the
+module; the feed-evaluated value already captures it. Updating :math:`\varphi`
+locally would matter for a mixture whose components' :math:`\varphi` differ
+strongly, but not here.
+
+The remaining factor-of-two shortfall (:math:`\sim6` vs. :math:`\sim13` points)
+is therefore **not** the constant-vs-local :math:`\varphi` approximation --- it
+is that MemPy couples the equation of state *throughout* the molar-density and
+velocity balances (and resolves a channel pressure drop), whereas the unit
+applies :math:`\varphi` to the **driving force only**. That is the real limit of
+a driving-force fugacity correction, constant or local (:ref:`sec-limitations`).
+Even so it captures the right sign and trend and removes :math:`\sim40\text{--}45\%`
+of the ideal-gas error --- a genuine screening-level improvement over ideal gas.
 
 .. _sec-real-gas:
 
