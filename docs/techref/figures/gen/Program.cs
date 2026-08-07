@@ -200,6 +200,44 @@ for (int k = 0; k < mP.Length; k++)
 }
 WriteCsv("c3_ig_rg.csv", "Pf_bar,theta_ig,theta_rg_const,theta_rg_local,theta_ig_mempy,theta_rg_mempy,phiC3H6", c3Rows);
 
+Console.WriteLine("=== Aziaba TC2 (Sada, CO2/O2/N2) & TC3 (Chowdhury, H2/N2/CH4/Ar), counter-current ===");
+double[] sFeed = { 0.50, 0.105, 0.395 };
+double[] sPerm = { 204.2e-10, 60.2e-10, 13.1e-10 };
+double sPp = 1.01325e5;
+double[] sPf = { 15.7e5, 10.8e5, 5.9e5 };
+double[] tc2Theta = { 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65 };
+var tc2rows = new List<string>();
+foreach (double th in tc2Theta)
+{
+    var row = new StringBuilder(F(th));
+    foreach (double pf in sPf)
+        row.Append("," + F(PlugFlowModel.SolveByStageCut(sFeed, sPerm, sPp / pf, FlowPattern.CounterCurrent, th).PermeateComposition[0]));
+    tc2rows.Add(row.ToString());
+}
+WriteCsv("aziaba_tc2.csv", "theta,yCO2_15p7bar,yCO2_10p8bar,yCO2_5p9bar", tc2rows);
+
+double[] cFeed = { 0.5178, 0.2469, 0.1957, 0.0396 };   // H2, N2, CH4, Ar
+// Aziaba Table 1 prints Ar = 70e-10, which gives Ar/N2 ~ 24 (impossible) and makes Ar the largest minor;
+// 7.0e-10 (Ar/N2 ~ 2.4) reproduces their Fig. 9 across all four components -- a factor-of-10 typo.
+double[] cPerm = { 284e-10, 2.95e-10, 2.84e-10, 7.0e-10 };
+double cg = 11.23e5 / 69.64e5;
+double[] tc3Theta = { 0.30, 0.325, 0.35, 0.375, 0.40, 0.425, 0.45, 0.475, 0.50 };
+var tc3rows = new List<string>();
+foreach (double th in tc3Theta)
+{
+    var r = PlugFlowModel.SolveByStageCut(cFeed, cPerm, cg, FlowPattern.CounterCurrent, th);
+    tc3rows.Add($"{F(th)},{F(r.PermeateComposition[0])},{F(r.PermeateComposition[1])},{F(r.PermeateComposition[2])},{F(r.PermeateComposition[3])}");
+}
+WriteCsv("aziaba_tc3.csv", "theta,yH2,yN2,yCH4,yAr", tc3rows);
+
+var s05 = PlugFlowModel.SolveByStageCut(sFeed, sPerm, sPp / 15.7e5, FlowPattern.CounterCurrent, 0.05);
+var s60 = PlugFlowModel.SolveByStageCut(sFeed, sPerm, sPp / 15.7e5, FlowPattern.CounterCurrent, 0.60);
+Console.WriteLine($"  TC2 15.7bar: yCO2(0.05)={F(s05.PermeateComposition[0])} yCO2(0.60)={F(s60.PermeateComposition[0])}  (Fig8 ~0.885, ~0.75)");
+var c30 = PlugFlowModel.SolveByStageCut(cFeed, cPerm, cg, FlowPattern.CounterCurrent, 0.30);
+var c50 = PlugFlowModel.SolveByStageCut(cFeed, cPerm, cg, FlowPattern.CounterCurrent, 0.50);
+Console.WriteLine($"  TC3 theta=0.30: H2/N2/CH4/Ar=[{F(c30.PermeateComposition[0])},{F(c30.PermeateComposition[1])},{F(c30.PermeateComposition[2])},{F(c30.PermeateComposition[3])}]  (Fig9 H2~0.974)");
+Console.WriteLine($"  TC3 theta=0.50: H2/N2/CH4/Ar=[{F(c50.PermeateComposition[0])},{F(c50.PermeateComposition[1])},{F(c50.PermeateComposition[2])},{F(c50.PermeateComposition[3])}]  (Fig9 H2~0.928)");
+
 Console.WriteLine("done.");
 
 // ---- helpers ----

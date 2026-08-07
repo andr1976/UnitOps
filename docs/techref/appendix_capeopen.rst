@@ -88,7 +88,7 @@ Parameters
      - option
      - --
      - input
-     - ``Fugacity`` (default; feed-evaluated) / ``FugacityLocal`` (φ updated along the module by a
+     - ``Fugacity`` (default; feed-evaluated) / ``FugacityLocal`` (:math:`\varphi` updated along the module by a
        stage-cut table + interpolation, cross-flow) / ``PartialPressure`` (ideal) (:ref:`sec-fugacity`)
 
 Per-compound parameters are created dynamically once a feed is connected:
