@@ -1,0 +1,2977 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) Journal Publishing DTD v1.3 20210610//EN" "JATS-journalpublishing1-3.dtd">
+<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" article-type="research-article" dtd-version="1.3" xml:lang="en">
+  <front>
+    <journal-meta>
+      <journal-id journal-id-type="publisher-id">membranes</journal-id>
+      <journal-title-group>
+        <journal-title>Membranes</journal-title>
+        <abbrev-journal-title abbrev-type="publisher">Membranes</abbrev-journal-title>
+        <abbrev-journal-title abbrev-type="pubmed">Membranes</abbrev-journal-title>
+      </journal-title-group>
+      <issn pub-type="epub">2077-0375</issn>
+      <publisher>
+        <publisher-name>MDPI</publisher-name>
+      </publisher>
+    </journal-meta>
+    <article-meta>
+      <article-id pub-id-type="doi">10.3390/membranes12121186</article-id>
+      <article-id pub-id-type="publisher-id">membranes-12-01186</article-id>
+      <article-categories>
+        <subj-group>
+          <subject>Article</subject>
+        </subj-group>
+      </article-categories>
+      <title-group>
+        <article-title>Design of a Gas Permeation and Pervaporation Membrane Model for an Open Source Process Simulation Tool</article-title>
+      </title-group>
+      <contrib-group>
+        <contrib contrib-type="author">
+          <name>
+            <surname>Aziaba</surname>
+            <given-names>Kouessan</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Conceptualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Data curation" vocab-term-identifier="https://credit.niso.org/contributor-roles/data-curation/">Data curation</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Formal analysis" vocab-term-identifier="https://credit.niso.org/contributor-roles/formal-analysis/">Formal analysis</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Methodology" vocab-term-identifier="https://credit.niso.org/contributor-roles/methodology/">Methodology</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Software" vocab-term-identifier="https://credit.niso.org/contributor-roles/software/">Software</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Visualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/visualization/">Visualization</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; original draft" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-original-draft/">Writing &#x2013; original draft</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; review &amp; editing" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-review-editing/">Writing &#x2013; review &amp; editing</role>
+        </contrib>
+        <contrib contrib-type="author">
+          <contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0002-9661-0959</contrib-id>
+          <name>
+            <surname>Jordan</surname>
+            <given-names>Christian</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Conceptualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Investigation" vocab-term-identifier="https://credit.niso.org/contributor-roles/investigation/">Investigation</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Project administration" vocab-term-identifier="https://credit.niso.org/contributor-roles/project-administration/">Project administration</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Supervision" vocab-term-identifier="https://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; original draft" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-original-draft/">Writing &#x2013; original draft</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; review &amp; editing" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-review-editing/">Writing &#x2013; review &amp; editing</role>
+        </contrib>
+        <contrib contrib-type="author">
+          <contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0003-3403-6346</contrib-id>
+          <name>
+            <surname>Haddadi</surname>
+            <given-names>Bahram</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Conceptualization" vocab-term-identifier="https://credit.niso.org/contributor-roles/conceptualization/">Conceptualization</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Supervision" vocab-term-identifier="https://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; original draft" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-original-draft/">Writing &#x2013; original draft</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Writing &#x2013; review &amp; editing" vocab-term-identifier="https://credit.niso.org/contributor-roles/writing-review-editing/">Writing &#x2013; review &amp; editing</role>
+          <xref rid="c1-membranes-12-01186" ref-type="corresp">*</xref>
+        </contrib>
+        <contrib contrib-type="author">
+          <contrib-id contrib-id-type="orcid" authenticated="true">https://orcid.org/0000-0002-6490-5840</contrib-id>
+          <name>
+            <surname>Harasek</surname>
+            <given-names>Michael</given-names>
+          </name>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Funding acquisition" vocab-term-identifier="https://credit.niso.org/contributor-roles/funding-acquisition/">Funding acquisition</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Project administration" vocab-term-identifier="https://credit.niso.org/contributor-roles/project-administration/">Project administration</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Resources" vocab-term-identifier="https://credit.niso.org/contributor-roles/resources/">Resources</role>
+          <role vocab="credit" vocab-identifier="https://credit.niso.org/" vocab-term="Supervision" vocab-term-identifier="https://credit.niso.org/contributor-roles/supervision/">Supervision</role>
+        </contrib>
+      </contrib-group>
+      <contrib-group>
+        <contrib contrib-type="editor">
+          <name>
+            <surname>Shen</surname>
+            <given-names>Yuexiao</given-names>
+          </name>
+          <role>Academic Editor</role>
+        </contrib>
+        <contrib contrib-type="editor">
+          <name>
+            <surname>Song</surname>
+            <given-names>Lianfa</given-names>
+          </name>
+          <role>Academic Editor</role>
+        </contrib>
+      </contrib-group>
+      <aff id="af1-membranes-12-01186">Institute of Chemical, Environmental &amp; Bioscience Engineering E166, Technische Universit&#xE4;t Wien, 1060 Vienna, Austria</aff>
+      <author-notes>
+        <corresp id="c1-membranes-12-01186"><label>*</label>Correspondence: <email>bahram.haddadi@tuwien.ac.at</email></corresp>
+      </author-notes>
+      <pub-date pub-type="epub">
+        <day>25</day>
+        <month>11</month>
+        <year>2022</year>
+      </pub-date>
+      <pub-date pub-type="collection">
+        <month>12</month>
+        <year>2022</year>
+      </pub-date>
+      <volume>12</volume>
+      <issue>12</issue>
+      <elocation-id>1186</elocation-id>
+      <history>
+        <date date-type="received">
+          <day>30</day>
+          <month>09</month>
+          <year>2022</year>
+        </date>
+        <date date-type="accepted">
+          <day>19</day>
+          <month>11</month>
+          <year>2022</year>
+        </date>
+      </history>
+      <permissions>
+        <copyright-statement>&#xA9; 2022 by the authors.</copyright-statement>
+        <copyright-year>2022</copyright-year>
+        <license license-type="open-access">
+          <license-p>Licensee MDPI, Basel, Switzerland. This article is an open access article distributed under the terms and conditions of the Creative Commons Attribution (CC BY) license (<ext-link ext-link-type="uri" xlink:href="https://creativecommons.org/licenses/by/4.0/">https://creativecommons.org/licenses/by/4.0/</ext-link>).</license-p>
+        </license>
+      </permissions>
+      <abstract>
+        <p>Gas permeation and pervaporation are technologies that emerged several decades ago. Even though they have discovered increasing popularity for industrial separation processes, they are not represented equally within process simulation tools except for commercial systems. The availability of such a numerical solution shall be extended due to the design of a membrane model with Visual Basic based on the solution-diffusion model. Although this works approach is presented for a specific process simulator application, the algorithm can generally be transferred to any other programming language and process simulation solver, which allows custom implementations or modeling. Furthermore, the modular design of the model enables its further development by operators through the integration of physical effects. A comparison with experimental data of gas permeation and pervaporation applications as well as other published simulation data delivers either good accordance with the results or negligible deviations of less than 1% from other data.</p>
+      </abstract>
+      <kwd-group>
+        <kwd>simulation</kwd>
+        <kwd>membranes</kwd>
+        <kwd>membrane model</kwd>
+        <kwd>DWSIM</kwd>
+        <kwd>gas permeation</kwd>
+        <kwd>pervaporation</kwd>
+      </kwd-group>
+      <funding-group>
+        <award-group>
+          <funding-source>Vienna Business Agency (WAW)</funding-source>
+          <award-id>2761267</award-id>
+        </award-group>
+        <award-group>
+          <funding-source>K1-MET GmbH, metallurgical competence center</funding-source>
+        </award-group>
+        <funding-statement>This research was subsidized by city of Vienna funds via the Vienna Business Agency (WAW), grant number 2761267. Further, the authors acknowledge the funding support of K1-MET GmbH, metallurgical competence center. The research program of the K1-MET competence center is supported by COMET (Competence Center for Excellent Technologies), the Austrian program for competence centers. COMET is funded by the Federal Ministry for Transport, Innovation, and Technology; the Federal Ministry for Digital and Economic Affairs; the provinces of Upper Austria, Tyrol, and Styria; and the Styrian Business Promotion Agency (SFG).</funding-statement>
+      </funding-group>
+    </article-meta>
+  </front>
+  <body>
+    <sec id="sec1-membranes-12-01186" sec-type="intro">
+      <title>1. Introduction</title>
+      <p>Membranes are already widely considered an alternative separation route alongside conventional separation technologies, such as cryogenic and adsorptive technologies, delivering comparably sufficiently high purities for many subsequent applications. Particularly advantageous compared to the alternatives mentioned is the easy maintenance, facile operation, small size, and low energy consumption, while a separation of liquid&#x2013;liquid, vapor&#x2013;liquid, and also gaseous mixtures is possible [<xref ref-type="bibr" rid="B1-membranes-12-01186">1</xref>,<xref ref-type="bibr" rid="B2-membranes-12-01186">2</xref>,<xref ref-type="bibr" rid="B3-membranes-12-01186">3</xref>,<xref ref-type="bibr" rid="B4-membranes-12-01186">4</xref>].</p>
+      <p>Within the framework of the design of technical processes, process simulation (PS) takes over many relevant functions. PS is a comparably cost-efficient and decisive tool in a company with experimental and plant engineering data for the design, operation, and optimization fields of process engineering. It offers the opportunity to predict the behavior of single unit operations (UOs) and the results of full processes as long as the models are available. It provides the opportunity to apply sensitivity analyses (SA), multivariate optimization, and copes relatively rapidly with design-of-experiments compared to experimental work. In addition, didactic purposes can be pursued with the use of process simulation.</p>
+      <p>Nevertheless, drawbacks can arise from those with comparably weak capabilities limiting PS&#x2019;s expressive power. However, some UOs qualities may increase their predictive accuracy through further development and validation with test cases. Furthermore, convergence problems, the possible necessity of preconditions, occurring errors, and limited access to several PS software and its UOs are already adverse but improvable aspects. Yet, the predictions obtained by PS are increasingly indispensable in the technical industry [<xref ref-type="bibr" rid="B5-membranes-12-01186">5</xref>].</p>
+      <p>Since the demands of PS users can vary significantly depending on the process that shall be designed or optimized, there is also a variable selection of UOs each PS software offers. The focus of this work lies within the development of membranes for an open-source tool. Several development approaches for designing and using membrane models in process simulation tools have been discovered and explored. However, the proposed model combines object-oriented methods to directly introduce a numerical solution for multi-component and multi-stage membrane separation into an open-source process simulation tool, while laying the groundwork for further developments by providing the complete source code as <xref ref-type="app" rid="app1-membranes-12-01186">Supplementary Information</xref>. This modularity offers extensive development opportunities for the simulation and membrane research community, which is considered a novel development.</p>
+      <sec id="sec1dot1-membranes-12-01186">
+        <title>1.1. State of the Art: Mathematic Solutions for Membrane Models</title>
+        <p>Even though several publications already report models and implementations of gas permeation of binary systems, there is far less information about simulations to separate multi-component systems with membranes. Even though some information about the modeling is available in the literature, it is still constrained [<xref ref-type="bibr" rid="B6-membranes-12-01186">6</xref>,<xref ref-type="bibr" rid="B7-membranes-12-01186">7</xref>,<xref ref-type="bibr" rid="B8-membranes-12-01186">8</xref>,<xref ref-type="bibr" rid="B9-membranes-12-01186">9</xref>,<xref ref-type="bibr" rid="B10-membranes-12-01186">10</xref>].</p>
+        <p>Pan et al., delivered a comparably early approach for the mathematical modeling of gas permeation for the co-current- and counter-current flow configuration model based on the solution-diffusion model compared with experimental data from a field pilot-plant recovering Helium (He) from natural gas. Pan et al.&#x2019;s work considered the residues concentrations as the parameter to be set, yielding the permeate pressure, composition, and required fiber length. Since many membrane manufacturers do not offer the opportunity to provide custom fiber lengths, the applicability of this specific result may be limited [<xref ref-type="bibr" rid="B11-membranes-12-01186">11</xref>].</p>
+        <p>Kundu applied the solution-diffusion model to separate multi-component gaseous mixtures with polymeric membranes to calculate the enrichment of Methane (CH<sub>4</sub>) from biogas. A mathematical model is proposed using ordinary differential equations (ODE) for co-current- and counter-current flow configurations. The numerical solving technique, which uses Gear&#x2019;s method, demands the feed composition and the ideal selectivity referenced to a single compound. It describes the flux, the permeates flow rate, the composition of both, the permeate and the retentate, and the pressure build-up within the fiber [<xref ref-type="bibr" rid="B12-membranes-12-01186">12</xref>].</p>
+        <p>Rezakazemi et al., proposed a mathematical 2D model that was handled with CFD-solving technology based on the Navier-Stokes equations to model HFMC for natural gas sweetening. Validation with experimental data is described as in &#x201C;good agreement&#x201D; with the simulation results, indicating that the model could also be used as a predictive instance for process designs [<xref ref-type="bibr" rid="B13-membranes-12-01186">13</xref>]. Farno et al., provided a 3D gas permeation PDMS membrane model derived from mass transport and momentum transfer equations, also considering the diffusivity for a ternary system. An artificial neural network&#x2019;s contribution to improving the prediction of the permeates composition, permeabilities, and solubilities was also discussed. The results were in good agreement with experimental findings [<xref ref-type="bibr" rid="B14-membranes-12-01186">14</xref>]. Haddadi et al., introduced a CFD algorithm for gas permeation simulations based on a multi-compartment approach. Each region can be regarded as its standalone operation inheriting its turbulence models, and thermophysical properties. The algorithm was implemented in the open-source CFD environment OpenFOAM [<xref ref-type="bibr" rid="B15-membranes-12-01186">15</xref>].</p>
+        <p>Katoh et al., proposed the tank-in-series method combined with the Runge&#x2013;Katta integration method to solve the governing ODEs to handle the dynamic and non-ideal mixing behavior of the species across the membrane [<xref ref-type="bibr" rid="B16-membranes-12-01186">16</xref>]. Elshof et al., described a mathematical model for the separation of water and organic solvents with a microporous silica membrane based on the Maxwell-Stefan model. The model relies on Maxwell-Stefan diffusion coefficients, which describe the transport through the microporous barrier, also considering the friction during this phenomenon [<xref ref-type="bibr" rid="B17-membranes-12-01186">17</xref>]. Makaruk et al., developed a numerical approach for the calculation of co-current- counter current and cross-flow gas permeation membranes, which were also verified with experimental results [<xref ref-type="bibr" rid="B18-membranes-12-01186">18</xref>].</p>
+        <p>Finally, it remains to mention the availability of further models to describe mass transfer across a membrane depending on the membrane type, such as the pore-flow model, which is occasionally applied for liquid binary mixtures and porous membranes. [<xref ref-type="bibr" rid="B19-membranes-12-01186">19</xref>]</p>
+        <p>The following list shall highlight some advantages and drawbacks of the aforementioned modeling solutions:<list list-type="bullet"><list-item><p>Solutions-Diffusion model</p><p>Undoubtedly, the solution-diffusion model (SDM) is one of the most widely used and adapted models found in the literature and process simulators for gas permeation and pervaporation applications. The description of the product streams is usually possible depending on the feed concentration, permeance, and a set product value, such as the concentration of the permeate or the pressure difference. Theoretically, there is no limit to the number of compounds the model can handle. The limited accuracy of the model can be a drawback. However, its relative simplicity makes it more likely to be combined with customized solving routines. Most models to follow in <xref ref-type="sec" rid="sec1dot3-membranes-12-01186">Section 1.3</xref> are based on further developments of the solution-diffusion model;</p></list-item><list-item><p>Maxwell&#x2013;Stefan Theory</p><p>As a theory that also incorporates the migration in dependence of friction and influences of the interaction of components and membrane, the Maxwell-Stefan theory is comparably more complex than the SDM. Theoretically, the model can process multi-component gas permeation and pervaporation systems. An advantage of the Maxwell-Stefan theory is the opportunity to obtain comparably more accurate information about non-ideal multi-component systems from the results of single-component calculations and an estimation of the systems&#x2019; selectivities [<xref ref-type="bibr" rid="B20-membranes-12-01186">20</xref>];</p></list-item><list-item><p>Pore flow Model</p><p>This model is usually introduced as a theory for porous membranes separating liquid mixtures. In comparison, it is based on the migration of permeating components through theoretical pores on the membrane&#x2019;s surface through capillary. Several adaptions of the underlying mathematical relations are to be found in the literature, such as the equation of Ergun, Carman&#x2013;Kozeny, or Darcy&#x2019;s law. While it is considered to perform roughly equivalently accurately, it shares the identical drawback as the SDM in that it majorly considers the pressure and concentration gradient. However, depending on the mathematical background, it may give information about the pressure drop due to the geometry of the membrane itself [<xref ref-type="bibr" rid="B19-membranes-12-01186">19</xref>,<xref ref-type="bibr" rid="B20-membranes-12-01186">20</xref>,<xref ref-type="bibr" rid="B21-membranes-12-01186">21</xref>];</p></list-item><list-item><p>Object-oriented Programming</p><p>Even though modeling with object-oriented programming methods is not an actual calculation routine similar to the earlier mass transfer methods, it can be a powerful approach for modeling in general. While calculation routines and algorithms are the center of interest for developers, the product mainly displays the model itself and its handling. This may indicate an increased complexity since other routines must be implemented then the pure numeric solution. However, this also poses a huge potential since every method can communicate with each other [<xref ref-type="bibr" rid="B22-membranes-12-01186">22</xref>].</p></list-item></list></p>
+      </sec>
+      <sec id="sec1dot2-membranes-12-01186">
+        <title>1.2. State of the Art: Membrane Models in Process Simulators</title>
+        <p>Aspen Technology is a well-known provider of two proprietary process simulators, Aspen Plus and Aspen Hysys. The primary application fields are process design and optimization in chemical engineering industries [<xref ref-type="bibr" rid="B23-membranes-12-01186">23</xref>]. Many PS tools have an interface for integrating custom models or licensed addons, as Aspen Technologies does. The Aspen Custom Modeler belongs to the Aspen software package and is a commonly used solution for integrating user-generated models [<xref ref-type="bibr" rid="B24-membranes-12-01186">24</xref>,<xref ref-type="bibr" rid="B25-membranes-12-01186">25</xref>]. Additional integration methods in the literature use Aspen technology products, such as FORTRAN or MATLAB [<xref ref-type="bibr" rid="B26-membranes-12-01186">26</xref>].</p>
+        <p>Nonetheless, adverse effects are reported using Aspen Hysys in combination with MATLAB, Excel, Python, and C# [<xref ref-type="bibr" rid="B27-membranes-12-01186">27</xref>]. According to custom modeling and membranes, several models have already emerged for Aspen Plus and Aspen Hysys. A flat sheet gas permeation membrane model was implemented into Aspen Plus with the Aspen custom modeler based on the fugacities and mixture diffusivities derived from Blanc&#x2019;s law. The predictive performance for the residuals molar fraction is described to be accurate [<xref ref-type="bibr" rid="B28-membranes-12-01186">28</xref>].</p>
+        <p>ChemBrane is a custom membrane model developed by Graigner in 2007 which operates on Hysys based on a fourth-order Runga&#x2013;Kutta method for the calculation of the flux. It is used to predict the flux for perfectly mixed, co-current, and counter-current flow configurations based on the permeabilities of each compound [<xref ref-type="bibr" rid="B29-membranes-12-01186">29</xref>]. Cavalcanti et al., described a pervaporation membrane model based on the SDM integrated with the Aspen Custom Modeler. It was applied to predict the purification of EtOH with a polyetherimide membrane [<xref ref-type="bibr" rid="B30-membranes-12-01186">30</xref>]. A high-pressure hollow fiber membrane contactor for natural gas purification was modeled for the PS tool gPROMS in a counter-current flow configuration [<xref ref-type="bibr" rid="B31-membranes-12-01186">31</xref>]. AVEVA&#x2019;s Pro/II is an equation-oriented steady-state PS tool that already inherits a membrane model developed based on a membrane reactor derived from Bishop et al. [<xref ref-type="bibr" rid="B32-membranes-12-01186">32</xref>].</p>
+        <p>An overview of additional available PS tools which allow the development and integration of membrane models is available in the literature [<xref ref-type="bibr" rid="B33-membranes-12-01186">33</xref>]. All described tools have in common that only proprietary PS tools are available today. This is an adverse and limiting precondition for multiple reasons. The accessibility for industry, researchers, and teachers is limited due to partially costly products. Further, the models are commonly provided as black box models. This excludes the opportunity to re-construct the algorithm to evaluate if the preliminarily determined preconditions are suitable for the model. In combination with the lost opportunity to modify or extend the model, many models&#x2019; capabilities are limited in many ways. Therefore, the drive for the development of an initially facile but continuously extended open-source membrane model for an open-source software was given.</p>
+      </sec>
+      <sec id="sec1dot3-membranes-12-01186">
+        <title>1.3. Mathematical Background of the Model</title>
+        <p>Currently, the solution-diffusion model is reportedly a popular approach to model membrane separation. It is suitable for various gas and liquid feeds in membrane permeation applications. [<xref ref-type="bibr" rid="B34-membranes-12-01186">34</xref>] The idealized counter- and co-current flow patterns are illustrated in <xref ref-type="fig" rid="membranes-12-01186-f001">Figure 1</xref>.</p>
+        <p>The local flux through the membrane is commonly described as follows Equation (1).
+        <disp-formula id="FD1-membranes-12-01186"><label>(1)</label><mml:math id="mm1" display="block"><mml:semantics><mml:mrow><mml:mi>d</mml:mi><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:mi>x</mml:mi><mml:mi>n</mml:mi></mml:mrow><mml:mo>)</mml:mo></mml:mrow><mml:mo>=</mml:mo><mml:mo>&#x2212;</mml:mo><mml:mi>Q</mml:mi><mml:mo>&#xD7;</mml:mo><mml:mi>A</mml:mi><mml:mo>&#xD7;</mml:mo><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:mi>x</mml:mi><mml:mi>P</mml:mi><mml:mo>&#x2212;</mml:mo><mml:mi>y</mml:mi><mml:mi>p</mml:mi></mml:mrow><mml:mo>)</mml:mo></mml:mrow></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The molar flow, molar fraction, and permeance are abbreviated as <inline-formula><mml:math id="mm2"><mml:semantics><mml:mi>n</mml:mi></mml:semantics></mml:math></inline-formula>, <inline-formula><mml:math id="mm3"><mml:semantics><mml:mi>x</mml:mi></mml:semantics></mml:math></inline-formula>, and <inline-formula><mml:math id="mm4"><mml:semantics><mml:mi>Q</mml:mi></mml:semantics></mml:math></inline-formula>. The feed pressure <inline-formula><mml:math id="mm5"><mml:semantics><mml:mi>P</mml:mi></mml:semantics></mml:math></inline-formula>, permeate pressure <inline-formula><mml:math id="mm6"><mml:semantics><mml:mi>p</mml:mi></mml:semantics></mml:math></inline-formula>, <inline-formula><mml:math id="mm7"><mml:semantics><mml:mrow><mml:mi>A</mml:mi><mml:mo>,</mml:mo></mml:mrow></mml:semantics></mml:math></inline-formula> and <inline-formula><mml:math id="mm8"><mml:semantics><mml:mi>y</mml:mi></mml:semantics></mml:math></inline-formula> as the surface area and the permeate composition of the operation also determine the flux. The subscripted variables <inline-formula><mml:math id="mm9"><mml:semantics><mml:mrow><mml:mi>F</mml:mi><mml:mo>,</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>p</mml:mi><mml:mo>,</mml:mo></mml:mrow></mml:semantics></mml:math></inline-formula> and <inline-formula><mml:math id="mm10"><mml:semantics><mml:mi>r</mml:mi></mml:semantics></mml:math></inline-formula> represent the feed, permeate, and retentate side of the corresponding value. The membrane area <inline-formula><mml:math id="mm11"><mml:semantics><mml:mi>A</mml:mi></mml:semantics></mml:math></inline-formula> can be calculated from the number of fibers <inline-formula><mml:math id="mm12"><mml:semantics><mml:mrow><mml:mi>&#x3F5;</mml:mi></mml:mrow></mml:semantics></mml:math></inline-formula>, the inner diameter of the fiber <inline-formula><mml:math id="mm13"><mml:semantics><mml:mrow><mml:msub><mml:mi>d</mml:mi><mml:mrow><mml:mi>f</mml:mi><mml:mi>i</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>r</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula>, and the fiber length <inline-formula><mml:math id="mm14"><mml:semantics><mml:mrow><mml:msub><mml:mi>l</mml:mi><mml:mrow><mml:mi>f</mml:mi><mml:mi>i</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>r</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> as described in Equation (2).
+        <disp-formula id="FD2-membranes-12-01186"><label>(2)</label><mml:math id="mm15" display="block"><mml:semantics><mml:mrow><mml:mi>A</mml:mi><mml:mo>=</mml:mo><mml:mi>&#x3F5;</mml:mi><mml:mo>&#xD7;</mml:mo><mml:msub><mml:mi>d</mml:mi><mml:mrow><mml:mi>f</mml:mi><mml:mi>i</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>r</mml:mi></mml:mrow></mml:msub><mml:mo>&#xD7;</mml:mo><mml:mi>&#x3C0;</mml:mi><mml:mo>&#xD7;</mml:mo><mml:msub><mml:mi>l</mml:mi><mml:mrow><mml:mi>f</mml:mi><mml:mi>i</mml:mi><mml:mi>b</mml:mi><mml:mi>e</mml:mi><mml:mi>r</mml:mi></mml:mrow></mml:msub></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>Considering the fact that process simulation tools will be obliged to set multiple preconditions, such as plug flow, perfect mixing on the permeate and the feed/retentate side Equation (1) shall be integrated and set in relation with its feed, which shall result in a relation between the flux and the stage-cut. The molar fractions <inline-formula><mml:math id="mm16"><mml:semantics><mml:mi>x</mml:mi></mml:semantics></mml:math></inline-formula> and <inline-formula><mml:math id="mm17"><mml:semantics><mml:mi>y</mml:mi></mml:semantics></mml:math></inline-formula> are to be chosen depending on the flow configuration.
+        <disp-formula id="FD3-membranes-12-01186"><label>(3)</label><mml:math id="mm18" display="block"><mml:semantics><mml:mrow><mml:mi>&#x3B8;</mml:mi><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mi>y</mml:mi><mml:msub><mml:mi>n</mml:mi><mml:mi>p</mml:mi></mml:msub></mml:mrow><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>F</mml:mi></mml:msub><mml:msub><mml:mi>n</mml:mi><mml:mi>F</mml:mi></mml:msub></mml:mrow></mml:mfrac><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:mi>A</mml:mi><mml:mi>Q</mml:mi><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:mi>x</mml:mi><mml:mi>P</mml:mi><mml:mo>&#x2212;</mml:mo><mml:mi>y</mml:mi><mml:mi>p</mml:mi></mml:mrow><mml:mo>)</mml:mo></mml:mrow></mml:mrow><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>F</mml:mi></mml:msub><mml:msub><mml:mi>n</mml:mi><mml:mi>F</mml:mi></mml:msub></mml:mrow></mml:mfrac></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>Since the SDM is already well documented and published, this work will solely cover its implementation into the PS tool DWSIM, including its modifications and preconditions. However, the presented background is also well applicable to other PS tools. Alongside the solution-diffusion model itself, the following list of preconditions were also set:<list list-type="bullet"><list-item><p>Negligible axial and radial pressure variation;</p></list-item><list-item><p>Perfect mixing in every compartment;</p></list-item><list-item><p>Negligible radial concentration variation</p></list-item><list-item><p>Pure component permeances are independent of feed composition, temperature, and pressure variations;</p></list-item><list-item><p>Negligible deformation of the hollow fiber under pressure.</p></list-item></list></p>
+        <p>Since not only the feed composition but also the permeate composition is decisive for the driving force, it must also be considered in the calculations. With the previously stated upper assumptions, the permeate composition <inline-formula><mml:math id="mm19"><mml:semantics><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> can be calculated as follows.
+        <disp-formula id="FD4-membranes-12-01186"><label>(4)</label><mml:math id="mm20" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msub><mml:mi>n</mml:mi><mml:mi>p</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mi>A</mml:mi><mml:mi>Q</mml:mi><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>r</mml:mi></mml:msub><mml:mi>P</mml:mi><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mi>p</mml:mi></mml:mrow><mml:mo>)</mml:mo></mml:mrow></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>For multi-component fluid mixtures, the permeate molar fraction for counter-current flow is calculated by forming the ratio of the components&#x2019; fluxes over the total flux [<xref ref-type="bibr" rid="B10-membranes-12-01186">10</xref>]. The subscripts <inline-formula><mml:math id="mm21"><mml:semantics><mml:mi>i</mml:mi></mml:semantics></mml:math></inline-formula>, <inline-formula><mml:math id="mm22"><mml:semantics><mml:mi>j</mml:mi></mml:semantics></mml:math></inline-formula>, and <inline-formula><mml:math id="mm23"><mml:semantics><mml:mi>k</mml:mi></mml:semantics></mml:math></inline-formula> represent the <inline-formula><mml:math id="mm24"><mml:semantics><mml:mi>i</mml:mi></mml:semantics></mml:math></inline-formula>th, <inline-formula><mml:math id="mm25"><mml:semantics><mml:mi>j</mml:mi></mml:semantics></mml:math></inline-formula>th compound from a total number k of compounds.
+        <disp-formula id="FD5-membranes-12-01186"><label>(5)</label><mml:math id="mm26" display="block"><mml:semantics><mml:mrow><mml:mfrac><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:mrow><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:mrow></mml:mfrac><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:msub><mml:mi>Q</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>r</mml:mi><mml:mo>,</mml:mo><mml:mi>i</mml:mi></mml:mrow></mml:msub><mml:mi>P</mml:mi><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mi>p</mml:mi></mml:mrow><mml:mo>)</mml:mo></mml:mrow></mml:mrow><mml:mrow><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>j</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>i</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>Q</mml:mi><mml:mi>j</mml:mi></mml:msub><mml:mrow><mml:mo>{</mml:mo><mml:mrow><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>r</mml:mi><mml:mo>,</mml:mo><mml:mi>j</mml:mi></mml:mrow></mml:msub></mml:mrow><mml:mo>)</mml:mo></mml:mrow><mml:mi>P</mml:mi><mml:mo>&#x2212;</mml:mo><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:mn>1</mml:mn><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow><mml:mo>)</mml:mo></mml:mrow><mml:mi>p</mml:mi></mml:mrow><mml:mo>}</mml:mo></mml:mrow></mml:mrow></mml:mfrac></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>A distinction must be made on whether a counter-current or co-current membrane shall be modeled. The driving force of the membrane model configured as a counter-current model competes with the permeate side aside from the feed&#x2019;s end, which is indicated in Equation (6), which is a rearrangement from Equation (5).
+        <disp-formula id="FD6-membranes-12-01186"><label>(6)</label><mml:math id="mm27" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:msub><mml:mi>Q</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>r</mml:mi><mml:mo>,</mml:mo><mml:mi>i</mml:mi></mml:mrow></mml:msub><mml:msub><mml:mi>&#x3B1;</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>j</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>i</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow><mml:mrow><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>i</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>j</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>Q</mml:mi><mml:mi>j</mml:mi></mml:msub><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>r</mml:mi><mml:mo>,</mml:mo><mml:mi>i</mml:mi></mml:mrow></mml:msub><mml:msub><mml:mi>&#x3B1;</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow><mml:mo>)</mml:mo></mml:mrow><mml:mo>+</mml:mo><mml:msub><mml:mi>Q</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>j</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>i</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow></mml:mfrac></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+        <p>The driving force for the co-current flow mode is slightly different since it is the retentate end of the feed that corresponds with the actual permeate, as indicated in Equation (6).
+        <disp-formula id="FD7-membranes-12-01186"><label>(7)</label><mml:math id="mm28" display="block"><mml:semantics><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo>=</mml:mo><mml:mfrac><mml:mrow><mml:msub><mml:mi>Q</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>F</mml:mi><mml:mo>,</mml:mo><mml:mi>i</mml:mi></mml:mrow></mml:msub><mml:msub><mml:mi>&#x3B1;</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>j</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>i</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow><mml:mrow><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>i</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>j</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>Q</mml:mi><mml:mi>j</mml:mi></mml:msub><mml:mrow><mml:mo>(</mml:mo><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mrow><mml:mi>F</mml:mi><mml:mo>,</mml:mo><mml:mi>i</mml:mi></mml:mrow></mml:msub><mml:msub><mml:mi>&#x3B1;</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:mo>&#x2212;</mml:mo><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow><mml:mo>)</mml:mo></mml:mrow><mml:mo>+</mml:mo><mml:msub><mml:mi>Q</mml:mi><mml:mi>i</mml:mi></mml:msub><mml:msubsup><mml:mstyle mathsize="70%" displaystyle="true"><mml:mo>&#x2211;</mml:mo></mml:mstyle><mml:mrow><mml:mi>j</mml:mi><mml:mo>&#x2260;</mml:mo><mml:mi>i</mml:mi></mml:mrow><mml:mi>k</mml:mi></mml:msubsup><mml:msub><mml:mi>y</mml:mi><mml:mi>j</mml:mi></mml:msub></mml:mrow></mml:mfrac></mml:mrow></mml:semantics></mml:math></disp-formula></p>
+      </sec>
+    </sec>
+    <sec id="sec2-membranes-12-01186">
+      <title>2. Materials and Methods</title>
+      <p>This section intends to provide an overview of the applied routines and methods to design and integrate the mathematical model into open-source PS software. Specific software was chosen to proceed with the approach, yet the presented procedures are applicable for any PS tool that can proceed or include numerical solvers.</p>
+      <sec id="sec2dot1-membranes-12-01186">
+        <title>2.1. Machine, Operating System and Software</title>
+        <p>Every applied software was operated on both a AsRock DeskMini A300 with a Ryzen 3 3400G and 32 GB of Ram and a Notebook Dell Inspiron 7415 with a Ryzen 5 5500U processor and 16 GB of RAM. All systems were operated with Windows 10. DWSIM was operated with version 8.0.3 on both systems. The Visual Basic(VB) code was scripted in Visual Studio 2017, its community distribution.</p>
+      </sec>
+      <sec id="sec2dot2-membranes-12-01186">
+        <title>2.2. DWSIM</title>
+        <p>DWSIM is an open-source process simulation tool available on multiple platforms that was developed by Daniel Wagner Oliveira de Medeiros. It can be considered as a competitive alternative to other process simulators, such as Aspen Plus or PRO-II. It also operates its calculations as steady-state simulations. Since Version 6, dynamic simulations were introduced into DWSIM. With Version 7 DWSIM Pro was introduced, which offers various extensions, such as further Unit Operations (UO) and property packages. DWSIM provides the possibility to modify individual units as well as entire calculation routines of the flowsheet. Further, it already supports the opportunity to manipulate the communication between UOs and the flowsheet, and between UOs. The creation of whole UOs as custom plugins is an additional strength DWSIM offers. Yet, they must have been written in DWSIM&#x2019;s native coding language, Visual Basic and C# [<xref ref-type="bibr" rid="B35-membranes-12-01186">35</xref>].</p>
+      </sec>
+      <sec id="sec2dot3-membranes-12-01186">
+        <title>2.3. Steps to Follow</title>
+        <sec id="sec2dot3dot1-membranes-12-01186">
+          <title>2.3.1. Work Environment</title>
+          <p>DWSIM was obtained from SourceForge [<xref ref-type="bibr" rid="B36-membranes-12-01186">36</xref>]. The setup inherits Microsoft WebView 2 Runtime, ChemSep, CAPE-OPEN Type Libraries, Register Type Libraries, and DWSIM itself [<xref ref-type="bibr" rid="B35-membranes-12-01186">35</xref>]. The initial step to set up the actual work environment is creating a VB Class project by configuring the project&#x2019;s name, location and aiming. NET Framework. Targeting the same. NET Framework as the DWSIM is running is recommended. A selection of DWSIM-related dynamic link library files (.dll) will offer the opportunity to run DWSIM-associated functions within VB if implemented in the reference section. Since not every library is needed for the developed functions, the complete list of DLL&#x2019;s is provided in <xref ref-type="table" rid="membranes-12-01186-t0A1">Table A1</xref>.</p>
+        </sec>
+        <sec id="sec2dot3dot2-membranes-12-01186">
+          <title>2.3.2. Implementation of General Models Related Functions</title>
+          <p>Since DWSIM is an open-source tool, there are also open libraries that can be applied to various models. Functions and code structures, such as the opportunity to process several properties of incoming materials streams or even the cosmetic design of the model itself, are provided to a fair extent. <xref ref-type="table" rid="membranes-12-01186-t0A2">Table A2</xref> contains the applied libraries.</p>
+          <p>In order to ultimately start the code, a couple of initial properties must be defined. Since the model of interest is a UO, it must also inherit the data structure of it, while it should also include the opportunity to apply the typical functions of other UOs in DWSIM. The two following lines of code can realize these:<list list-type="simple"><list-item><p><italic>Inherits UnitOperations.UnitOpBaseClass</italic></p></list-item><list-item><p><italic>Implements DWSIM.Interfaces.IExternalUnitOperation</italic></p></list-item></list></p>
+          <p>Following this, the first set of properties shall be declared here, such as the UO&#x2019;s name and description and the category to which the UO belongs. Whenever a UO is initialized, it also inherits default values for its parameters, which can also be provided as early as this step.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public m_ResStageCut As Dictionary(Of String, Double)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Private Property UOName As String = &#x201C;Membrane&#x201D;</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Private Property UODEscription As String = &#x201C;Membrane Unit Operation&#x201D;</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Private _components As New List(Of String)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Private _componentsids As New List(Of String)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Private _components_re As New List(Of String)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim N0 As New Dictionary(Of String, Double)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim Colums, Rows As Integer</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Overrides Property ComponentName As String = UOName</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Overrides Property ComponentDescription As String = UODEscription</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Overrides Property ObjectClass As SimulationObjectClass = SimulationObjectClass.Separators</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property Permeances As New Dictionary(Of String, Double)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property AllPermeances As New Dictionary(Of String, Double)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property PermeatePressure As Double = 100000.0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property NumberFibers As Double = 100.0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property InnerDiameterFibers As Double = 0.01</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property FiberLength As Double = 0.1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property Chambers As Double = 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Property StageCut As Double = 0.2</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>One primary motivation for creating this UO was the opportunity to design the property editor (PE) in a fully customized way. Therefore, the PE will take its own descriptive part within the <xref ref-type="app" rid="app1-membranes-12-01186">Supplementary Information</xref>. However, the PE also has to be linked to the main UO model, which usually shall also occur in the initial part of the code.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Overrides Sub DisplayEditForm()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If editwindow Is Nothing Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow = New Editor() With {.HObject = Me}</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.ShowHint = GlobalSettings.Settings.DefaultEditFormLocation</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.Tag = &#x201C;ObjectEditor&#x201D;</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Me.FlowSheet.DisplayForm(editwindow)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Else</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If editwindow.IsDisposed Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow = New Editor() With {.HObject = Me}</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.ShowHint = GlobalSettings.Settings.DefaultEditFormLocation</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.Tag = &#x201C;ObjectEditor&#x201D;</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Me.FlowSheet.DisplayForm(editwindow)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Else</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.Activate()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>FlowSheet.DisplayForm(editwindow)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Sub</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>On a regular application of the UO on a flowsheet, the PE must be frequently closed and opened, resulting in the necessity of implementing these functions.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Overrides Sub UpdateEditForm()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If editwindow IsNot Nothing Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If editwindow.InvokeRequired Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.Invoke(Sub()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow?.UpdateInfo()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Sub)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Else</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow?.UpdateInfo()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Sub</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Public Overrides Sub CloseEditForm()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>&#x2018;editwindow?.Close()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If editwindow IsNot Nothing Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If Not editwindow.IsDisposed Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow.Close()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>editwindow = Nothing</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Sub</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>Further general model-specific functions, e.g., functions to manage and display the input and output connectors, a call function for the model image, and many more, are provided in the <xref ref-type="app" rid="app1-membranes-12-01186">Supplementary Information</xref>.</p>
+        </sec>
+        <sec id="sec2dot3dot3-membranes-12-01186">
+          <title>2.3.3. Implementation of Membrane Specific Functions</title>
+          <p>With the general model-specific functions created, a suitable environment to implement membrane-specific properties and functions is finally available. The following section shall give an insight into the approach to implementing functions that shall provide specific properties for the membrane model, e.g., the membrane area, calculation mode, flow mode, and functions to calculate stream-related properties.</p>
+          <p>A selection of the most relevant functions is provided and explained in this section.</p>
+          <p>Creating an entity of a stream is necessary at some points of the calculations. Therefore, a method to do so is introduced</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Function InitStream() As MaterialStream</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim Value As MaterialStream</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value = New MaterialStream()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Me.FlowSheet.AddCompoundsToMaterialStream(Value)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value.SetFlowsheet(FlowSheet)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value.PropertyPackage = Me.PropertyPackage</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value.SpecType = StreamSpec.Temperature_and_Pressure</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value.ClearAllProps()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Return Value</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Function</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>This function is applied to introduce an intermediate stream different from all input and output streams. It offers the opportunity to use the DWSIM integrated calculation routine to find the physical properties of mixed streams without changing anything of the actual present streams on the flowsheet.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Function RefreshStream(Stream As MaterialStream, Temperature As Double, Pressure As Double, MolarFraction As Double(), MolarFlow As Double()) As MaterialStream</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.ClearAllProps()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.SetMolarFlow(SumY(MolarFlow))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.SetOverallComposition(MolarFlow.ToArray)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.SetTemperature(Temperature)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.SetPressure(Pressure)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.SetFlashSpec(&#x201C;PT&#x201D;)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Me.PropertyPackage.CurrentMaterialStream = Stream</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.Calculate()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Stream.Validate()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Return Stream</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Function</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>Especially the pervaporation process is highly dependent on the continuous calculation of the physical properties of the stream&#x2019;s compounds. The actual calculation routine utilizes quantization steps within a single model. This causes a change in concentration when the stream is submitted to the following chamber. The function &#x201C;RefreshStream&#x201D; recalculates all stream-specific properties again. The partial pressure is a crucial variable for calculating the driving force. The partial pressure calculation follows two different routes depending on whether a gas permeation or pervaporation is simulated. The algorithm for gas permeation implements the law of Dalton.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Function PartialPressure(MolFrac As Double(), Pressure As Double) As Double()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim Value(MolFrac.Length &#x2212; 1) As Double</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To MolFrac.Length &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value(I) = Pressure * MolFrac(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Return Value</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Function</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>Even though the partial pressures of the vapor flow could be calculated, DWSIM&#x2019;s internal functions were used to determine these values by getting the pressure of the feed stream.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Public Function PartialPressure(Stream As MaterialStream) As Double()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>&#x2018;get pressure and molarfrac from stream, apply Law of Dalton</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim molarFraction As Double() = Stream.GetPhaseComposition(0)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim Pressure As Double = Stream.GetPressure()</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim Value(molarFraction.Length &#x2212; 1) As Double</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For i = 0 To molarFraction.Length &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value(i) = Pressure * molarFraction(i)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Return Value</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Function</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>Having the relevant partial pressures available finally allows calculating the composition y<sub>i</sub> of the permeate on the retentate end.</p>
+          <p>Public Function yiRetentateMultids2(RetMolFrac As Double(), MolFracLastIt As Double(), ratio As Double(), Perm As Double()) As Double()</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>Dim A(RetMolFrac.Length &#x2212;  1), B(RetMolFrac.Length &#x2212; 1), C(RetMolFrac.Length &#x2212; 1), Value(RetMolFrac.Length &#x2212; 1), ValueRaw(RetMolFrac.Length &#x2212; 1) As Double</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To RetMolFrac.Length &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>A(I) = Perm(I) * RetMolFrac(I) * ratio(I) * (SumY(MolFracLastIt) - MolFracLastIt(I))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>B(I) = 0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For J = 0 To RetMolFrac.Length &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>If J = I Then</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>B(I) += 0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Else</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>B(I) += Perm(J) * ((RetMolFrac(J) * ratio(J)) &#x2212; MolFracLastIt(J))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End If</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>C(I) = Perm(I) * (SumY(MolFracLastIt) &#x2212; MolFracLastIt(I))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>ValueRaw(I) = A(I)/(B(I) + C(I))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Dim SumRaw As Double = SumY(ValueRaw)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To RetMolFrac.Length &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Value(I) = ValueRaw(I)/SumRaw</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Return Value</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End Function</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>The value y<sub>i</sub> provides the opportunity to calculate the stage-cut &#x3B8; and consequently the retentate composition x<sub>r</sub> and the corresponding partial- and vapor pressures.</p>
+          <list list-type="simple">
+            <list-item>
+              <p>
+                <italic>While (deviation &gt;= 0.00001) And (count &lt; 1000)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>yi = yiRetentateMultids2(xr, yi, Ratio, Permeance)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>pyi = PartialPressure(yi, pp)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qi0(I) = qip(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>sc(I) = (((Permeance(I) * (Area/Chambers))) * (((pxf(I) &#x2212; pyp(I)) &#x2212; (pxr(I) &#x2212; pyi(I)))/(Log((pxf(I) &#x2212; pyp(I))/(pxr(I) &#x2212; pyi(I))))))/NEff(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qip(I) = sc(I) * NEff(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qtp = SumY(qip)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>yp(I) = qip(I)/qtp</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>pyp = PartialPressure(yp, pp)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qtr = 0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qir(I) = NEff(I) &#x2212; qip(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>qtr = SumY(qir)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>xr(I) = qir(I)/qtr</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>pxr(I) = Pf * xr(I)</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>deviation = 0</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>For I = 0 To NumCompounds &#x2212; 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>deviation = deviation + Abs(qip(I) &#x2212; qi0(I))</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>Next</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>count = count + 1</italic>
+              </p>
+            </list-item>
+            <list-item>
+              <p>
+                <italic>End While</italic>
+              </p>
+            </list-item>
+          </list>
+          <p>This loop is the last instance of the actual calculations. It starts with an If- condition where the deviation of the stage-cut is compared. This error must fall below a tolerance of 10<sup>&#x2212;6</sup> to end the while loop, as long as the while-loop continues to run the calculations process with the determination of the permeate composition followed by its corresponding partial pressures. These calculations are followed by the determination of the stage-cut from <inline-formula><mml:math id="mm29"><mml:semantics><mml:mrow><mml:msub><mml:mi>y</mml:mi><mml:mi>i</mml:mi></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula>. <inline-formula><mml:math id="mm30"><mml:semantics><mml:mrow><mml:msub><mml:mi>x</mml:mi><mml:mi>r</mml:mi></mml:msub></mml:mrow></mml:semantics></mml:math></inline-formula> and the remaining total flows are calculated from the stage cut.</p>
+          <p>The exportation of the corresponding file delivered the model into the &#x201C;unitop&#x201D; folder of DWSIM as a .dll file.</p>
+        </sec>
+      </sec>
+      <sec id="sec2dot4-membranes-12-01186">
+        <title>2.4. Test Cases</title>
+        <p>As a performance benchmark, this subsection shall introduce applied test cases in this work. The first test case is a polyetherimide/&#x3B3;-alumina composite membrane characterized and described by Park et al. It was used to separate HAc, EtOH, EtOAc, and H<sub>2</sub>O. The initial model set-up was operated with a permeate pressure of 267 Pa. The fiber was further specified with an inner diameter of 7 mm and an arbitrarily large amount of fibers of 750,000 with 30 compartments. The length of the fibers was set to 1 m. An overview of the permeance of every compound and the feed, retentate, and permeate composition of the corresponding simulation of test case 1 is described in <xref ref-type="sec" rid="sec4dot1-membranes-12-01186">Section 4.1</xref>.</p>
+        <p>The model was also compared with other gas permeation and pervaporation solutions from the literature. These further test cases inherit both experimental results as well as simulated data. An overview of different investigated models is displayed in <xref ref-type="table" rid="membranes-12-01186-t001">Table 1</xref>.</p>
+        <p>The second test case can be described as a hollow-fiber gas permeation membrane module that was deployed to separate a three-component mixture consisting of CO<sub>2</sub>, O<sub>2</sub> and N<sub>2</sub>. Four different Modules were reported. However, only module 31 was compared in this study. The permeance of CO<sub>2</sub> in the membrane was determined experimentally at 30 &#xB0;C and 24 bar [<xref ref-type="bibr" rid="B37-membranes-12-01186">37</xref>].</p>
+        <p>Test case three is a membrane model for multi-component gas permeation developed for Aspen Plus as a FORTRAN calculation routine. The model was compared to multiple models and experimental data. The test case was created with a simulation separating H<sub>2</sub>, N<sub>2</sub>, CH<sub>4,</sub> and Ar with an upstream pressure of approximately 69 bar and a permeate pressure slightly above 11 bar. The permeances were taken from another publication specified in the work of Chowdhury et al. [<xref ref-type="bibr" rid="B38-membranes-12-01186">38</xref>].</p>
+        <p>The final and fourth test case was derived from the work of Koch et al., who managed to separate EtOH, IPA, and ACE with a polymeric PERVAP<sup>TM</sup> 1210 membrane with an active layer of polyvinyl alcohol receiving high purities of water in the permeate stream. The feed pressure was kept atmospheric, while the permeate pressure was adjusted to approximately 3000 Pa.</p>
+      </sec>
+    </sec>
+    <sec id="sec3-membranes-12-01186">
+      <title>3. The Model</title>
+      <p>Staring DWSIM also initiates results in the usual loading screen, which is terminated with the initial menu, where a new file can be either set up or an existing one can be loaded. For this investigation, a new empty file was created. A random number of compounds can be chosen all of which shall have the same state. If the compounds are in a liquid form, the availability of interaction parameters must be considered. Nevertheless, the properties of test case 1 were chosen for this specific set-up. The membrane model can be found on the Separator/Tanks tab of the UO&#x2019;s menu. The implementation of the flowsheet does not differ from the other UOs. The model offers the opportunity to attach two inlets, one of which is an energy inlet, and two outlet streams. The flow direction happens to be the configuration of a co-current model. The model is portrayed in <xref ref-type="fig" rid="membranes-12-01186-f002">Figure 2</xref>.</p>
+      <sec>
+        <title>Property Editor</title>
+        <p>The property&#x2019;s editor was designed to improve the operability of the whole model itself. The editor of the model occurs just analogously to the other model&#x2019;s editors by clicking on the model itself. Alongside the general information and the group of connections, there is also a box element with three tabs. Another box with only two tabs follows this box. The property table is portrayed in <xref ref-type="fig" rid="membranes-12-01186-f003">Figure 3</xref>.</p>
+        <p>The major calculation parameters are to be found on the first <xref ref-type="table" rid="membranes-12-01186-t002">Table 2</xref> drop-down menus with three entries each that are followed by the six fields with values that can be set here. The permeate pressure as well as three further fields with fiber-related properties are revealed on this part of the editor. Fiber is the primary area determining property. Further, the number of compartments is to be specified on the 5th field.</p>
+        <p>Toggling through the tabs by clicking delivers a list of compounds handled by the membrane and a table with the corresponding permeances.</p>
+        <p>The only function of the compounds tab is the opportunity to check specific compounds of the simulation. If a particular compound is checked, it will be considered in the separation process. <xref ref-type="fig" rid="membranes-12-01186-f004">Figure 4</xref>b is derived from the compounds checked in the tab before and only displayed the compounds and the lists which have been checked. The initial values for the permeances of the displayed compounds are 0 mol/m<sup>2</sup>sPa.</p>
+      </sec>
+    </sec>
+    <sec id="sec4-membranes-12-01186" sec-type="results">
+      <title>4. Results and Discussion</title>
+      <p>The following section shall give an insight into the behavior of the developed UOs in dependence on various parameters. Further, the accuracy and reliability of the results shall also be investigated.</p>
+      <sec id="sec4dot1-membranes-12-01186">
+        <title>4.1. Influence of Parameters</title>
+        <p>As mentioned in <xref ref-type="sec" rid="sec1-membranes-12-01186">Section 1</xref>, the permeance of a compound through a specific membrane is a highly influential parameter for the flux of a compound through a membrane. Therefore, the behavior of the model, which uses the solution-diffusion model as a calculative background, is of interest. The permeance must be a highly influential parameter for the calculative background. The results of the test case one simulations are listed in <xref ref-type="table" rid="membranes-12-01186-t002">Table 2</xref>.</p>
+        <table-wrap id="membranes-12-01186-t002" position="anchor">
+          <object-id pub-id-type="pii">membranes-12-01186-t002_Table 2</object-id>
+          <label>Table 2</label>
+          <caption>
+            <p>An overview of the permeance of every compound and the feed, retentate, and permeate composition of the corresponding simulation of test case 1. Permeance data obtained from [<xref ref-type="bibr" rid="B40-membranes-12-01186">40</xref>].</p>
+          </caption>
+          <table>
+            <thead>
+              <tr>
+                <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Compound</th>
+                <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Permeances<break/>[mol/m<sup>2</sup>sbar]</th>
+                <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Feed<break/>mol%</th>
+                <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Permeate<break/>mol%</th>
+                <th align="center" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Retentate<break/>mol%</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="center" valign="middle">HAc</td>
+                <td align="center" valign="middle">0.000201</td>
+                <td align="center" valign="middle">14</td>
+                <td align="center" valign="middle">1.07</td>
+                <td align="center" valign="middle">14.98</td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle">EtOH</td>
+                <td align="center" valign="middle">0.000161</td>
+                <td align="center" valign="middle">14</td>
+                <td align="center" valign="middle">1.25</td>
+                <td align="center" valign="middle">14.97</td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle">EtOAc</td>
+                <td align="center" valign="middle">0.000125</td>
+                <td align="center" valign="middle">36</td>
+                <td align="center" valign="middle">3.01</td>
+                <td align="center" valign="middle">38.51</td>
+              </tr>
+              <tr>
+                <td align="center" valign="middle" style="border-bottom:solid thin">H<sub>2</sub>O</td>
+                <td align="center" valign="middle" style="border-bottom:solid thin">0.00647</td>
+                <td align="center" valign="middle" style="border-bottom:solid thin">36</td>
+                <td align="center" valign="middle" style="border-bottom:solid thin">94.68</td>
+                <td align="center" valign="middle" style="border-bottom:solid thin">31.54</td>
+              </tr>
+            </tbody>
+          </table>
+        </table-wrap>
+        <p>The permeance of H<sub>2</sub>O is seen to be at least ten times higher than the permeance of any other compound. Alongside this, it can also be observed that the composition of the permeate consists of almost 95% water, followed by EtOAc with 3%. HAc and EtOH share approximately 1% of the permeate composition. The composition of the retentate is quite similar to the feedstock. All compounds seem to be enriched with the exception of H<sub>2</sub>O, which dropped to a composition of 31.54%. The stage-cut was calculated to be 0.071.</p>
+        <sec id="sec4dot1dot1-membranes-12-01186">
+          <title>4.1.1. Area</title>
+          <p>Alongside the permeance of each compound, the available area of the membrane is decisive for the flux and composition of the product streams. Sensitivity analyses with the number of fibers as a variable were carried out to obtain an overview of the influence of the area on the simulation. The compositions of the permeate and retentate are displayed in dependence on the stage cut in <xref ref-type="fig" rid="membranes-12-01186-f005">Figure 5</xref>.</p>
+          <p>The initial behavior regarding the permeate reoccurs again, showing that the H<sub>2</sub>O content in the permeate is the highest at any stage-cut, followed by EtOAc with a very long distance. EtOH and HAc almost share the same compositions, close to 1% for all stage cuts &lt; 0.3. While the behavior of the initial simulation in 3.2.1 was basically reproduced for the counter-current configuration, slight differences can be observed if the simulation was run in co-current mode. However, even though every compound permeates concentrations are still deficient compared to H<sub>2</sub>O, two compounds switch their positions in the rankings of the permeate molar fraction. EtOH surpasses HAc on the co-current simulations.</p>
+          <p>Further information about the model&#x2019;s behavior is displayed by the decrease of H<sub>2</sub>O in the permeate and the corresponding increase of the other compounds. It can be observed that the trends shown are clearly non-linear in dependence on the stage cut. Since the permeate composition does not portray a complete picture of the system, the retentate composition is also displayed in <xref ref-type="fig" rid="membranes-12-01186-f005">Figure 5</xref>.</p>
+          <p>Two interesting trends are revealed in <xref ref-type="fig" rid="membranes-12-01186-f005">Figure 5</xref>. The trend for the H<sub>2</sub>O content in the retentate is driven down to a value very close to 0 at a stage cut of 0.4. The second information in this plot is revealed as the initial rise of other compounds concentrations up to a stage cut of approximately 0.4.</p>
+          <p>Another notable behavior is the fact that the simulations do not converge after a further increase in the number of fibers. This behavior may also be related to the low residual water content in the feed/retentate, resulting in a deficient driving force.</p>
+        </sec>
+        <sec id="sec4dot1dot2-membranes-12-01186">
+          <title>4.1.2. Feed</title>
+          <p>The performance of the same membrane was also investigated numerically in dependence on the feed by increasing the EtOH content of the feed from 0.1 to approximately 0.7 wt%. A comparison of y<sub>p</sub> and x<sub>r</sub> for the counter-current and co-current is displayed for the permeate and the retentate streams in <xref ref-type="fig" rid="membranes-12-01186-f006">Figure 6</xref>.</p>
+          <p>The share of fast permeating H<sub>2</sub>O is the largest, starting with above 95 mol%. However, the rising share of EtOH in the feed leads to reduced water content in the permeate. While the composition of EtOAc and HAc stay almost constant in the permeate stream, a comparably strong rise of EtOH is revealed with rising x<sub>F, EtOH</sub>. <xref ref-type="fig" rid="membranes-12-01186-f006">Figure 6</xref> also reveals a seemingly linear depletion of all compounds in the retentate stream with the exception of EtOH which is displayed with a strong rise to a similar scale as x<sub>F, EtOH.</sub> Further, also the stage cut is revealed to decline in both flow configurations with increasing x<sub>F, EtOH</sub>.</p>
+        </sec>
+        <sec id="sec4dot1dot3-membranes-12-01186">
+          <title>4.1.3. Cells</title>
+          <p>Many models follow the approach to calculate the membrane as a single unit. Since the retentate and also the permeate composition is highly dependent on the change of the feed composition proceeding through the membrane, it can be assumed that a model could be tuned by a separation into multiple compartments. These compartments were realized as cells. The influence of the number of cells is displayed in <xref ref-type="fig" rid="membranes-12-01186-f007">Figure 7</xref>.</p>
+          <p>Specifying here what is visible in the images, the trends display a significant deviation for the compositions in the permeate for less than five cells. Whenever the amount of five cells is surpassed; the concentrations stay constant with comparably low deviations.</p>
+        </sec>
+      </sec>
+      <sec id="sec4dot2-membranes-12-01186">
+        <title>4.2. Comparisons</title>
+        <p>Three other test cases, cases 2, 3 and 4, were prepared and simulated. The test cases are covered and described in <xref ref-type="sec" rid="sec2dot4-membranes-12-01186">Section 2.4</xref> and <xref ref-type="table" rid="membranes-12-01186-t001">Table 1</xref>.</p>
+        <sec id="sec4dot2dot1-membranes-12-01186">
+          <title>4.2.1. Gas Permeation</title>
+          <p>Two test cases were carried out as gas permeation simulations. Test case 2 was simulated, resulting in a comparison between the experimental data obtained by Sada et al., and the DWSIM simulation is displayed in <xref ref-type="fig" rid="membranes-12-01186-f008">Figure 8</xref>.</p>
+          <p>As a first impression, it can be seen that the trends of the experimental data are in accordance with the trends of the simulations, while the actual CO<sub>2</sub> concentrations also range in the same scale. The CO<sub>2</sub> content of the permeate decreases with the rising stage cut. The deviation between the simulated data and experimental values is &lt;0.84% for all simulations.</p>
+          <p>Test case three is another comparison for gas permeation. A comparison between the DWSIM model and the work of Chowdhury et al., is portrayed in <xref ref-type="fig" rid="membranes-12-01186-f009">Figure 9</xref>.</p>
+          <p>For practical reasons, the scale of the <italic>y</italic>-axis was cut into two segments giving better visibility of the plots. As indicated by the permeances of the available components, the composition of the permeate mainly consists of H<sub>2</sub>. It starts at approximately 97.5% for a stage cut of 0.3 and proceeds to decrease the more the flux increases. Correspondingly, the composition of the other compounds starts at just approximately 1% each and increases with the N<sub>2</sub>, CH<sub>4</sub>, and Ar in decreasing order. The most exciting information in <xref ref-type="fig" rid="membranes-12-01186-f009">Figure 9</xref> is the seemingly good agreement between the data delivered by DWSIM and the simulated results of Chowdhury et al. [<xref ref-type="bibr" rid="B38-membranes-12-01186">38</xref>].</p>
+        </sec>
+        <sec id="sec4dot2dot2-membranes-12-01186">
+          <title>4.2.2. Pervaporation</title>
+          <p>The separation of liquid&#x2013;liquid mixtures received less attention in simulation tools, as already mentioned at the beginning of the work. Yet, a test case for the pervaporation was set up for comparison purposes with this model with test case 4, which is based on the work of Koch et al. A comparison of the water composition of the permeate depending on the water fraction in the feed is displayed in <xref ref-type="fig" rid="membranes-12-01186-f010">Figure 10</xref> [<xref ref-type="bibr" rid="B39-membranes-12-01186">39</xref>].</p>
+          <p>Both curves show the same trend declining from considerably high purities of 99 wt% of water in the permeate. The experimental values&#x2019; slope is comparably low compared to the simulated. The maximum error between the experimental and the simulated results for w<sub>p,H2O</sub> is still &lt;1%.</p>
+        </sec>
+      </sec>
+    </sec>
+    <sec id="sec5-membranes-12-01186" sec-type="conclusions">
+      <title>5. Conclusions</title>
+      <p>This article has given a substantial description of the design and operation of a membrane model, which can simulate the separation of gaseous and liquid mixtures. The design enables comparably easy implementation of the model into DWSIM, including its property editor. However, due to the object-oriented design and general approach to the proceeding, the model may be integrated into every PS tool that can interact with custom solvers. In particular, this model based on open-source software is not just limited to prominent players in the field of the process engineering industry. Further, due to its convenient applicability, the model may also be considered suitable for didactic purposes, including subsequent development. The model&#x2019;s performance reveals consistent and credible trends according to the significant influences of its primary mode.</p>
+      <p>Further, comparisons with experimental data unveil a comparably adequate predictive performance of the model for gas permeation operations. The accuracy of the pervaporation simulations is distinctly lower, which may be attributed to the more extensive influence of physical effects, such as the effects of friction and other impacts due to its more significant dependence on temperature. Yet, the major objective of a design of an integrated and modular membrane model with counter- and co-current flow configuration has been achieved. The basic algorithm of the code still allows enhancements and upgrades.</p>
+      <p>A proposal for such an upgrade would be the implementation of a fourth tab for the property editor, which shall inherit check-boxes for additional physical effects, e.g., the equation of Hagen&#x2013;Poiseuille, an opportunity to provide the Reynolds number and the permeance as a function of temperature. Another perspective could be the implementation of estimates along the lines of an artificial neural network. Integrating more complex solvers or membrane types would also result in an increased simulation duration, which accurate predictions could mitigate.</p>
+    </sec>
+  </body>
+  <back>
+    <app-group>
+      <app id="app1-membranes-12-01186">
+        <title>Supplementary Materials</title>
+        <p>The following supporting information can be downloaded at: <uri>https://www.mdpi.com/article/10.3390/membranes12121186/s1</uri>. The source code for the developed model is submitted with the manuscript.</p>
+        <supplementary-material xmlns:xlink="http://www.w3.org/1999/xlink" id="membranes-12-01186-s001" xlink:href="membranes-12-01186-s001.zip"/>
+      </app>
+    </app-group>
+    <notes>
+      <title>Author Contributions</title>
+      <p>Conceptualization, K.A., C.J. and B.H.; methodology, K.A.; software, K.A.; validation, K.A.; formal analysis, K.A.; investigation, K.A. and C.J.; resources, K.A. and M.H.; data curation, K.A.; writing&#x2014;original draft preparation, K.A., C.J. and B.H.; writing&#x2014;review and editing, K.A., C.J., B.H. and M.H.; visualization, K.A.; supervision, B.H., C.J. and M.H.; project administration, C.J. and M.H.; funding acquisition, C.J. and M.H. All authors have read and agreed to the published version of the manuscript.</p>
+    </notes>
+    <notes>
+      <title>Institutional Review Board Statement</title>
+      <p>Not applicable.</p>
+    </notes>
+    <notes>
+      <title>Informed Consent Statement</title>
+      <p>Not applicable.</p>
+    </notes>
+    <notes>
+      <title>Data Availability Statement</title>
+      <p>Not applicable.</p>
+    </notes>
+    <ack>
+      <title>Acknowledgments</title>
+      <p>The authors are especially grateful for the administrative and financial support of kleinkraft OG.</p>
+    </ack>
+    <notes notes-type="COI-statement">
+      <title>Conflicts of Interest</title>
+      <p>The authors declare no conflict of interest.</p>
+    </notes>
+    <glossary>
+      <title>Abbreviations</title>
+      <array>
+        <tbody>
+          <tr>
+            <td align="left" valign="middle">CFD</td>
+            <td colspan="2" align="left" valign="middle">computational fluid dynamics</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">DLL</td>
+            <td colspan="2" align="left" valign="middle">dynamic link library</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">HFMC</td>
+            <td colspan="2" align="left" valign="middle">hollow fiber membrane contactor</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">ODE</td>
+            <td colspan="2" align="left" valign="middle">ordinary differential equation</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">PDMS</td>
+            <td colspan="2" align="left" valign="middle">Polydimethylsiloxane</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">PE</td>
+            <td colspan="2" align="left" valign="middle">property editor</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">PS</td>
+            <td colspan="2" align="left" valign="middle">process simulation/process simulator</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">SDM</td>
+            <td colspan="2" align="left" valign="middle">solution-diffusion model</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">UO</td>
+            <td colspan="2" align="left" valign="middle">Unit Operation</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">VB</td>
+            <td colspan="2" align="left" valign="middle">Visual Basic</td>
+          </tr>
+          <tr>
+            <td colspan="3" align="left" valign="middle">Substances:</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">ACE</td>
+            <td colspan="2" align="left" valign="middle">Acetone</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">Ar</td>
+            <td colspan="2" align="left" valign="middle">Argon</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">CH<sub>4</sub></td>
+            <td colspan="2" align="left" valign="middle">Methane</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">CO<sub>2</sub></td>
+            <td colspan="2" align="left" valign="middle">Carbon dioxide</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">EtOAc</td>
+            <td colspan="2" align="left" valign="middle">Ethyl acetate</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">EtOH</td>
+            <td colspan="2" align="left" valign="middle">Ethanol</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">H<sub>2</sub></td>
+            <td colspan="2" align="left" valign="middle">Hydrogen</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">H<sub>2</sub>O</td>
+            <td colspan="2" align="left" valign="middle">Water</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">HAc</td>
+            <td colspan="2" align="left" valign="middle">Acetic acid</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">He</td>
+            <td colspan="2" align="left" valign="middle">Helium</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">IPA</td>
+            <td colspan="2" align="left" valign="middle">Isopropyl alcohol</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">N<sub>2</sub></td>
+            <td colspan="2" align="left" valign="middle">Nitrogen</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">O<sub>2</sub></td>
+            <td colspan="2" align="left" valign="middle">Oxygen</td>
+          </tr>
+          <tr>
+            <td colspan="3" align="left" valign="middle">List of Symbols:</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm31">
+                  <mml:semantics>
+                    <mml:mi>A</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">membrane area</td>
+            <td align="left" valign="middle">[m<sup>2</sup>]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm32">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>d</mml:mi>
+                        <mml:mrow>
+                          <mml:mi>f</mml:mi>
+                          <mml:mi>i</mml:mi>
+                          <mml:mi>b</mml:mi>
+                          <mml:mi>e</mml:mi>
+                          <mml:mi>r</mml:mi>
+                        </mml:mrow>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">inner diameter of fiber</td>
+            <td align="left" valign="middle">[&#xB5;m]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle"><inline-formula><mml:math id="mm33"><mml:semantics><mml:mrow><mml:mi>i</mml:mi><mml:mo>,</mml:mo><mml:mo>&#xA0;</mml:mo><mml:mi>j</mml:mi></mml:mrow></mml:semantics></mml:math></inline-formula> as subscripts</td>
+            <td align="left" valign="middle">the <italic>i</italic>th/<italic>j</italic>th compound of the mixture </td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm34">
+                  <mml:semantics>
+                    <mml:mi>k</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">number of compounds </td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm35">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>l</mml:mi>
+                        <mml:mrow>
+                          <mml:mi>f</mml:mi>
+                          <mml:mi>i</mml:mi>
+                          <mml:mi>b</mml:mi>
+                          <mml:mi>e</mml:mi>
+                          <mml:mi>r</mml:mi>
+                        </mml:mrow>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">fiber length</td>
+            <td align="left" valign="middle">[cm]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm36">
+                  <mml:semantics>
+                    <mml:mi>n</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">molar flow </td>
+            <td align="left" valign="middle">[mol/s]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm37">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:mi>P</mml:mi>
+                      <mml:mo>,</mml:mo>
+                      <mml:mi>p</mml:mi>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">feed pressure, permeate pressure </td>
+            <td align="left" valign="middle">[bar]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm38">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>n</mml:mi>
+                        <mml:mi>F</mml:mi>
+                      </mml:msub>
+                      <mml:mo>,</mml:mo>
+                      <mml:msub>
+                        <mml:mi>n</mml:mi>
+                        <mml:mi>p</mml:mi>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">feed molar flow, permeate molar flow</td>
+            <td align="left" valign="middle">[mol/s]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm39">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>w</mml:mi>
+                        <mml:mrow>
+                          <mml:mi>F</mml:mi>
+                          <mml:mo>,</mml:mo>
+                          <mml:mi>H</mml:mi>
+                          <mml:mn>2</mml:mn>
+                          <mml:mi>O</mml:mi>
+                        </mml:mrow>
+                      </mml:msub>
+                      <mml:mo>,</mml:mo>
+                      <mml:mo>&#xA0;</mml:mo>
+                      <mml:msub>
+                        <mml:mi>w</mml:mi>
+                        <mml:mrow>
+                          <mml:mi>p</mml:mi>
+                          <mml:mo>,</mml:mo>
+                          <mml:mi>H</mml:mi>
+                          <mml:mn>2</mml:mn>
+                          <mml:mi>O</mml:mi>
+                        </mml:mrow>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">feed/permeate weight fraction of H<sub>2</sub>O</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm40">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:mi>x</mml:mi>
+                      <mml:mo>,</mml:mo>
+                      <mml:mi>y</mml:mi>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">molar fraction</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm41">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>x</mml:mi>
+                        <mml:mi>F</mml:mi>
+                      </mml:msub>
+                      <mml:mo>,</mml:mo>
+                      <mml:msub>
+                        <mml:mi>x</mml:mi>
+                        <mml:mi>r</mml:mi>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">feed molar fraction, retentate molar fraction</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm42">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>y</mml:mi>
+                        <mml:mi>i</mml:mi>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">permeate molar fraction closed end</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm43">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>y</mml:mi>
+                        <mml:mi>p</mml:mi>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">permeate molar fraction </td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm44">
+                  <mml:semantics>
+                    <mml:mi>Q</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">permeance</td>
+            <td align="left" valign="middle">[mol/(m<sup>2</sup>*s*Pa)]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm45">
+                  <mml:semantics>
+                    <mml:mrow>
+                      <mml:msub>
+                        <mml:mi>&#x3B1;</mml:mi>
+                        <mml:mi>i</mml:mi>
+                      </mml:msub>
+                    </mml:mrow>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">ideal selectivity for the i<sup>th</sup> compound</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm46">
+                  <mml:semantics>
+                    <mml:mi>&#x3F5;</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">number of fibers</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+          <tr>
+            <td align="left" valign="middle">
+              <inline-formula>
+                <mml:math id="mm47">
+                  <mml:semantics>
+                    <mml:mi>&#x3B8;</mml:mi>
+                  </mml:semantics>
+                </mml:math>
+              </inline-formula>
+            </td>
+            <td align="left" valign="middle">stage-cut</td>
+            <td align="left" valign="middle">[-]</td>
+          </tr>
+        </tbody>
+      </array>
+    </glossary>
+    <app-group>
+      <app id="app2-membranes-12-01186">
+        <title>Appendix A</title>
+        <table-wrap id="membranes-12-01186-t0A1" position="float">
+          <object-id pub-id-type="pii">membranes-12-01186-t0A1_Table A1</object-id>
+          <label>Table A1</label>
+          <caption>
+            <p>List of used DLL&#x2019;s.</p>
+          </caption>
+          <table>
+            <thead>
+              <tr>
+                <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin">dll</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" valign="middle">CapeOpen</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Drawing.SkiaSharp</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.DrawingTools.Point</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.ExtensionMethods</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.ExtensionMethods.Eto</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.FlowsheetBase</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.GlobalSetting</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Interfaces</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.SharedClasses</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Thermodynamics</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.UnitOperations</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.XMLSerializer</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Eto</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Newtonsoft.Json</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">RichTextBoxExtended</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Skiasharp</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Skiasharp.Extended</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Skiahsarp.Views.Desktop.Common</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">Skiasharp.Views.WindowsForms</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Core</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Data</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Data.DataSet.Extensions</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Drawing</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Net.Http</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Windows</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Windows.Forms</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Xml</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">System.Xml.Linq</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle" style="border-bottom:solid thin">WeifenLuo.WinFormsUI.Docking</td>
+              </tr>
+            </tbody>
+          </table>
+        </table-wrap>
+        <table-wrap id="membranes-12-01186-t0A2" position="float">
+          <object-id pub-id-type="pii">membranes-12-01186-t0A2_Table A2</object-id>
+          <label>Table A2</label>
+          <caption>
+            <p>A list of all applied Libraries.</p>
+          </caption>
+          <table>
+            <thead>
+              <tr>
+                <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Functions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td align="left" valign="middle">System.Math</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Thermodynamics</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Thermodynamics.BaseClasses</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Thermodynamics.Streams</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Thermodynamics.PropertyPackages</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Interfaces</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Interfaces.Enums</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Interfaces.Enums.GraphicObjects</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.FlowsheetBase</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">SkiaSharp.Views.Desktop.Extensions</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.Drawing.SkiaSharp.GraphicObjects</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.ExtensionMethods</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.UnitOperations.UnitOperations.Auxiliary</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.UnitOperations.UnitOperations</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle">DWSIM.SharedClasses</td>
+              </tr>
+              <tr>
+                <td align="left" valign="middle" style="border-bottom:solid thin">DWSIM.Thermodynamics.PropertyPackages.PropertyPackage</td>
+              </tr>
+            </tbody>
+          </table>
+        </table-wrap>
+      </app>
+    </app-group>
+    <ref-list>
+      <title>References</title>
+      <ref id="B1-membranes-12-01186">
+        <label>1.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Rom</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Friedl</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Investigation of pervaporation performance of POMS membrane during separation of butanol from water and the effect of added acetone and ethanol</article-title>
+          <source>Sep. Purif. Technol.</source>
+          <year>2016</year>
+          <volume>170</volume>
+          <fpage>40</fpage>
+          <lpage>48</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.seppur.2016.06.030</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B2-membranes-12-01186">
+        <label>2.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Liemberger</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Gro&#xDF;</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Miltner</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Harasek</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Experimental analysis of membrane and pressure swing adsorption (PSA) for the hydrogen separation from natural gas</article-title>
+          <source>J. Clean. Prod.</source>
+          <year>2017</year>
+          <volume>167</volume>
+          <fpage>896</fpage>
+          <lpage>907</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.jclepro.2017.08.012</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B3-membranes-12-01186">
+        <label>3.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Bernardo</surname>
+              <given-names>G.</given-names>
+            </name>
+            <name>
+              <surname>Ara&#xFA;jo</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Lopes</surname>
+              <given-names>T.d.</given-names>
+            </name>
+            <name>
+              <surname>Sousa</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Mendes</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Recent advances in membrane technologies for hydrogen purification</article-title>
+          <source>Int. J. Hydrogen Energy.</source>
+          <year>2020</year>
+          <volume>45</volume>
+          <fpage>7313</fpage>
+          <lpage>7338</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.ijhydene.2019.06.162</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B4-membranes-12-01186">
+        <label>4.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Lee</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Elam</surname>
+              <given-names>J.W.</given-names>
+            </name>
+            <name>
+              <surname>Darling</surname>
+              <given-names>S.B.</given-names>
+            </name>
+          </person-group>
+          <article-title>Membrane materials for water purification: Design, development, and application</article-title>
+          <source>Environ. Sci. Water Res. Technol.</source>
+          <year>2016</year>
+          <volume>2</volume>
+          <fpage>17</fpage>
+          <lpage>42</lpage>
+          <pub-id pub-id-type="doi">10.1039/C5EW00159E</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B5-membranes-12-01186">
+        <label>5.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Asprion</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Bortz</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Process Modeling, Simulation and Optimization: From Single Solutions to a Multitude of Solutions to Support Decision Making</article-title>
+          <source>Chem. Ing. Tech.</source>
+          <year>2018</year>
+          <volume>90</volume>
+          <fpage>1727</fpage>
+          <lpage>1738</lpage>
+          <pub-id pub-id-type="doi">10.1002/cite.201800051</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B6-membranes-12-01186">
+        <label>6.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Coker</surname>
+              <given-names>D.T.</given-names>
+            </name>
+            <name>
+              <surname>Freeman</surname>
+              <given-names>B.D.</given-names>
+            </name>
+            <name>
+              <surname>Fleming</surname>
+              <given-names>G.K.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling multi-component gas separation using hollow-fiber membrane contactors</article-title>
+          <source>AIChE J.</source>
+          <year>1998</year>
+          <volume>44</volume>
+          <fpage>1289</fpage>
+          <lpage>1302</lpage>
+          <pub-id pub-id-type="doi">10.1002/aic.690440607</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B7-membranes-12-01186">
+        <label>7.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Szwast</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modelling the gas flow in permeate channel in membrane gas separation process</article-title>
+          <source>Chem. Process Eng.</source>
+          <year>2018</year>
+          <volume>39</volume>
+          <fpage>271</fpage>
+          <lpage>280</lpage>
+          <pub-id pub-id-type="doi">10.24425/122949</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B8-membranes-12-01186">
+        <label>8.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Giglia</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Bikson</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Perrin</surname>
+              <given-names>J.E.</given-names>
+            </name>
+            <name>
+              <surname>Donatelli</surname>
+              <given-names>A.A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Mathematical and Experimental Analysis of Gas Separation by Hollow Fiber Membranes</article-title>
+          <source>Ind. Eng. Chem. Res.</source>
+          <year>1991</year>
+          <volume>30</volume>
+          <fpage>1239</fpage>
+          <lpage>1248</lpage>
+          <pub-id pub-id-type="doi">10.1021/ie00054a026</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B9-membranes-12-01186">
+        <label>9.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Khalilpour</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Abbas</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Lai</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>Pinnau</surname>
+              <given-names>I.</given-names>
+            </name>
+          </person-group>
+          <article-title>Analysis of hollow fibre membrane systems for multi-component gas separation</article-title>
+          <source>Chem. Eng. Res. Des.</source>
+          <year>2013</year>
+          <volume>91</volume>
+          <fpage>332</fpage>
+          <lpage>347</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.cherd.2012.07.009</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B10-membranes-12-01186">
+        <label>10.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Davis</surname>
+              <given-names>R.A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Simple gas permeation and pervaporation membrane unit operation models for process simulators</article-title>
+          <source>Chem. Eng. Technol.</source>
+          <year>2002</year>
+          <volume>25</volume>
+          <fpage>717</fpage>
+          <lpage>722</lpage>
+          <pub-id pub-id-type="doi">10.1002/1521-4125(20020709)25:7&lt;717::AID-CEAT717&gt;3.0.CO;2-N</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B11-membranes-12-01186">
+        <label>11.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Pan</surname>
+              <given-names>C.Y.</given-names>
+            </name>
+          </person-group>
+          <article-title>Gas separation by high-flux, asymmetric hollow-fiber membrane</article-title>
+          <source>AIChE J.</source>
+          <year>1986</year>
+          <volume>32</volume>
+          <fpage>2020</fpage>
+          <lpage>2027</lpage>
+          <pub-id pub-id-type="doi">10.1002/aic.690321212</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B12-membranes-12-01186">
+        <label>12.</label>
+        <element-citation publication-type="thesis">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Kundu</surname>
+              <given-names>P.K.</given-names>
+            </name>
+          </person-group>
+          <article-title>Process Analysis of Asymmetric Hollow Fiber Permeators, Unsteady State Permeation and Membrane-Amine Hybrid Systems for Gas Separations</article-title>
+          <source>Ph.D. Thesis</source>
+          <publisher-name>University of Waterloo</publisher-name>
+          <publisher-loc>Waterloo, ON, Canada</publisher-loc>
+          <year>2013</year>
+        </element-citation>
+      </ref>
+      <ref id="B13-membranes-12-01186">
+        <label>13.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Rezakazemi</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Niazi</surname>
+              <given-names>Z.</given-names>
+            </name>
+            <name>
+              <surname>Mirfendereski</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Shirazian</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Mohammadi</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Pak</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>CFD simulation of natural gas sweetening in a gas&#x2013;liquid hollow-fiber membrane contactor</article-title>
+          <source>Chem. Eng. J.</source>
+          <year>2011</year>
+          <volume>168</volume>
+          <fpage>1217</fpage>
+          <lpage>1226</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.cej.2011.02.019</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B14-membranes-12-01186">
+        <label>14.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Farno</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Rezakazemi</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Mohammadi</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Kasiri</surname>
+              <given-names>N.</given-names>
+            </name>
+          </person-group>
+          <article-title>Ternary Gas Permeation Through Synthesized PDMS Membranes: Experimental and CFD Simulation Based on Sorption-Dependent System Using Neural Network Model</article-title>
+          <source>Polym. Eng. Sci.</source>
+          <year>2014</year>
+          <volume>54</volume>
+          <fpage>215</fpage>
+          <lpage>226</lpage>
+          <pub-id pub-id-type="doi">10.1002/pen.23555</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B15-membranes-12-01186">
+        <label>15.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Haddadi</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Jordan</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Miltner</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Harasek</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Membrane modeling using CFD: Combined evaluation of mass transfer and geometrical influences in 1D and 3D</article-title>
+          <source>J. Memb. Sci.</source>
+          <year>2018</year>
+          <volume>563</volume>
+          <fpage>199</fpage>
+          <lpage>209</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.memsci.2018.05.040</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B16-membranes-12-01186">
+        <label>16.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Katoh</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Tokumura</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Yoshikawa</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Kawase</surname>
+              <given-names>Y.</given-names>
+            </name>
+          </person-group>
+          <article-title>Dynamic simulation of multi-component gas separation by hollow-fiber membrane module: Nonideal mixing flows in permeate and residue sides using the tanks-in-series model</article-title>
+          <source>Sep. Purif. Technol.</source>
+          <year>2011</year>
+          <volume>76</volume>
+          <fpage>362</fpage>
+          <lpage>372</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.seppur.2010.11.006</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B17-membranes-12-01186">
+        <label>17.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Elshof</surname>
+              <given-names>J.E.t.</given-names>
+            </name>
+            <name>
+              <surname>Abadal</surname>
+              <given-names>C.R.</given-names>
+            </name>
+            <name>
+              <surname>Sekuli&#x107;</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Chowdhury</surname>
+              <given-names>S.R.</given-names>
+            </name>
+            <name>
+              <surname>Blank</surname>
+              <given-names>D.H.A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Transport mechanisms of water and organic solvents through microporous silica in the pervaporation of binary liquids</article-title>
+          <source>Microporous Mesoporous Mater.</source>
+          <year>2003</year>
+          <volume>65</volume>
+          <fpage>197</fpage>
+          <lpage>208</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.micromeso.2003.08.010</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B18-membranes-12-01186">
+        <label>18.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Makaruk</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Harasek</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Numerical algorithm for modelling multi-component multipermeator systems</article-title>
+          <source>J. Memb. Sci.</source>
+          <year>2009</year>
+          <volume>344</volume>
+          <fpage>258</fpage>
+          <lpage>265</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.memsci.2009.08.013</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B19-membranes-12-01186">
+        <label>19.</label>
+        <element-citation publication-type="book">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Luis</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>van der Bruggen</surname>
+              <given-names>B.</given-names>
+            </name>
+          </person-group>
+          <article-title>Pervaporation modeling</article-title>
+          <source>Pervaporation, Vapour Permeation and Membrane Distillation</source>
+          <publisher-name>Elsevier</publisher-name>
+          <publisher-loc>Amsterdam, The Netherlands</publisher-loc>
+          <year>2015</year>
+          <fpage>87</fpage>
+          <lpage>106</lpage>
+          <pub-id pub-id-type="doi">10.1016/B978-1-78242-246-4.00004-0</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B20-membranes-12-01186">
+        <label>20.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Azimi</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Thibault</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Tezel</surname>
+              <given-names>F.H.</given-names>
+            </name>
+          </person-group>
+          <article-title>Separation of Butanol Using Pervaporation: A Review of Mass Transfer Models</article-title>
+          <source>J. Fluid Flow Heat Mass Transf.</source>
+          <year>2019</year>
+          <volume>5</volume>
+          <fpage>53</fpage>
+          <lpage>82</lpage>
+          <pub-id pub-id-type="doi">10.11159/jffhmt.2019.002</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B21-membranes-12-01186">
+        <label>21.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Frikha</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Frikha</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Gabsi</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling of the flow inside a pore in vacuum membrane distillation</article-title>
+          <source>Euro-Mediterr. J. Environ. Integr.</source>
+          <year>2021</year>
+          <volume>6</volume>
+          <fpage>66</fpage>
+          <pub-id pub-id-type="doi">10.1007/s41207-021-00275-2</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B22-membranes-12-01186">
+        <label>22.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Fontoura</surname>
+              <given-names>T.B.</given-names>
+            </name>
+            <name>
+              <surname>de S&#xE1;</surname>
+              <given-names>M.C.C.</given-names>
+            </name>
+            <name>
+              <surname>de Menezes</surname>
+              <given-names>D.Q.F.</given-names>
+            </name>
+            <name>
+              <surname>Oechsler</surname>
+              <given-names>B.F.</given-names>
+            </name>
+            <name>
+              <surname>Melo</surname>
+              <given-names>A.</given-names>
+            </name>
+            <name>
+              <surname>Luiz</surname>
+              <given-names>L.F.</given-names>
+            </name>
+            <name>
+              <surname>Anzai</surname>
+              <given-names>T.K.</given-names>
+            </name>
+            <name>
+              <surname>Diehl</surname>
+              <given-names>F.C.</given-names>
+            </name>
+            <name>
+              <surname>Thompson</surname>
+              <given-names>P.H.</given-names>
+            </name>
+            <name>
+              <surname>Pinto</surname>
+              <given-names>J.C.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling of spiral wound membranes for gas separations. Part III: A nonisothermal 2D permeation model</article-title>
+          <source>Chem. Eng. Res. Des.</source>
+          <year>2022</year>
+          <volume>177</volume>
+          <fpage>376</fpage>
+          <lpage>393</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.cherd.2021.10.036</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B23-membranes-12-01186">
+        <label>23.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Evans</surname>
+              <given-names>L.B.</given-names>
+            </name>
+            <name>
+              <surname>Boston</surname>
+              <given-names>J.F.</given-names>
+            </name>
+            <name>
+              <surname>Britt</surname>
+              <given-names>H.I.</given-names>
+            </name>
+            <name>
+              <surname>Gallier</surname>
+              <given-names>P.W.</given-names>
+            </name>
+            <name>
+              <surname>Gupta</surname>
+              <given-names>P.K.</given-names>
+            </name>
+            <name>
+              <surname>Joseph</surname>
+              <given-names>B.</given-names>
+            </name>
+            <name>
+              <surname>Mahalec</surname>
+              <given-names>V.</given-names>
+            </name>
+            <name>
+              <surname>Ng</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Seider</surname>
+              <given-names>W.D.</given-names>
+            </name>
+            <name>
+              <surname>Yagi</surname>
+              <given-names>H.</given-names>
+            </name>
+          </person-group>
+          <article-title>ASPEN: An Advanced System for Process Engineering</article-title>
+          <source>Comput. Chem. Eng.</source>
+          <year>1979</year>
+          <volume>3</volume>
+          <fpage>319</fpage>
+          <lpage>327</lpage>
+          <pub-id pub-id-type="doi">10.1016/0098-1354(79)80053-8</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B24-membranes-12-01186">
+        <label>24.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Shen</surname>
+              <given-names>M.T.</given-names>
+            </name>
+            <name>
+              <surname>Chen</surname>
+              <given-names>Y.H.</given-names>
+            </name>
+            <name>
+              <surname>Chang</surname>
+              <given-names>H.</given-names>
+            </name>
+          </person-group>
+          <article-title>Simulation of the Dynamics and Control Responses of the Carbon Dioxide Chemical Absorption Process using Aspen Custom Modeler</article-title>
+          <source>Energy Procedia.</source>
+          <year>2019</year>
+          <volume>158</volume>
+          <fpage>4915</fpage>
+          <lpage>4920</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.egypro.2019.01.700</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B25-membranes-12-01186">
+        <label>25.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>S&#xE1;nchez</surname>
+              <given-names>M.</given-names>
+            </name>
+            <name>
+              <surname>Amores</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Abad</surname>
+              <given-names>D.</given-names>
+            </name>
+            <name>
+              <surname>Rodr&#xED;guez</surname>
+              <given-names>L.</given-names>
+            </name>
+            <name>
+              <surname>Clemente-Jul</surname>
+              <given-names>C.</given-names>
+            </name>
+          </person-group>
+          <article-title>Aspen Plus model of an alkaline electrolysis system for hydrogen production</article-title>
+          <source>Int. J. Hydrogen Energy</source>
+          <year>2020</year>
+          <volume>45</volume>
+          <fpage>3916</fpage>
+          <lpage>3929</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.ijhydene.2019.12.027</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B26-membranes-12-01186">
+        <label>26.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Kombe</surname>
+              <given-names>E.Y.</given-names>
+            </name>
+            <name>
+              <surname>Lang&#x2019;at</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Njogu</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Malessa</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Weber</surname>
+              <given-names>C.T.</given-names>
+            </name>
+            <name>
+              <surname>Njoka</surname>
+              <given-names>F.</given-names>
+            </name>
+            <name>
+              <surname>Krause</surname>
+              <given-names>U.</given-names>
+            </name>
+          </person-group>
+          <article-title>Process modeling and evaluation of optimal operating conditions for production of hydrogen-rich syngas from air gasification of rice husks using aspen plus and response surface methodology</article-title>
+          <source>Bioresour. Technol.</source>
+          <year>2022</year>
+          <volume>361</volume>
+          <fpage>127734</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.biortech.2022.127734</pub-id>
+          <pub-id pub-id-type="pmid">35932945</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B27-membranes-12-01186">
+        <label>27.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Bartolome</surname>
+              <given-names>P.S.</given-names>
+            </name>
+            <name>
+              <surname>van Gerven</surname>
+              <given-names>T.</given-names>
+            </name>
+          </person-group>
+          <article-title>A comparative study on Aspen Hysys interconnection methodologies</article-title>
+          <source>Comput. Chem. Eng.</source>
+          <year>2022</year>
+          <volume>162</volume>
+          <fpage>107785</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.compchemeng.2022.107785</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B28-membranes-12-01186">
+        <label>28.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Brinkmann</surname>
+              <given-names>T.</given-names>
+            </name>
+            <name>
+              <surname>Pohlmann</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Withalm</surname>
+              <given-names>U.</given-names>
+            </name>
+            <name>
+              <surname>Wind</surname>
+              <given-names>J.</given-names>
+            </name>
+            <name>
+              <surname>Wolff</surname>
+              <given-names>T.</given-names>
+            </name>
+          </person-group>
+          <article-title>Theoretical and experimental investigations of flat sheet membrane module types for high capacity gas separation applications</article-title>
+          <source>Chem. Ing. Tech.</source>
+          <year>2013</year>
+          <volume>85</volume>
+          <fpage>1210</fpage>
+          <lpage>1220</lpage>
+          <pub-id pub-id-type="doi">10.1002/cite.201200238</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B29-membranes-12-01186">
+        <label>29.</label>
+        <element-citation publication-type="thesis">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Grainger</surname>
+              <given-names>D.</given-names>
+            </name>
+          </person-group>
+          <article-title>Development of Carbon Membranes for Hydrogen Recovery</article-title>
+          <source>Ph.D. Thesis</source>
+          <publisher-name>Norwegian University of Science and Technology</publisher-name>
+          <publisher-loc>Trondheim, Norway</publisher-loc>
+          <year>2007</year>
+        </element-citation>
+      </ref>
+      <ref id="B30-membranes-12-01186">
+        <label>30.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Cavalcanti</surname>
+              <given-names>C.</given-names>
+            </name>
+            <name>
+              <surname>Ramos</surname>
+              <given-names>W.</given-names>
+            </name>
+            <name>
+              <surname>Brito</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Britoa</surname>
+              <given-names>K.</given-names>
+            </name>
+          </person-group>
+          <article-title>Detailed evaluation of pervaporation modeling to obtaining anhydrous ethanol</article-title>
+          <source>Quim. Nova</source>
+          <year>2022</year>
+          <volume>45</volume>
+          <fpage>374</fpage>
+          <lpage>382</lpage>
+          <pub-id pub-id-type="doi">10.21577/0100-4042.20170840</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B31-membranes-12-01186">
+        <label>31.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Quek</surname>
+              <given-names>V.C.</given-names>
+            </name>
+            <name>
+              <surname>Shah</surname>
+              <given-names>N.</given-names>
+            </name>
+            <name>
+              <surname>Chachuat</surname>
+              <given-names>B.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling for design and operation of high-pressure membrane contactors in natural gas sweetening</article-title>
+          <source>Chem. Eng. Res. Des.</source>
+          <year>2018</year>
+          <volume>132</volume>
+          <fpage>1005</fpage>
+          <lpage>1019</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.cherd.2018.01.033</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B32-membranes-12-01186">
+        <label>32.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Bishop</surname>
+              <given-names>B.A.</given-names>
+            </name>
+            <name>
+              <surname>Lima</surname>
+              <given-names>F.V.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling, Simulation, and Operability Analysis of a Nonisothermal, Countercurrent, Polymer Membrane Reactor</article-title>
+          <source>Processes</source>
+          <year>2020</year>
+          <volume>8</volume>
+          <elocation-id>78</elocation-id>
+          <pub-id pub-id-type="doi">10.3390/pr8010078</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B33-membranes-12-01186">
+        <label>33.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Kancherla</surname>
+              <given-names>R.</given-names>
+            </name>
+            <name>
+              <surname>Nazia</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Kalyani</surname>
+              <given-names>S.</given-names>
+            </name>
+            <name>
+              <surname>Sridhar</surname>
+              <given-names>S.</given-names>
+            </name>
+          </person-group>
+          <article-title>Modeling and simulation for design and analysis of membrane-based separation processes</article-title>
+          <source>Comput. Chem. Eng.</source>
+          <year>2021</year>
+          <volume>148</volume>
+          <fpage>107258</fpage>
+          <pub-id pub-id-type="doi">10.1016/j.compchemeng.2021.107258</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B34-membranes-12-01186">
+        <label>34.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Wijmans</surname>
+              <given-names>J.G.</given-names>
+            </name>
+            <name>
+              <surname>Baker</surname>
+              <given-names>R.W.</given-names>
+            </name>
+          </person-group>
+          <article-title>The solution-diffusion model: A review</article-title>
+          <source>J. Membr. Sci.</source>
+          <year>1995</year>
+          <volume>107</volume>
+          <fpage>1</fpage>
+          <lpage>21</lpage>
+          <pub-id pub-id-type="doi">10.1016/0376-7388(95)00102-I</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B35-membranes-12-01186">
+        <label>35.</label>
+        <element-citation publication-type="web">
+          <person-group person-group-type="author">
+            <name>
+              <surname>de Medeiros</surname>
+              <given-names>D.W.O.</given-names>
+            </name>
+          </person-group>
+          <article-title>DWSIM&#x2013;The Open Source Chemical Process Simulator, (Version 8.0.3.)</article-title>
+          <comment>Available online: <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://dwsim.org/index.php/about/" ext-link-type="uri">https://dwsim.org/index.php/about/</ext-link></comment>
+          <date-in-citation content-type="access-date" iso-8601-date="2022-06-07">(accessed on 7 June 2022)</date-in-citation>
+        </element-citation>
+      </ref>
+      <ref id="B36-membranes-12-01186">
+        <label>36.</label>
+        <element-citation publication-type="web">
+          <article-title>DWSIM-Open Source Process Simulator-Browse Files at SourceForge.net</article-title>
+          <comment>Available online: <ext-link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://sourceforge.net/projects/dwsim/files/" ext-link-type="uri">https://sourceforge.net/projects/dwsim/files/</ext-link></comment>
+          <date-in-citation content-type="access-date" iso-8601-date="2022-09-29">(accessed on 29 September 2022)</date-in-citation>
+        </element-citation>
+      </ref>
+      <ref id="B37-membranes-12-01186">
+        <label>37.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Sada</surname>
+              <given-names>E.</given-names>
+            </name>
+            <name>
+              <surname>Kumazawa</surname>
+              <given-names>H.</given-names>
+            </name>
+            <name>
+              <surname>Wang</surname>
+              <given-names>J.-S.</given-names>
+            </name>
+            <name>
+              <surname>Koizumi</surname>
+              <given-names>M.</given-names>
+            </name>
+          </person-group>
+          <article-title>Separation of carbon dioxide by asymmetric hollow fiber membrane of cellulose triacetate</article-title>
+          <source>J. Appl. Polym. Sci.</source>
+          <year>1992</year>
+          <volume>45</volume>
+          <fpage>2181</fpage>
+          <lpage>2186</lpage>
+          <pub-id pub-id-type="doi">10.1002/app.1992.070451214</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B38-membranes-12-01186">
+        <label>38.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Chowdhury</surname>
+              <given-names>M.H.M.</given-names>
+            </name>
+            <name>
+              <surname>Feng</surname>
+              <given-names>X.</given-names>
+            </name>
+            <name>
+              <surname>Douglas</surname>
+              <given-names>P.</given-names>
+            </name>
+            <name>
+              <surname>Croiset</surname>
+              <given-names>E.</given-names>
+            </name>
+          </person-group>
+          <article-title>A New Numerical Approach for a Detailed Multicomponent Gas Separation Membrane Model and AspenPlus Simulation</article-title>
+          <source>Chem. Eng. Technol.</source>
+          <year>2005</year>
+          <volume>28</volume>
+          <fpage>773</fpage>
+          <lpage>782</lpage>
+          <pub-id pub-id-type="doi">10.1002/ceat.200500077</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B39-membranes-12-01186">
+        <label>39.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Koch</surname>
+              <given-names>K.</given-names>
+            </name>
+            <name>
+              <surname>G&#xF3;rak</surname>
+              <given-names>A.</given-names>
+            </name>
+          </person-group>
+          <article-title>Pervaporation of binary and ternary mixtures of acetone, isopropyl alcohol and water using polymeric membranes: Experimental characterisation and modelling</article-title>
+          <source>Chem. Eng. Sci.</source>
+          <year>2014</year>
+          <volume>115</volume>
+          <fpage>95</fpage>
+          <lpage>114</lpage>
+          <pub-id pub-id-type="doi">10.1016/j.ces.2014.02.009</pub-id>
+        </element-citation>
+      </ref>
+      <ref id="B40-membranes-12-01186">
+        <label>40.</label>
+        <element-citation publication-type="journal">
+          <person-group person-group-type="author">
+            <name>
+              <surname>Park</surname>
+              <given-names>B.G.</given-names>
+            </name>
+          </person-group>
+          <article-title>Pervaporation characteristics of polyetherimide/&#x3B3;alumina composite membrane for a quaternary equilibrium mixture of acetic acid-ethanol-ethyl acetate-water</article-title>
+          <source>Korean J. Chem. Eng.</source>
+          <year>2004</year>
+          <volume>21</volume>
+          <fpage>882</fpage>
+          <lpage>889</lpage>
+          <pub-id pub-id-type="doi">10.1007/BF02705534</pub-id>
+        </element-citation>
+      </ref>
+    </ref-list>
+    <sec sec-type="display-objects">
+      <title>Figures and Tables</title>
+      <fig id="membranes-12-01186-f001" position="float">
+        <label>Figure 1</label>
+        <caption>
+          <p>Illustrations of idealized co-current (top) and counter-current (bottom) flow patterns.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g001.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f002" position="float">
+        <label>Figure 2</label>
+        <caption>
+          <p>An actual impression of the unit operation on DWSIM&#x2019;s flowsheet.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g002.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f003" position="float">
+        <label>Figure 3</label>
+        <caption>
+          <p>The property table with the first tab and its calculation parameters.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g003.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f004" position="float">
+        <label>Figure 4</label>
+        <caption>
+          <p>This figure portrays the compound (<bold>a</bold>) and the permeances (<bold>b</bold>) tabs of the membrane model.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g004.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f005" position="float">
+        <label>Figure 5</label>
+        <caption>
+          <p>A simulated pervaporation operation in counter-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i001.tif"/>) and co-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i002.tif"/>) mode in dependence on the stage cut &#x3B8;.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g005.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f006" position="float">
+        <label>Figure 6</label>
+        <caption>
+          <p>A simulated pervaporation operation in counter-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i003.tif"/>) and co-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i004.tif"/>) mode depending on x<sub>F, EtOH</sub>.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g006.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f007" position="float">
+        <label>Figure 7</label>
+        <caption>
+          <p>A simulated pervaporation operation in dependence on the number of compartments in counter-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i005.tif"/>) and co-current (<inline-graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-i006.tif"/>) mode.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g007.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f008" position="float">
+        <label>Figure 8</label>
+        <caption>
+          <p>A comparison of an experimental gas permeation operation by Seda et al. [<xref ref-type="bibr" rid="B37-membranes-12-01186">37</xref>]. (test case 2) and a DWSIM simulation in dependence of &#x3B8;.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g008.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f009" position="float">
+        <label>Figure 9</label>
+        <caption>
+          <p>A comparison of an experimental gas permeation operation by Chowdhury et al. [<xref ref-type="bibr" rid="B38-membranes-12-01186">38</xref>]. (test case 3) and a DWSIM simulation in dependence of &#x3B8;.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g009.tif"/>
+      </fig>
+      <fig id="membranes-12-01186-f010" position="float">
+        <label>Figure 10</label>
+        <caption>
+          <p>A comparison of an experimental pervaporation operation by Koch et al. [<xref ref-type="bibr" rid="B39-membranes-12-01186">39</xref>] and a DWSIM simulation in dependence of w<sub>F, H2O</sub>.</p>
+        </caption>
+        <graphic xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="membranes-12-01186-g010.tif"/>
+      </fig>
+      <table-wrap id="membranes-12-01186-t001" position="float">
+        <object-id pub-id-type="pii">membranes-12-01186-t001_Table 1</object-id>
+        <label>Table 1</label>
+        <caption>
+          <p>An overview of compared gas permeation and pervaporation systems.</p>
+        </caption>
+        <table>
+          <thead>
+            <tr>
+              <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin"> </th>
+              <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Sada et al. [<xref ref-type="bibr" rid="B37-membranes-12-01186">37</xref>]<break/>Test Case 2</th>
+              <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Chowdhury et al. [<xref ref-type="bibr" rid="B38-membranes-12-01186">38</xref>]<break/>Test Case 3</th>
+              <th align="left" valign="middle" style="border-top:solid thin;border-bottom:solid thin">Koch et al. [<xref ref-type="bibr" rid="B39-membranes-12-01186">39</xref>]<break/>Test Case 4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td align="left" valign="middle">membrane</td>
+              <td align="left" valign="middle">asymmetric cellulose triacetate <break/>hollow fiber <break/>(Sample 31)</td>
+              <td align="left" valign="middle">simulated asymmetric cellulose acetate hollow fiber</td>
+              <td align="left" valign="middle">Hydrophilic polymeric <break/>PERVAP<sup>TM</sup> 1210</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">type</td>
+              <td align="left" valign="middle">gas permeation</td>
+              <td align="left" valign="middle">gas permeation</td>
+              <td align="left" valign="middle">pervaporation</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">flow configuration</td>
+              <td align="left" valign="middle">counter-current</td>
+              <td align="left" valign="middle">counter-current</td>
+              <td align="left" valign="middle">co-current</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">inner diameter [&#xB5;m]</td>
+              <td align="left" valign="middle">0.000125</td>
+              <td align="left" valign="middle">80</td>
+              <td rowspan="3" align="left" valign="middle"><sup>1</sup> membrane area <break/>159.4 cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">length [cm]</td>
+              <td align="left" valign="middle">63</td>
+              <td align="left" valign="middle">15</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">no. of fibers [-]</td>
+              <td align="left" valign="middle">270</td>
+              <td align="left" valign="middle">70</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">Temperature [K]</td>
+              <td align="left" valign="middle">303</td>
+              <td align="left" valign="middle">298</td>
+              <td align="left" valign="middle">~333 K</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">feed pressure [bar]</td>
+              <td align="left" valign="middle">Varied between 15.7&#x2013;5.9</td>
+              <td align="left" valign="middle">69.64</td>
+              <td align="left" valign="middle"> </td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">feed composition</td>
+              <td align="left" valign="middle">50.0% CO<sub>2</sub> <break/>10.5% O<sub>2</sub> <break/>39.5% N<sub>2</sub> <break/></td>
+              <td align="left" valign="middle">51.78% H<sub>2</sub> <break/>24.69% N<sub>2</sub> <break/>19.57% CH<sub>4</sub> <break/>3.96% Ar</td>
+              <td align="left" valign="middle">23.7 % ACE <break/>65.1 % H<sub>2</sub> <break/>11.2 % IPA</td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle">permeate pressure [mbar]</td>
+              <td align="left" valign="middle">1013.25</td>
+              <td align="left" valign="middle">11230</td>
+              <td align="left" valign="middle"> </td>
+            </tr>
+            <tr>
+              <td align="left" valign="middle" style="border-bottom:solid thin">permeance [10<sup>&#x2212;10</sup> mol/s m<sup>2</sup>Pa]</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin">CO<sub>2</sub>: 204.2 <break/>O<sub>2</sub>: 60.2 <break/>N<sub>2</sub>: 13.1</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin">H<sub>2</sub>: 284 <break/>N<sub>2</sub>: 2.95 <break/>CH<sub>4</sub>: 2.84 <break/>Ar: 70</td>
+              <td align="left" valign="middle" style="border-bottom:solid thin">variable permeances</td>
+            </tr>
+          </tbody>
+        </table>
+        <table-wrap-foot>
+          <fn>
+            <p><sup>1</sup> Values such as the inner diameter, number of fibers, and the fiber length are not provided by the source of the membrane.</p>
+          </fn>
+        </table-wrap-foot>
+      </table-wrap>
+    </sec>
+    <fn-group>
+      <fn>
+        <p><bold>Publisher&#x2019;s Note:</bold> MDPI stays neutral with regard to jurisdictional claims in published maps and institutional affiliations.</p>
+      </fn>
+    </fn-group>
+  </back>
+</article>

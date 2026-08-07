@@ -1,0 +1,336 @@
+% ===========================================================================
+% ORS Membrane Unit Operation — Technical Reference — Bibliography
+% ---------------------------------------------------------------------------
+% Entries marked "VERIFY" have some metadata reconstructed from secondary
+% sources (preprints, citing papers); confirm against the version of record
+% before external use.
+% ===========================================================================
+
+% ---------------------------------------------------------------------------
+% Membrane transport theory and textbooks
+% ---------------------------------------------------------------------------
+
+@book{geankoplis,
+  author    = {Geankoplis, Christie J.},
+  title     = {Transport Processes and Unit Operations},
+  edition   = {3rd},
+  publisher = {Prentice Hall},
+  address   = {Englewood Cliffs, NJ},
+  year      = {1993},
+  note      = {Ch. 13, Membrane Separation Processes; gas-permeation flow models
+               (complete mixing §13.4, cross-flow §13.6, countercurrent §13.7),
+               Table 13.3-1 permeabilities, Table 13.8-1 separation factors.
+               The 4th ed. (2003) retitled "…and Separation Process Principles"
+               keeps the same section/equation numbers.},
+}
+
+@book{baker2004,
+  author    = {Baker, Richard W.},
+  title     = {Membrane Technology and Applications},
+  edition   = {2nd},
+  publisher = {John Wiley \& Sons},
+  address   = {Chichester},
+  year      = {2004},
+  doi       = {10.1002/0470020393},
+}
+
+@article{wijmans1995,
+  author  = {Wijmans, J. G. and Baker, R. W.},
+  title   = {The solution-diffusion model: a review},
+  journal = {Journal of Membrane Science},
+  volume  = {107},
+  number  = {1--2},
+  pages   = {1--21},
+  year    = {1995},
+  doi     = {10.1016/0376-7388(95)00102-I},
+}
+
+@article{coker1998,
+  author  = {Coker, D. T. and Freeman, B. D. and Fleming, G. K.},
+  title   = {Modeling multicomponent gas separation using hollow-fiber membrane contactors},
+  journal = {AIChE Journal},
+  volume  = {44},
+  number  = {6},
+  pages   = {1289--1302},
+  year    = {1998},
+  doi     = {10.1002/aic.690440607},
+  note    = {VERIFY. Multicomponent spiral/hollow-fibre permeator modelling.},
+}
+
+% ---------------------------------------------------------------------------
+% Flow-pattern / permeator models
+% ---------------------------------------------------------------------------
+
+@article{weller1950,
+  author  = {Weller, S. and Steiner, W. A.},
+  title   = {Separation of gases by fractional permeation through membranes},
+  journal = {Journal of Applied Physics},
+  volume  = {21},
+  number  = {4},
+  pages   = {279--283},
+  year    = {1950},
+  doi     = {10.1063/1.1699653},
+  note    = {Analytic cross-flow (Weller--Steiner) solution.},
+}
+
+@article{shindo1985,
+  author  = {Shindo, Y. and Hakuta, T. and Yoshitome, H. and Inoue, H.},
+  title   = {Calculation methods for multicomponent gas separation by permeation},
+  journal = {Separation Science and Technology},
+  volume  = {20},
+  number  = {5--6},
+  pages   = {445--459},
+  year    = {1985},
+  doi     = {10.1080/01496398508060692},
+  note    = {Cross-flow, co-current, counter-current, one-side-mixing and
+             perfect-mixing 1-D formulations; the primary benchmark used here.},
+}
+
+@article{pan1986,
+  author  = {Pan, C. Y.},
+  title   = {Gas separation by high-flux, asymmetric hollow-fiber membrane},
+  journal = {AIChE Journal},
+  volume  = {32},
+  number  = {12},
+  pages   = {2020--2027},
+  year    = {1986},
+  doi     = {10.1002/aic.690321212},
+}
+
+@article{diaspinto2020,
+  author  = {Dias, Ana Carolina S. and De S{\'a}, Mar{\'i}lia Caroline C. and
+             Fontoura, Tahyn{\'a} B. and Menezes, Diego Q. and Anzai, Thiago K. and
+             Diehl, F{\'a}bio C. and Thompson, Pedro H. and Pinto, Jos{\'e} Carlos},
+  title   = {Modeling of spiral wound membranes for gas separations.
+             Part I: An iterative 2D permeation model},
+  journal = {Journal of Membrane Science},
+  volume  = {611},
+  pages   = {118278},
+  year    = {2020},
+  doi     = {10.1016/j.memsci.2020.118278},
+}
+
+@article{fontoura2022,
+  author  = {Fontoura, Tahyn{\'a} B. and others},
+  title   = {Modeling of spiral wound membranes for gas separations.
+             Part III: A nonisothermal 2D permeation model},
+  journal = {Chemical Engineering Research and Design},
+  volume  = {177},
+  pages   = {376--393},
+  year    = {2022},
+  doi     = {10.1016/j.cherd.2022.11.041},
+  note    = {VERIFY author list and volume against the version of record.},
+}
+
+@article{dejaco2020,
+  author  = {DeJaco, Robert F. and Loprete, Kenneth and Pennisi, Kenneth and
+             Majumdar, Sudipto and Siepmann, J. Ilja and Daoutidis, Prodromos and
+             Murnen, Hannah K. and Tsapatsis, Michael},
+  title   = {Modeling and simulation of gas separations with spiral-wound membranes},
+  journal = {AIChE Journal},
+  volume  = {66},
+  number  = {11},
+  pages   = {e16274},
+  year    = {2020},
+  doi     = {10.1002/aic.16274},
+  note    = {VERIFY venue/DOI against version of record (on-file copy is the
+             preprint). Software: MemPy v1.0.},
+}
+
+@article{aziaba2022,
+  author  = {Aziaba, Kouessan and Jordan, Christian and Haddadi, Bahram and Harasek, Michael},
+  title   = {Design of a gas permeation and pervaporation membrane model for an
+             open source process simulation tool},
+  journal = {Membranes},
+  volume  = {12},
+  number  = {12},
+  pages   = {1186},
+  year    = {2022},
+  doi     = {10.3390/membranes12121186},
+}
+
+% ---------------------------------------------------------------------------
+% CAPE-OPEN standards
+% ---------------------------------------------------------------------------
+
+@techreport{cocolan_uo,
+  author      = {{CO-LaN}},
+  title       = {Unit Operations Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2001},
+  note        = {Version 1.0. https://www.colan.org/},
+}
+
+@techreport{cocolan_param,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2001},
+  note        = {Version 1.0. https://www.colan.org/},
+}
+
+@techreport{cocolan_param_errata,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface --- Errata and Clarifications},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2016},
+  note        = {Errata 1.0.1; array-parameter (CAPE\_ARRAY / SAFEARRAY(VARIANT))
+                 clarifications. https://www.colan.org/},
+}
+
+% ---------------------------------------------------------------------------
+% Permeability / permeance data library (see data_library.rst)
+% ---------------------------------------------------------------------------
+
+@article{Puleo1989,
+  author  = {Puleo, A. C. and Paul, D. R. and Kelley, S. S.},
+  title   = {The effect of degree of acetylation on gas sorption and transport behavior in cellulose acetate},
+  journal = {Journal of Membrane Science}, volume = {47}, number = {3}, pages = {301--332}, year = {1989},
+  doi     = {10.1016/S0376-7388(00)83083-5},
+}
+
+@book{Baker2012,
+  author = {Baker, R. W.},
+  title = {Membrane Technology and Applications}, edition = {3rd}, publisher = {Wiley}, year = {2012},
+  isbn = {978-0-470-74372-0},
+}
+
+@article{MizrahiRodriguez2022,
+  author  = {Mizrahi Rodriguez, J. and Wu, A. X. and Benedetti, F. M. and Smith, Z. P. and Freeman, B. D.},
+  title   = {Multi-lab study on the pure-gas permeation of commercial polysulfone (PSf) membranes},
+  journal = {Journal of Membrane Science}, volume = {659}, pages = {120746}, year = {2022},
+  doi     = {10.1016/j.memsci.2022.120746},
+}
+
+@article{Hellums1989,
+  author  = {Hellums, M. W. and Koros, W. J. and Husk, G. R. and Paul, D. R.},
+  title   = {Fluorinated polycarbonates for gas separation applications},
+  journal = {Journal of Membrane Science}, volume = {46}, pages = {93--112}, year = {1989},
+  doi     = {10.1016/S0376-7388(00)81173-9},
+}
+
+@article{AguilarVega1993,
+  author  = {Aguilar-Vega, M. and Paul, D. R.},
+  title   = {Gas transport properties of polyphenylene ethers},
+  journal = {Journal of Polymer Science Part B: Polymer Physics}, volume = {31}, number = {11}, pages = {1577--1589}, year = {1993},
+  doi     = {10.1002/polb.1993.090311114},
+}
+
+@article{PinnauToy1996,
+  author  = {Pinnau, I. and Toy, L. G.},
+  title   = {Gas and vapor transport properties of amorphous perfluorinated copolymer membranes},
+  journal = {Journal of Membrane Science}, volume = {109}, number = {1}, pages = {125--133}, year = {1996},
+  doi     = {10.1016/0376-7388(95)00193-X},
+}
+
+@article{CastroMunozMembranes2018,
+  author  = {Castro-Mu{\~n}oz, R. and F{\'i}la, V.},
+  title   = {Progress on Incorporating Zeolites in Matrimid 5218 Mixed Matrix Membranes towards Gas Separation},
+  journal = {Membranes}, volume = {8}, number = {2}, pages = {30}, year = {2018},
+  doi     = {10.3390/membranes8020030},
+}
+
+@article{Barsema2003,
+  author  = {Barsema, J. N. and Kapantaidakis, G. C. and van der Vegt, N. F. A. and Koops, G. H. and Wessling, M.},
+  title   = {Preparation and characterization of highly selective dense and hollow fiber asymmetric membranes based on BTDA-TDI/MDI co-polyimide},
+  journal = {Journal of Membrane Science}, volume = {216}, number = {1-2}, pages = {195--205}, year = {2003},
+  doi     = {10.1016/S0376-7388(03)00071-1},
+}
+
+@article{Robb1968,
+  author  = {Robb, W. L.},
+  title   = {Thin Silicone Membranes---Their Permeation Properties and Some Applications},
+  journal = {Annals of the New York Academy of Sciences}, volume = {146}, number = {1}, pages = {119--137}, year = {1968},
+  doi     = {10.1111/j.1749-6632.1968.tb20277.x},
+}
+
+@article{BernardoClarizia2020,
+  author  = {Bernardo, P. and Clarizia, G.},
+  title   = {Enhancing Gas Permeation Properties of Pebax 1657 Membranes via Polysorbate Nonionic Surfactants Doping},
+  journal = {Polymers}, volume = {12}, number = {2}, pages = {253}, year = {2020},
+  doi     = {10.3390/polym12020253},
+}
+
+@article{Clarizia2018,
+  author  = {Clarizia, G. and Bernardo, P. and Gorrasi, G. and Zampino, D. and Carroccio, S. C.},
+  title   = {Influence of the Preparation Method and Photo-Oxidation Treatment on the Thermal and Gas Transport Properties of Dense Films Based on a Poly(ether-block-amide) Copolymer},
+  journal = {Materials}, volume = {11}, number = {8}, pages = {1326}, year = {2018},
+  doi     = {10.3390/ma11081326},
+}
+
+@article{Thomas2009,
+  author  = {Thomas, S. and Pinnau, I. and Du, N. and Guiver, M. D.},
+  title   = {Pure- and mixed-gas permeation properties of a microporous spirobisindane-based ladder polymer (PIM-1)},
+  journal = {Journal of Membrane Science}, volume = {333}, number = {1-2}, pages = {125--131}, year = {2009},
+  doi     = {10.1016/j.memsci.2009.02.003},
+}
+
+@article{Sanders2013,
+  author  = {Sanders, D. F. and Smith, Z. P. and Guo, R. and Robeson, L. M. and McGrath, J. E. and Paul, D. R. and Freeman, B. D.},
+  title   = {Energy-efficient polymeric gas separation membranes for a sustainable future: A review},
+  journal = {Polymer}, volume = {54}, number = {18}, pages = {4729--4761}, year = {2013},
+  doi     = {10.1016/j.polymer.2013.05.075},
+}
+
+@article{Bernardo2009,
+  author  = {Bernardo, P. and Drioli, E. and Golemme, G.},
+  title   = {Membrane Gas Separation: A Review/State of the Art},
+  journal = {Industrial \& Engineering Chemistry Research}, volume = {48}, number = {10}, pages = {4638--4663}, year = {2009},
+  doi     = {10.1021/ie8019032},
+}
+
+@article{Robeson1991,
+  author  = {Robeson, L. M.},
+  title   = {Correlation of separation factor versus permeability for polymeric membranes},
+  journal = {Journal of Membrane Science}, volume = {62}, number = {2}, pages = {165--185}, year = {1991},
+  doi     = {10.1016/0376-7388(91)80060-J},
+}
+
+@article{Robeson2008,
+  author  = {Robeson, L. M.},
+  title   = {The upper bound revisited},
+  journal = {Journal of Membrane Science}, volume = {320}, number = {1-2}, pages = {390--400}, year = {2008},
+  doi     = {10.1016/j.memsci.2008.04.030},
+}
+
+@article{Freeman1999,
+  author  = {Freeman, B. D.},
+  title   = {Basis of Permeability/Selectivity Tradeoff Relations in Polymeric Gas Separation Membranes},
+  journal = {Macromolecules}, volume = {32}, number = {2}, pages = {375--380}, year = {1999},
+  doi     = {10.1021/ma9814548},
+}
+
+@article{ComesanaGandara2019,
+  author  = {Comesa{\~n}a-G{\'a}ndara, B. and Chen, J. and Bezzu, C. G. and Carta, M. and Rose, I. and Ferrari, M.-C. and Esposito, E. and Fuoco, A. and Jansen, J. C. and McKeown, N. B.},
+  title   = {Redefining the Robeson upper bounds for CO2/CH4 and CO2/N2 separations using ultrapermeable benzotriptycene-based polymers of intrinsic microporosity},
+  journal = {Energy \& Environmental Science}, volume = {12}, number = {9}, pages = {2733--2740}, year = {2019},
+  doi     = {10.1039/C9EE01384A},
+}
+
+@article{BakerLokhandwala2008,
+  author  = {Baker, R. W. and Lokhandwala, K.},
+  title   = {Natural Gas Processing with Membranes: An Overview},
+  journal = {Industrial \& Engineering Chemistry Research}, volume = {47}, number = {7}, pages = {2109--2121}, year = {2008},
+  doi     = {10.1021/ie071083w},
+}
+
+@article{Merkel2010,
+  author  = {Merkel, T. C. and Lin, H. and Wei, X. and Baker, R.},
+  title   = {Power plant post-combustion carbon dioxide capture: An opportunity for membranes},
+  journal = {Journal of Membrane Science}, volume = {359}, number = {1-2}, pages = {126--139}, year = {2010},
+  doi     = {10.1016/j.memsci.2009.10.041},
+}
+
+@misc{EvonikSepuranGreen,
+  author       = {{Evonik}},
+  title        = {SEPURAN Green --- Membrane technology for upgrading biogas (datasheet)},
+  year         = {2022},
+  note         = {Manufacturer datasheet; pure-gas CO2/CH4 selectivity ca. 50. https://www.evonik.com/sepuran},
+}
+
+@misc{YongZhang2021,
+  author       = {Yong, W. F. and Zhang, H.},
+  title        = {Recent advances of polymeric membranes for CO2/CH4 and air separation (review)},
+  year         = {2021},
+  note         = {Review; source for tetrabromo-bisphenol-A polycarbonate (Generon) O2/N2 ca. 7.5, O2 ca. 1.83 Barrer.},
+}

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RootNamespace>MembraneCore</RootNamespace>
+    <AssemblyName>MembraneCore</AssemblyName>
+    <Description>Gas-permeation membrane calculation engine (Dias-Pinto iterative 2D cross-flow + Shindo 1D). PME-agnostic; no COM/CAPE-OPEN dependencies.</Description>
+  </PropertyGroup>
+
+</Project>

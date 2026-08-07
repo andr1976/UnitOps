@@ -1,0 +1,30 @@
+# ---- .NET build artifacts ----
+[Bb]in/
+[Oo]bj/
+.vs/
+*.user
+*.suo
+
+# ---- Sphinx / LaTeX build output (regenerable from source) ----
+_build/
+docs/techref/figures/tikz/build/
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.out
+
+# ---- Diagnostics / logs ----
+*.log
+
+# ---- Copyrighted / third-party source material (NOT distributed to the remote) ----
+# Source PDFs: journal papers, the Geankoplis textbook, CAPE-OPEN specifications.
+# The small cited figure crops under docs/techref/figures/ are PNGs and ARE tracked.
+*.pdf
+# Vendored third-party code (DeJaco et al. MemPy).
+membrane/other/MemPy-1.0/
+
+# ---- OS cruft ----
+Thumbs.db
+.DS_Store

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>Membrane.CapeOpen</RootNamespace>
+    <AssemblyName>Membrane.CapeOpen</AssemblyName>
+    <!-- COM server: class is [ComVisible(true)] individually; assembly default is not visible. -->
+    <ComVisible>false</ComVisible>
+    <EnableComHosting>false</EnableComHosting>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Deterministic>true</Deterministic>
+    <Description>CAPE-OPEN 1.0 gas-permeation membrane unit operation (cross-flow). Delegates physics to MembraneCore; delegates thermodynamics to the PME material object.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="register.bat" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="unregister.bat" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="register-user.ps1" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="unregister-user.ps1" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MembraneCore\MembraneCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Official CAPE-OPEN 1.1 primary interop assembly (superset: contains the 1.0 unit + thermo
+         interfaces AND the 1.1 thermo interfaces; COFE uses CO 1.1 material objects). -->
+    <Reference Include="CAPE-OPENv1-1-0">
+      <HintPath>C:\Program Files\Common Files\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll</HintPath>
+      <Private>false</Private>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+
+</Project>
