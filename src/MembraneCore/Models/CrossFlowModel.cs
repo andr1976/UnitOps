@@ -1,4 +1,5 @@
 using System;
+using MembraneCore.Fugacity;
 using MembraneCore.Solvers;
 
 namespace MembraneCore.Models
@@ -90,7 +91,8 @@ namespace MembraneCore.Models
         public static MembraneResult SolveByArea(double[] feed, double feedMolarFlow, double[] permeanceSI,
                                                  double retentatePressure, double permeatePressure,
                                                  double area, int steps = 4000, int profilePoints = 0,
-                                                 double[]? a = null, double[]? b = null)
+                                                 double[]? a = null, double[]? b = null,
+                                                 FugacityTable? phiTable = null)
         {
             if (feed == null) throw new ArgumentNullException(nameof(feed));
             if (permeanceSI == null) throw new ArgumentNullException(nameof(permeanceSI));
@@ -143,7 +145,10 @@ namespace MembraneCore.Models
                 var x = new double[nc];
                 for (int i = 0; i < nc; i++) x[i] = R[i] / Rtot;
 
-                var yLocal = LocalPermeateSolver.Solve(x, permeanceSI, gamma, a, b);
+                // Position-dependent φ: interpolate the table at the local cumulative stage cut (local-φ mode).
+                if (phiTable != null) phiTable.At((feedMolarFlow - Rtot) / feedMolarFlow, aa, bb);
+
+                var yLocal = LocalPermeateSolver.Solve(x, permeanceSI, gamma, aa, bb);
 
                 while (profile != null && sIdx < profilePoints && sampleAt![sIdx] == s)
                 {
@@ -169,7 +174,8 @@ namespace MembraneCore.Models
                 for (int i = 0; i < nc; i++) Rtot += R[i];
                 var xf = new double[nc];
                 for (int i = 0; i < nc; i++) xf[i] = Rtot > 0.0 ? R[i] / Rtot : 0.0;
-                var yf = Rtot > 0.0 ? LocalPermeateSolver.Solve(xf, permeanceSI, gamma, a, b) : new double[nc];
+                if (phiTable != null) phiTable.At((feedMolarFlow - Rtot) / feedMolarFlow, aa, bb);
+                var yf = Rtot > 0.0 ? LocalPermeateSolver.Solve(xf, permeanceSI, gamma, aa, bb) : new double[nc];
                 double scf = permeatedTotal / feedMolarFlow;
                 while (sIdx < profilePoints) { RecordSample(profile, sIdx, (double)sampleAt![sIdx] / steps, z, xf, yf, scf); sIdx++; }
             }

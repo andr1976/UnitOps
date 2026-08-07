@@ -98,6 +98,16 @@ at 60 bar and up to :math:`\sim15\%` at 100 bar for CO\ :sub:`2`/CH\ :sub:`4`
 :cite:`dejaco2020` report (a quantitative cross-check on their propane/propylene
 system is in :ref:`sec-val-ig-rg`).
 
+A ``FugacityLocal`` option updates :math:`\varphi` **along the flow direction**:
+because the cross-flow composition trajectory is a one-parameter family in stage
+cut :math:`\theta` (independent of area), the PME is evaluated at a coarse set of
+:math:`\theta` breakpoints once and the marching solver reads :math:`\varphi` by
+linear interpolation at every step --- position-dependent coefficients at
+:math:`\mathcal{O}(10^2)` PME calls per solve rather than the two of the
+feed-evaluated default. It narrows the residual gap to a fully EOS-coupled model
+at the cost of those extra evaluations; the feed-evaluated ``Fugacity`` remains
+the default.
+
 .. _sec-pressure-ratio-limit:
 
 The pressure-ratio limit

@@ -88,7 +88,8 @@ Parameters
      - option
      - --
      - input
-     - ``Fugacity`` (default, real-gas) / ``PartialPressure`` (ideal) (:ref:`sec-fugacity`)
+     - ``Fugacity`` (default; feed-evaluated) / ``FugacityLocal`` (φ updated along the module by a
+       stage-cut table + interpolation, cross-flow) / ``PartialPressure`` (ideal) (:ref:`sec-fugacity`)
 
 Per-compound parameters are created dynamically once a feed is connected:
 

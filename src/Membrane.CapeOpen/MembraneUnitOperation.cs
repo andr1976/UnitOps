@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using CAPEOPEN;
 using MembraneCore.Energy;
+using MembraneCore.Fugacity;
 using MembraneCore.Models;
 
 namespace Membrane.CapeOpen
@@ -36,6 +37,7 @@ namespace Membrane.CapeOpen
         private const string EnergyAdiabatic = "Adiabatic";
         private const string DrivingFugacity = "Fugacity";
         private const string DrivingPartial = "PartialPressure";
+        private const string DrivingFugacityLocal = "FugacityLocal";
 
         // CAPE-OPEN dimensionality vectors, order [m, kg, s, A, K, mol] (spec: Watt = [2,1,-3,0,0,0]).
         private static readonly double[] DimPressure = { -1, 1, -2, 0, 0, 0 };            // Pa = kg·m⁻¹·s⁻²
@@ -70,8 +72,8 @@ namespace Membrane.CapeOpen
                 EnergyIsothermal, new[] { EnergyIsothermal, EnergyAdiabatic }, CapeParamMode.CAPE_INPUT);
         private readonly OptionParameter _drivingForce =
             new OptionParameter("DrivingForce",
-                "Flux driving force: Fugacity = real-gas fugacity difference from the PME equation of state (default; feed-evaluated coefficients); PartialPressure = ideal-gas partial-pressure difference. Fugacity falls back to PartialPressure if the property package cannot supply fugacity coefficients.",
-                DrivingFugacity, new[] { DrivingFugacity, DrivingPartial }, CapeParamMode.CAPE_INPUT);
+                "Flux driving force: Fugacity = real-gas fugacity difference from the PME EOS (default; feed-evaluated coefficients, constant along the module); FugacityLocal = fugacity coefficients updated along the flow direction via a stage-cut table + interpolation (more PME calls, closer to a fully EOS-coupled model); PartialPressure = ideal-gas partial-pressure difference. Fugacity modes fall back to PartialPressure if the property package cannot supply fugacity coefficients.",
+                DrivingFugacity, new[] { DrivingFugacity, DrivingFugacityLocal, DrivingPartial }, CapeParamMode.CAPE_INPUT);
         private readonly RealParameter _retentateTemperature =
             new RealParameter("RetentateTemperature", "Retentate outlet temperature", 0.0, 0.0, 1.0e5, CapeParamMode.CAPE_OUTPUT, DimTemperature);
         private readonly RealParameter _permeateTemperature =
@@ -235,17 +237,29 @@ namespace Membrane.CapeOpen
                     throw ComError.SolvingError("All component permeances are zero — set them in the parameter grid.");
                 Diagnostics.Log($"Calculate: pr={pr:F0}Pa pp={pp:F0}Pa area={_membraneArea.ValueCore:E3}m2 perm=[{string.Join(",", permeance)}]");
 
-                // Real-gas driving force: feed-evaluated fugacity coefficients (null ⇒ ideal partial pressure).
+                string fp = _flowPattern.value?.ToString() ?? CrossFlow;
+
+                // Real-gas driving force: feed-evaluated fugacity coefficients (null ⇒ ideal partial pressure);
+                // in FugacityLocal mode also build a φ(θ) table for position-dependent coefficients (cross-flow).
                 double[]? aRet = null, bPerm = null;
-                if (IsFugacity()) TryFugacityCoefficients(feed, pr, pp, out aRet, out bPerm);
+                FugacityTable? phiTable = null;
+                if (IsAnyFugacity()) TryFugacityCoefficients(feed, pr, pp, out aRet, out bPerm);
+                if (IsFugacityLocal())
+                {
+                    if (fp == CrossFlow)
+                    {
+                        phiTable = BuildLocalPhiTable(feed, permeance, pr, pp);
+                        if (phiTable == null) Diagnostics.Log("FugacityLocal: table unavailable; using constant feed-phi.");
+                    }
+                    else Diagnostics.Log("FugacityLocal is CrossFlow-only; using constant feed-phi for " + fp + ".");
+                }
 
                 // Determine the membrane area from the spec mode (Area = rating; StageCut = design), then solve.
-                string fp = _flowPattern.value?.ToString() ?? CrossFlow;
                 double area;
                 if (IsStageCutSpec())
                 {
                     double target = _stageCut.ValueCore;
-                    area = RequiredArea(feed, permeance, pr, pp, fp, target, aRet, bPerm);
+                    area = RequiredArea(feed, permeance, pr, pp, fp, target, aRet, bPerm, phiTable);
                     _membraneArea.SetInternal(area);   // computed output
                     Diagnostics.Log($"Calculate: StageCut spec, target theta={target:F4} -> required area={area:E4} m2");
                 }
@@ -253,7 +267,7 @@ namespace Membrane.CapeOpen
                 {
                     area = _membraneArea.ValueCore;
                 }
-                var result = SolveAt(feed, permeance, pr, pp, fp, area, ProfilePoints, aRet, bPerm);
+                var result = SolveAt(feed, permeance, pr, pp, fp, area, ProfilePoints, aRet, bPerm, phiTable);
                 Diagnostics.Log($"Calculate: [{fp}] area={area:E4}m2 solved theta={result.StageCut:F4} mbRes={result.MassBalanceResidual:E2}");
 
                 // Optional adiabatic energy balance -> outlet temperatures. The separation is unchanged;
@@ -448,7 +462,59 @@ namespace Membrane.CapeOpen
             _stageCut.Mode = sc ? CapeParamMode.CAPE_INPUT : CapeParamMode.CAPE_OUTPUT;
         }
 
-        private bool IsFugacity() => (_drivingForce.value?.ToString() ?? DrivingFugacity) == DrivingFugacity;
+        private string DrivingMode() => _drivingForce.value?.ToString() ?? DrivingFugacity;
+        private bool IsAnyFugacity() { var m = DrivingMode(); return m == DrivingFugacity || m == DrivingFugacityLocal; }
+        private bool IsFugacityLocal() => DrivingMode() == DrivingFugacityLocal;
+
+        /// <summary>
+        /// Builds a φ(θ) table for the local (position-dependent) fugacity driving force: a first cross-flow
+        /// pass gives the composition trajectory x(θ), y_coll(θ) (area-independent), and the PME is evaluated
+        /// at a coarse set of stage-cut breakpoints so the marching solver can interpolate φ cheaply at every
+        /// step. Returns null (⇒ constant feed-φ fallback) if the property package cannot deliver φ.
+        /// </summary>
+        private FugacityTable? BuildLocalPhiTable(FeedState feed, double[] permeance, double pr, double pp)
+        {
+            try
+            {
+                using var provider = EnthalpyProvider.Create(_feed.ConnectedObject!);
+                if (provider == null) return null;
+                // Trajectory to a high stage cut (φ-vs-θ is area-independent for cross-flow), ideal φ is fine here.
+                double areaHi = RequiredArea(feed, permeance, pr, pp, CrossFlow, 0.90);
+                var prof = CrossFlowModel.SolveByArea(feed.MoleFractions, feed.MolarFlow, permeance, pr, pp,
+                    areaHi, profilePoints: 40).Profile;
+                if (prof == null) return null;
+
+                int nc = feed.ComponentIds.Length;
+                var thetas = new List<double>();
+                var aRows = new List<double[]>();
+                var bRows = new List<double[]>();
+                double last = -1.0;
+                for (int k = 0; k < prof.Points; k++)
+                {
+                    double th = prof.StageCut[k];
+                    if (th <= last + 1e-4) continue;   // keep strictly ascending, coarse
+                    var x = new double[nc];
+                    var yc = new double[nc];
+                    for (int i = 0; i < nc; i++) { x[i] = prof.Retentate[i][k]; yc[i] = prof.PermeateCollected[i][k]; }
+                    if (!provider.TryFugacityCoefficients(feed.Temperature, pr, NormalizeFractions(x), out var aPhi)) return null;
+                    if (!provider.TryFugacityCoefficients(feed.Temperature, pp, NormalizeFractions(yc), out var bPhi)) return null;
+                    thetas.Add(th); aRows.Add(aPhi); bRows.Add(bPhi); last = th;
+                }
+                if (thetas.Count < 2) return null;
+                Diagnostics.Log($"FugacityLocal: built phi(theta) table, {thetas.Count} breakpoints up to theta={last:F3}.");
+                return new FugacityTable(thetas.ToArray(), aRows.ToArray(), bRows.ToArray());
+            }
+            catch (Exception ex) { Diagnostics.Log("FugacityLocal table build failed (" + ex.Message + "); constant-phi fallback."); return null; }
+        }
+
+        private static double[] NormalizeFractions(double[] v)
+        {
+            double s = 0.0; foreach (var t in v) s += t > 0.0 ? t : 0.0;
+            var r = new double[v.Length];
+            if (s <= 0.0) return r;
+            for (int i = 0; i < v.Length; i++) r[i] = (v[i] > 0.0 ? v[i] : 0.0) / s;
+            return r;
+        }
 
         /// <summary>
         /// Feed-evaluated real-gas fugacity coefficients for the driving force: retentate-side a_i = φ_i(T,p_r,z)
@@ -475,7 +541,7 @@ namespace Membrane.CapeOpen
 
         private MembraneCore.MembraneResult SolveAt(FeedState feed, double[] permeance, double pr, double pp,
                                                     string fp, double area, int profilePoints,
-                                                    double[]? a = null, double[]? b = null)
+                                                    double[]? a = null, double[]? b = null, FugacityTable? phiTable = null)
         {
             if (fp == CounterCurrent)
                 return PlugFlowModel.SolveByArea(feed.MoleFractions, feed.MolarFlow, permeance, pr, pp,
@@ -484,21 +550,21 @@ namespace Membrane.CapeOpen
                 return PlugFlowModel.SolveByArea(feed.MoleFractions, feed.MolarFlow, permeance, pr, pp,
                     MembraneCore.FlowPattern.CoCurrent, area, profilePoints: profilePoints, a: a, b: b);
             return CrossFlowModel.SolveByArea(feed.MoleFractions, feed.MolarFlow, permeance, pr, pp,
-                area, profilePoints: profilePoints, a: a, b: b);
+                area, profilePoints: profilePoints, a: a, b: b, phiTable: phiTable);
         }
 
         /// <summary>Root-finds the membrane area that yields a target stage cut (θ(area) is monotone in area).</summary>
         private double RequiredArea(FeedState feed, double[] permeance, double pr, double pp, string fp,
-                                    double targetTheta, double[]? a = null, double[]? b = null)
+                                    double targetTheta, double[]? a = null, double[]? b = null, FugacityTable? phiTable = null)
         {
             double lo = 0.0, hi = 1.0;
-            double th = SolveAt(feed, permeance, pr, pp, fp, hi, 0, a, b).StageCut;
+            double th = SolveAt(feed, permeance, pr, pp, fp, hi, 0, a, b, phiTable).StageCut;
             int guard = 0;
-            while (th < targetTheta && guard++ < 100) { hi *= 4.0; th = SolveAt(feed, permeance, pr, pp, fp, hi, 0, a, b).StageCut; }
+            while (th < targetTheta && guard++ < 100) { hi *= 4.0; th = SolveAt(feed, permeance, pr, pp, fp, hi, 0, a, b, phiTable).StageCut; }
             for (int it = 0; it < 200; it++)
             {
                 double mid = 0.5 * (lo + hi);
-                double t = SolveAt(feed, permeance, pr, pp, fp, mid, 0, a, b).StageCut;
+                double t = SolveAt(feed, permeance, pr, pp, fp, mid, 0, a, b, phiTable).StageCut;
                 if (Math.Abs(t - targetTheta) < 1e-6) return mid;
                 if (t < targetTheta) lo = mid; else hi = mid;
             }
@@ -629,7 +695,7 @@ namespace Membrane.CapeOpen
                     if (ver >= 7)
                     {
                         string df = r.ReadString();
-                        if (Array.IndexOf(new[] { DrivingFugacity, DrivingPartial }, df) >= 0) _drivingForce.value = df;
+                        if (Array.IndexOf(new[] { DrivingFugacity, DrivingFugacityLocal, DrivingPartial }, df) >= 0) _drivingForce.value = df;
                     }
                     // Seed any already-known permeance/profile params; the rest are seeded on discovery.
                     foreach (var kv in _savedPermeances)
