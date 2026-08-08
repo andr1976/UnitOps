@@ -405,28 +405,58 @@ counter-current solve at the case's :math:`\gamma`.
 
    Counter-current hollow-fibre validation. **TC2** (left): CO\ :sub:`2` permeate
    vs. stage cut for the Sada *et al.* experiment at three feed pressures --- this
-   solver (lines) vs. points read from Aziaba Fig. 8. **TC3** (right):
+   solver (solid lines) vs. the three DWSIM prediction curves **pixel-digitized**
+   from Aziaba Fig. 8 (open circles; see ``digitize_aziaba.py``). **TC3** (right):
    H\ :sub:`2`/N\ :sub:`2`/CH\ :sub:`4`/Ar permeate vs. stage cut for the
-   Chowdhury *et al.* case --- this solver (lines) vs. Aziaba Fig. 9 (markers),
-   using the corrected argon permeance.
+   Chowdhury *et al.* case --- this solver's model output (lines) with the single
+   value the paper states numerically (H\ :sub:`2` :math:`\approx 0.975` at
+   :math:`\theta = 0.30`, open circle), using the corrected argon permeance.
+
+.. note::
+
+   In both Aziaba figures the plotted reference is the **DWSIM prediction curve**,
+   not the raw experiment: Aziaba draw the Sada and Chowdhury experimental points
+   with the *same* marker colour as their own model, so an experimental cross
+   cannot be separated from a model marker by colour. We therefore digitize only
+   the continuous model curves (TC2) and quote the paper's stated numbers (TC3).
+   The experiment is still the anchor --- Aziaba report their DWSIM model matches
+   the Sada data to :math:`<0.84\%`, so reproducing their curve reproduces the
+   experiment to that tolerance.
 
 **TC2 --- Sada et al. (experiment), CO**\ :sub:`2`\ **/O**\ :sub:`2`\ **/N**\ :sub:`2`,
 cellulose triacetate. Feed 50.0 / 10.5 / 39.5 %, permeances
 :math:`204.2 / 60.2 / 13.1 \times10^{-10}`, permeate 1.013 bar, feed 5.9--15.7 bar
-(:math:`\gamma = 0.064\text{--}0.172`), 303 K. The unit reproduces the CO\ :sub:`2`
-permeate curves across all three feed pressures --- e.g. at 15.7 bar
-:math:`y_{\mathrm{CO_2}} = 0.886` at :math:`\theta=0.05` falling to
-:math:`0.776` at :math:`\theta=0.60`, matching Fig. 8 (and the Sada data, which
-Aziaba fit to :math:`<0.84\%`) to within reading accuracy.
+(:math:`\gamma = 0.064\text{--}0.172`), 303 K. This unit's counter-current
+CO\ :sub:`2` curves track the digitized DWSIM curves at all three feed pressures
+with a mean absolute deviation of :math:`\approx 0.002` mole fraction (worst
+:math:`\approx 0.008` near :math:`\theta = 0.60`, 5.9 bar) --- e.g. at 15.7 bar
+:math:`y_{\mathrm{CO_2}}` falls from :math:`0.886` (:math:`\theta=0.05`) to
+:math:`0.776` (:math:`\theta=0.60`), against digitized DWSIM values of
+:math:`0.882\to0.772`.
 
 **TC3 --- Chowdhury et al. (model), H**\ :sub:`2`\ **/N**\ :sub:`2`\ **/CH**\ :sub:`4`\ **/Ar**,
 cellulose acetate. Feed 51.78 / 24.69 / 19.57 / 3.96 %, permeate 11.23 bar, feed
-69.64 bar (:math:`\gamma=0.161`), 298 K. With H\ :sub:`2`/N\ :sub:`2`/CH\ :sub:`4`
-permeances :math:`284 / 2.95 / 2.84 \times10^{-10}` the unit reproduces Fig. 9:
-:math:`y_{\mathrm{H_2}}` from :math:`0.976` to :math:`0.936` over
-:math:`\theta = 0.30\to0.50`, with the minor components in the correct
-N\ :sub:`2` > CH\ :sub:`4` > Ar order --- provided the argon permeance is taken as
-7.0, not the 70 printed in the source table.
+69.64 bar (:math:`\gamma=0.161`), 298 K. Aziaba Fig. 9 is a broken (split) y-axis
+plot that does not calibrate reliably for pixel-digitizing, so TC3 is compared
+numerically rather than curve-against-curve. With H\ :sub:`2`/N\ :sub:`2`/CH\ :sub:`4`
+permeances :math:`284 / 2.95 / 2.84 \times10^{-10}` the unit reproduces the value
+the paper states in text --- :math:`y_{\mathrm{H_2}} \approx 0.975` at
+:math:`\theta = 0.30` (this unit: :math:`0.976`) --- and gives
+:math:`y_{\mathrm{H_2}} = 0.936` at :math:`\theta = 0.50`, with the minor
+components in the correct N\ :sub:`2` > CH\ :sub:`4` > Ar order throughout,
+provided the argon permeance is taken as 7.0, not the 70 printed in the source
+table.
+
+.. table:: TC3 permeate composition, this unit (counter-current, Ar :math:`=7.0`)
+   :align: center
+
+   ===============  ==========  ==========  ==========  ==========
+   :math:`\theta`   H\ :sub:`2`  N\ :sub:`2`  CH\ :sub:`4`  Ar
+   ===============  ==========  ==========  ==========  ==========
+   0.30             0.976       0.0114      0.0087      0.0042
+   0.40             0.966       0.0160      0.0122      0.0059
+   0.50             0.936       0.0304      0.0232      0.0107
+   ===============  ==========  ==========  ==========  ==========
 
 .. admonition:: A corrected source typo (argon permeance)
 
