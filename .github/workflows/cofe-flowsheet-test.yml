@@ -1,0 +1,138 @@
+name: COFEStand flowsheet gate
+
+# END-TO-END GATE. On a clean Windows runner: build the ORS membrane CAPE-OPEN unit,
+# assemble the portable ZIP, silently install COCO (for the TEA property package +
+# COFEStand), register the unit MACHINE-WIDE (HKLM) via the shipped register.bat, then
+# solve every flowsheet/*.fsd in COFEStand and assert each returns "SOLVE: OK". The job
+# FAILS if any flowsheet does not solve.
+#
+# Why HKLM: a GitHub runner's COFE discovers CAPE-OPEN components from the machine
+# (HKLM) class store only, not a per-user (HKCU) overlay. register.bat uses RegAsm
+# /codebase which, under the runner's elevated steps, writes HKLM -- and also dogfoods
+# the per-machine script we ship. Desktop users can still use per-user register-user.ps1.
+#
+# "SOLVE: OK" / "SOLVE: FAIL" are emitted by COFE.exe (which COFEStand drives) on
+# COCO 3.10.0.0 -- verified against the installed binary. COFEStand prints the verdict
+# then hangs on teardown by design, so we poll the redirected stdout and kill after.
+
+on:
+  workflow_dispatch:
+    inputs:
+      coco_url:
+        description: "Direct download URL for the COCO installer"
+        required: true
+        default: "https://www.cocosimulator.org/downloads/COCOInstall_v3.10.0.0.exe"
+      timeout_seconds:
+        description: "Per-flowsheet solve timeout (COFEStand teardown hangs by design; we kill after SOLVE: OK)"
+        required: true
+        default: "180"
+
+permissions:
+  contents: read
+
+jobs:
+  cofe-gate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Build CAPE-OPEN unit operation (Release, net48/x64)
+        run: dotnet build src/Membrane.CapeOpen/Membrane.CapeOpen.csproj -c Release -v minimal
+
+      - name: Assemble + extract portable package
+        shell: pwsh
+        run: |
+          ./package/Build-Portable.ps1 -Version ci
+          $pkgRoot = Join-Path $env:RUNNER_TEMP 'pkg'
+          Expand-Archive -Path 'package/Output/ORS-Membrane-Portable-ci.zip' -DestinationPath $pkgRoot -Force
+          "PKG_DIR=$(Join-Path $pkgRoot 'ORS-Membrane-Portable-ci')" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Install COCO (silent, with ChemSep/TEA)
+        shell: pwsh
+        run: |
+          $exe = Join-Path $env:RUNNER_TEMP 'coco_setup.exe'
+          Invoke-WebRequest -Uri '${{ github.event.inputs.coco_url }}' -OutFile $exe
+          # COCO is an NSIS installer: /S = silent. /CHEMSEP=yes gives the compound DB +
+          # TEA property package the example flowsheet uses; skip the Excel unit op;
+          # RUNCUP (COCO's online updater) has no unattended mode on a runner.
+          $p = Start-Process -Wait -PassThru -FilePath $exe -ArgumentList '/S','/CHEMSEP=yes','/OATS=yes','/EXCELUO=no','/RUNCUP=no'
+          Write-Host "COCO installer exit code: $($p.ExitCode)"
+          if (-not (Test-Path 'C:/Program Files/COCO/x64/COFEStand.exe')) { throw "COFEStand.exe not found after COCO install." }
+
+      - name: Register the unit MACHINE-WIDE (HKLM) via register.bat
+        shell: cmd
+        run: call "%PKG_DIR%\register.bat"
+
+      - name: Solve every flowsheet/*.fsd in COFEStand (gate - all must return SOLVE OK)
+        shell: pwsh
+        run: |
+          $exe   = 'C:/Program Files/COCO/x64/COFEStand.exe'
+          $toSec = [int]'${{ github.event.inputs.timeout_seconds }}'
+          $fsds  = Get-ChildItem 'flowsheet/*.fsd' | Sort-Object Name
+          if (-not $fsds) { throw 'No flowsheet/*.fsd found.' }
+          Write-Host "Flowsheets to solve: $($fsds.Name -join ', ')"
+          function Read-Shared([string]$path) {
+            if (-not (Test-Path $path)) { return '' }
+            try {
+              $fs = [System.IO.File]::Open($path,[System.IO.FileMode]::Open,[System.IO.FileAccess]::Read,[System.IO.FileShare]::ReadWrite)
+              $sr = New-Object System.IO.StreamReader($fs)
+              $t = $sr.ReadToEnd(); $sr.Dispose(); $fs.Dispose(); return $t
+            } catch { return '' }
+          }
+          $failed = @()
+          foreach ($f in $fsds) {
+            $out = Join-Path $env:RUNNER_TEMP ("cofe_" + $f.BaseName + ".txt")
+            $err = "$out.err"
+            Write-Host ""
+            Write-Host "==================== $($f.Name) ===================="
+            $p = Start-Process -PassThru -FilePath $exe -ArgumentList '/r', "`"$($f.FullName)`"" `
+                   -RedirectStandardOutput $out -RedirectStandardError $err
+            # Verdict is printed then COFEStand hangs on teardown; small outputs flush only
+            # at process end, so poll DURING the solve and for a window AFTER the kill.
+            $verdict = ''
+            for ($i = 0; $i -lt [int]($toSec / 2); $i++) {
+              Start-Sleep -Milliseconds 2000
+              $t = Read-Shared $out
+              if     ($t -match 'SOLVE:\s*OK')   { $verdict = 'OK';   break }
+              elseif ($t -match 'SOLVE:\s*FAIL')  { $verdict = 'FAIL'; break }
+              if ($p.HasExited) { break }
+            }
+            if (-not $p.HasExited) { try { $p.Kill() } catch {} }
+            try { $p.WaitForExit(15000) | Out-Null } catch {}
+            if ($verdict -eq '') {
+              for ($j = 0; $j -lt 30; $j++) {
+                $t = Read-Shared $out
+                if     ($t -match 'SOLVE:\s*OK')   { $verdict = 'OK';   break }
+                elseif ($t -match 'SOLVE:\s*FAIL')  { $verdict = 'FAIL'; break }
+                Start-Sleep -Milliseconds 2000
+              }
+              if ($verdict -eq '') { $verdict = 'TIMEOUT' }
+            }
+            (Read-Shared $out) -split "`r?`n" | Select-Object -Last 10 | ForEach-Object { Write-Host "    $_" }
+            if ($verdict -eq 'OK') { Write-Host ">>> $($f.Name): SOLVE OK" }
+            else { Write-Host ">>> $($f.Name): $verdict"; $failed += ("{0} ({1})" -f $f.Name, $verdict) }
+          }
+          Write-Host ""
+          if ($failed.Count) { throw ("Gate FAILED - " + ($failed -join ', ')) }
+          Write-Host "GATE PASSED - all $($fsds.Count) flowsheet(s) returned SOLVE: OK."
+
+      - name: Unregister (cleanup)
+        if: always()
+        shell: cmd
+        run: call "%PKG_DIR%\unregister.bat"
+
+      - name: Upload logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cofe-gate-logs
+          path: |
+            ${{ runner.temp }}/cofe_*.txt
+            ${{ env.PKG_DIR }}/*.log
+          if-no-files-found: warn

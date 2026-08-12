@@ -1,0 +1,95 @@
+name: Release portable package
+
+# Manual build of the portable, no-installer distribution of the ORS membrane
+# CAPE-OPEN unit operation on a Windows runner. Builds the net48/x64 adapter with
+# the repo-vendored CAPE-OPEN PIA (no COCO needed), assembles a self-contained ZIP
+# (adapter + physics DLL + PIA + register scripts + example flowsheet + docs), and
+# publishes it as a GitHub Release in THIS (private) repo, using the built-in
+# GITHUB_TOKEN. Also uploaded as a workflow artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version string for the ZIP + release name"
+        required: true
+        default: "1.0.0"
+      tag:
+        description: "Git tag for the release (e.g. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+      prerelease:
+        description: "Mark the release as a pre-release"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # create the Release + upload the asset in this repo (GITHUB_TOKEN)
+
+jobs:
+  portable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Build CAPE-OPEN unit operation (Release, net48/x64)
+        run: dotnet build src/Membrane.CapeOpen/Membrane.CapeOpen.csproj -c Release -v minimal
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build technical reference (HTML, best-effort)
+        # Renders the committed RST + figure PNGs; no figure regeneration and no
+        # source PDFs needed. Best-effort: a docs hiccup must not block a release
+        # (Build-Portable bundles docs only if present). PDF is not built in CI --
+        # the LaTeX toolchain is heavy/fragile; a maintainer commits it locally if wanted.
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          python -m pip install --quiet sphinx sphinxcontrib-bibtex alabaster
+          python -m sphinx -b html docs/techref docs/techref/_build/html --keep-going
+
+      - name: Assemble portable ZIP
+        shell: pwsh
+        run: ./package/Build-Portable.ps1 -Version "${{ github.event.inputs.version }}"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ORS-Membrane-Portable-${{ github.event.inputs.version }}
+          path: package/Output/ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip
+          if-no-files-found: error
+
+      - name: Publish GitHub Release (this repo)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          name: ORS Membrane Unit Operation ${{ github.event.inputs.version }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+          fail_on_unmatched_files: true
+          files: package/Output/ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip
+          body: |
+            **ORS Membrane (Gas Permeation, Cross-Flow) — CAPE-OPEN 1.0 unit operation. Portable, no-installer build (Windows x64).**
+
+            Self-contained: bundles the COM adapter, the physics core, the CAPE-OPEN 1.1 PIA, the registration scripts, an example flowsheet, and the Technical Reference (HTML). Registers per-user (HKCU, no admin) or per-machine (HKLM, admin).
+
+            ### Install
+            1. Extract `ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip` to a stable folder you will not move (e.g. `%LOCALAPPDATA%\Programs\ORS-Membrane`).
+            2. **Per-user (no admin):** run `register-user.ps1`. **Per-machine (admin):** run `register.bat` as administrator. Re-run if you later move the folder.
+            3. In a CAPE-OPEN simulator (COFE/COCO) the block appears in the unit-operation palette as **ORS Membrane (Gas Permeation, Cross-Flow)**.
+
+            ### Prerequisites (target PC)
+            - Windows x64, .NET Framework 4.8+
+            - A CAPE-OPEN PME (e.g. COCO/COFE) with a property package (e.g. TEA)
+
+            To uninstall, run `unregister-user.ps1` (per-user) or `unregister.bat` (per-machine).
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
