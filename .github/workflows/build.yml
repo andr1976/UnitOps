@@ -1,0 +1,37 @@
+name: Build & test
+
+# Fast compile + unit-test gate on every push / PR to main. No COCO, no COM
+# registration: the net8 physics core and the net48 COM adapter both build with the
+# repo-vendored CAPE-OPEN PIA (lib/CAPE-OPENv1-1-0.dll), and the adapter tests drive
+# the unit through an in-memory mock Material Object. Full end-to-end flowsheet
+# solving lives in cofe-flowsheet-test.yml.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Build (Release)
+        run: dotnet build src/MembraneUnitOp.sln -c Release -v minimal
+
+      - name: Test (core physics + COM adapter via mock Material Object)
+        run: dotnet test src/MembraneUnitOp.sln -c Release --no-build --verbosity normal

@@ -28,11 +28,18 @@
     <ProjectReference Include="..\MembraneCore\MembraneCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <PropertyGroup>
     <!-- Official CAPE-OPEN 1.1 primary interop assembly (superset: contains the 1.0 unit + thermo
-         interfaces AND the 1.1 thermo interfaces; COFE uses CO 1.1 material objects). -->
+         interfaces AND the 1.1 thermo interfaces; COFE uses CO 1.1 material objects).
+         Prefer the repo-vendored copy (lib/CAPE-OPENv1-1-0.dll) so CI builds need no COCO install;
+         fall back to the COCO / CO-LaN machine install on a developer box without the vendored copy. -->
+    <CapeOpenPia Condition="Exists('$(MSBuildProjectDirectory)\..\..\lib\CAPE-OPENv1-1-0.dll')">$(MSBuildProjectDirectory)\..\..\lib\CAPE-OPENv1-1-0.dll</CapeOpenPia>
+    <CapeOpenPia Condition="'$(CapeOpenPia)' == '' And Exists('$(CommonProgramFiles)\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll')">$(CommonProgramFiles)\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll</CapeOpenPia>
+  </PropertyGroup>
+
+  <ItemGroup>
     <Reference Include="CAPE-OPENv1-1-0">
-      <HintPath>C:\Program Files\Common Files\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll</HintPath>
+      <HintPath>$(CapeOpenPia)</HintPath>
       <Private>false</Private>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>

@@ -5,6 +5,9 @@
 *.user
 *.suo
 
+# ---- Portable package output (assembled by package/Build-Portable.ps1) ----
+package/Output/
+
 # ---- Sphinx / LaTeX build output (regenerable from source) ----
 _build/
 docs/techref/figures/tikz/build/

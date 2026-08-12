@@ -16,11 +16,17 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <!-- Prefer the repo-vendored PIA (lib/CAPE-OPENv1-1-0.dll); fall back to the machine install. -->
+    <CapeOpenPia Condition="Exists('$(MSBuildProjectDirectory)\..\..\lib\CAPE-OPENv1-1-0.dll')">$(MSBuildProjectDirectory)\..\..\lib\CAPE-OPENv1-1-0.dll</CapeOpenPia>
+    <CapeOpenPia Condition="'$(CapeOpenPia)' == '' And Exists('$(CommonProgramFiles)\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll')">$(CommonProgramFiles)\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll</CapeOpenPia>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Membrane.CapeOpen\Membrane.CapeOpen.csproj" />
     <ProjectReference Include="..\MembraneCore\MembraneCore.csproj" />
     <Reference Include="CAPE-OPENv1-1-0">
-      <HintPath>C:\Program Files\Common Files\CAPE-OPEN\Reference Assemblies\CAPE-OPENv1-1-0.dll</HintPath>
+      <HintPath>$(CapeOpenPia)</HintPath>
       <Private>false</Private>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
