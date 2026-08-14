@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Assemble the ORS Membrane CAPE-OPEN unit operation into a portable, no-installer ZIP.
+    Assemble the Membrane CAPE-OPEN unit operation into a portable, no-installer ZIP.
 
 .DESCRIPTION
     Stages the built COM adapter, its managed dependency, the vendored CAPE-OPEN 1.1 PIA, the
@@ -31,7 +31,7 @@ $ErrorActionPreference = 'Stop'
 $repo    = Split-Path -Parent $PSScriptRoot          # package/ -> repo root
 $adapter = Join-Path $repo 'src/Membrane.CapeOpen'
 $outDir  = Join-Path $PSScriptRoot 'Output'
-$pkgName = "ORS-Membrane-Portable-$Version"
+$pkgName = "Membrane-Portable-$Version"
 $stage   = Join-Path $outDir $pkgName
 $zipPath = Join-Path $outDir "$pkgName.zip"
 
@@ -102,8 +102,8 @@ if (Test-Path $pdfSrc) {
 # --- 7. README ---
 $asmVer = try { [System.Reflection.AssemblyName]::GetAssemblyName($dll.FullName).Version.ToString() } catch { 'unknown' }
 $readme = @"
-ORS Membrane (Gas Permeation, Cross-Flow) - CAPE-OPEN 1.0 Unit Operation
-========================================================================
+Membrane (Gas Permeation, Cross-Flow) - CAPE-OPEN 1.0 Unit Operation
+====================================================================
 Portable package $Version   (assembly $asmVer)   -   Windows x64, no installer
 
 WHAT THIS IS
@@ -125,12 +125,12 @@ INSTALL (choose ONE)
   Per-machine, admin:
       Right-click 'register.bat' > Run as administrator
 
-  Extract this folder to a STABLE location first (e.g. %LOCALAPPDATA%\Programs\ORS-Membrane).
+  Extract this folder to a STABLE location first (e.g. %LOCALAPPDATA%\Programs\Membrane).
   The registration records the current path; if you move the folder, re-run the script.
 
 USE
   In COFE/COCO the block appears in the unit-operation palette as
-  "ORS Membrane (Gas Permeation, Cross-Flow)". Add it, connect a Feed inlet and
+  "Membrane (Gas Permeation, Cross-Flow)". Add it, connect a Feed inlet and
   Retentate + Permeate outlets, set per-component permeances and operating conditions
   in the parameter grid, and solve.
 
@@ -145,7 +145,7 @@ UNINSTALL
 DOCS
   docs\ contains the Technical Reference (methods, architecture, validation) if bundled.
 
-(c) ORS Consulting. Bundled CAPE-OPENv1-1-0.dll is the CO-LaN reference PIA (redistributable).
+(c) 2026 Anders Andreasen. Licensed under the MIT License. Bundled CAPE-OPENv1-1-0.dll is the CO-LaN reference PIA (redistributable).
 "@
 Set-Content -Path (Join-Path $stage 'README.txt') -Value $readme -Encoding UTF8
 

@@ -778,8 +778,8 @@ namespace Membrane.CapeOpen
         private static string BuildReport(FeedState feed, MembraneCore.MembraneResult r, double pr, double pp)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("ORS Membrane Unit Operation - Gas Permeation (cross-flow)");
-            sb.AppendLine("==========================================================");
+            sb.AppendLine("Membrane Unit Operation - Gas Permeation (cross-flow)");
+            sb.AppendLine("=====================================================");
             sb.AppendLine();
             sb.AppendLine($"Feed pressure        : {pr / 1e5,10:F3} bar");
             sb.AppendLine($"Permeate pressure    : {pp / 1e5,10:F3} bar");

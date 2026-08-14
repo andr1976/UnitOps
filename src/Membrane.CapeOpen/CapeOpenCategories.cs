@@ -21,10 +21,10 @@ namespace Membrane.CapeOpen
     /// <summary>Stable identity of the membrane unit operation COM class. Do not change once published.</summary>
     internal static class MembraneUnitIdentity
     {
-        // Fresh GUIDs for this component (generated for the ORS membrane unit operation).
+        // Fresh GUIDs for this component (generated for the membrane unit operation).
         public const string Clsid = "B2E8A6C1-4F3D-4E7A-9C21-7A9F5D2E1B44";
-        public const string ProgId = "ORS.MembraneUnitOperation.1";
-        public const string Name = "ORS Membrane (Gas Permeation, Cross-Flow)";
+        public const string ProgId = "Membrane.MembraneUnitOperation.1";
+        public const string Name = "Membrane (Gas Permeation, Cross-Flow)";
         public const string Description =
             "Spiral-wound gas-permeation membrane (cross-flow, solution-diffusion, isothermal). " +
             "Physics validated against Shindo/Dias et al. (2020). Thermodynamics delegated to the flowsheet property package.";

@@ -7,7 +7,7 @@ Introduction
 Scope
 =====
 
-This reference documents the ORS **gas-permeation membrane unit operation**: a
+This reference documents the **gas-permeation membrane unit operation**: a
 CAPE-OPEN 1.0 compliant unit operation, usable in COFE and other CAPE-OPEN
 process modelling environments (PMEs), that models the separation of a
 multicomponent gas mixture across a permselective membrane. It covers:

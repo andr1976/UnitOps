@@ -1,9 +1,9 @@
 % Two-assembly architecture: adapter (Membrane.CapeOpen) depends on the physics
-% core (MembraneCore); the core never depends on the adapter. Brand colours from
+% core (MembraneCore); the core never depends on the adapter. Palette colours from
 % the preamble (PDF) / standalone wrapper (HTML PNG).
 \begin{tikzpicture}[font=\small, >=Latex,
     box/.style={draw, thick, rounded corners, align=left, text width=5.0cm, inner sep=7pt}]
-  \node[box, orsnavy, fill=orsnavy!6] (core)
+  \node[box, docnavy, fill=docnavy!6] (core)
     {\textbf{MembraneCore}\\[1pt]\footnotesize (physics, PME-agnostic)\\[3pt]
      \footnotesize $\bullet$ CrossFlowModel\\
      $\bullet$ PlugFlowModel (co/counter)\\
@@ -11,7 +11,7 @@
      $\bullet$ Energy / NonIsothermal\\
      $\bullet$ MembraneResult / Profile\\
      $\bullet$ IEnthalpyProvider (port)};
-  \node[box, orsred, fill=orsred!4, right=2.6cm of core] (ad)
+  \node[box, docred, fill=docred!4, right=2.6cm of core] (ad)
     {\textbf{Membrane.CapeOpen}\\[1pt]\footnotesize (COM / CAPE-OPEN adapter)\\[3pt]
      \footnotesize $\bullet$ MembraneUnitOperation\\
      $\bullet$ MaterialObjectAdapter\\
@@ -19,7 +19,7 @@
      $\bullet$ Real / Option / ArrayParameter\\
      $\bullet$ persistence, registration\\
      $\bullet$ HTML / text report};
-  \draw[->, thick, orsgrey] (ad) -- (core) node[midway, above, font=\footnotesize] {uses};
-  \node[font=\footnotesize, orsgrey, below=2pt of core] {net8.0, no COM};
-  \node[font=\footnotesize, orsgrey, below=2pt of ad] {net48 x64, COM-visible};
+  \draw[->, thick, docgrey] (ad) -- (core) node[midway, above, font=\footnotesize] {uses};
+  \node[font=\footnotesize, docgrey, below=2pt of core] {net8.0, no COM};
+  \node[font=\footnotesize, docgrey, below=2pt of ad] {net48 x64, COM-visible};
 \end{tikzpicture}

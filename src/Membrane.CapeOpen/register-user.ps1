@@ -1,5 +1,5 @@
 #requires -version 3
-# Per-user (no Administrator) COM registration of the ORS membrane unit operation for CAPE-OPEN / COFE.
+# Per-user (no Administrator) COM registration of the membrane unit operation for CAPE-OPEN / COFE.
 # Writes to HKCU\Software\Classes, which COM merges over HKLM\Software\Classes for the current user.
 # Run from the folder containing Membrane.CapeOpen.dll:  powershell -ExecutionPolicy Bypass -File register-user.ps1
 $ErrorActionPreference = 'Stop'
@@ -9,9 +9,9 @@ $dll = Join-Path $scriptDir 'Membrane.CapeOpen.dll'
 if (-not (Test-Path $dll)) { Write-Error "Not found: $dll  (build x64 Release first)"; exit 1 }
 
 $clsid    = '{B2E8A6C1-4F3D-4E7A-9C21-7A9F5D2E1B44}'
-$progId   = 'ORS.MembraneUnitOperation.1'
+$progId   = 'Membrane.MembraneUnitOperation.1'
 $typeName = 'Membrane.CapeOpen.MembraneUnitOperation'
-$name     = 'ORS Membrane (Gas Permeation, Cross-Flow)'
+$name     = 'Membrane (Gas Permeation, Cross-Flow)'
 $desc     = 'Spiral-wound gas-permeation membrane (cross-flow, solution-diffusion, isothermal). Thermodynamics delegated to the flowsheet property package.'
 $runtime  = 'v4.0.30319'
 $cats     = @(
@@ -61,9 +61,9 @@ $cd = "$clsKey\CapeDescription"
 Set-Val $cd 'Name'          $name
 Set-Val $cd 'Description'    $desc
 Set-Val $cd 'CapeVersion'   '1.0'
-Set-Val $cd 'About'         'ORS-Consulting membrane unit operation. Cross-flow gas permeation.'
+Set-Val $cd 'About'         'Membrane unit operation. Cross-flow gas permeation.'
 Set-Val $cd 'VersionNumber' '1.0.0'
-Set-Val $cd 'Vendor'        'ORS Consulting'
+Set-Val $cd 'Vendor'        'Anders Andreasen'
 
 $pk = "$base\$progId"
 Set-Default $pk $name

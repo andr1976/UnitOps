@@ -36,6 +36,6 @@ namespace Membrane.CapeOpen
         public string scope => string.Empty;
         public string interfaceName => string.Empty;
         public string operation => _operation;
-        public string moreInfo => "ORS membrane unit operation (see membrane_capeopen.log next to the DLL).";
+        public string moreInfo => "Membrane unit operation (see membrane_capeopen.log next to the DLL).";
     }
 }

@@ -7,7 +7,7 @@ environment.
 ## Layout
 
 ```
-cape-open/     CAPE-OPEN Unit Operation spec (ground truth) + errata + C# sample
+cape-open/     CAPE-OPEN Unit Operation spec (ground truth) + errata
 membrane/      Source models studied: Aziaba/DWSIM (baseline), MemPy, Dias-Pinto (chosen)
 docs/          Decision, plan, validation & findings, morning summary
 src/           The implementation (see below)
@@ -47,7 +47,7 @@ dotnet test  MembraneUnitOp.sln                 # 26 tests
 cd src/Membrane.CapeOpen/bin/x64/Release
 register.bat            # regasm /codebase; adds CAPE-OPEN CATIDs + CapeDescription
 ```
-The unit then appears in COFE's unit-operation palette as *"ORS Membrane (Gas Permeation, Cross-Flow)"*.
+The unit then appears in COFE's unit-operation palette as *"Membrane (Gas Permeation, Cross-Flow)"*.
 `unregister.bat` removes it.
 
 ## Status
@@ -55,3 +55,10 @@ The unit then appears in COFE's unit-operation palette as *"ORS Membrane (Gas Pe
 Physics core and CAPE-OPEN adapter are implemented, build clean, and pass all unit + headless integration
 tests. Not yet done (see `docs/04-morning-summary.md`): live COFE round-trip, the `Edit()` GUI, the exact
 Dias "2D model" refinement, and the non-isothermal (Part III) extension.
+
+## License
+
+Released under the [MIT License](LICENSE). © 2026 Anders Andreasen.
+
+The bundled `lib/CAPE-OPENv1-1-0.dll` is the CO-LaN reference Primary Interop Assembly, redistributed under
+its own terms.

@@ -1,5 +1,5 @@
 @echo off
-REM Register the ORS membrane unit operation as a CAPE-OPEN COM server (per-machine; run as Administrator).
+REM Register the membrane unit operation as a CAPE-OPEN COM server (per-machine; run as Administrator).
 REM RegAsm invokes the [ComRegisterFunction] which writes the CAPE-OPEN CATIDs and CapeDescription keys.
 setlocal
 set DLL=%~dp0Membrane.CapeOpen.dll
