@@ -10,8 +10,8 @@ namespace Membrane.CapeOpen
     /// </summary>
     internal static class HtmlReport
     {
-        // ORS brand palette.
-        private const string Navy = "#002D40", Red = "#D61F39", Amber = "#E6A740", Slate = "#82979F", DarkGrey = "#4C4D4E";
+        // Report palette.
+        private const string Navy = "#1F3A5F", Red = "#C0392B", Amber = "#D68910", Slate = "#7F8C8D", DarkGrey = "#34495E";
         private static readonly string[] SeriesColors = { Red, Navy, Amber, Slate, DarkGrey };
 
         public static string Build(FeedState feed, MembraneCore.MembraneResult r, double pr, double pp, string flowPattern)
@@ -20,14 +20,14 @@ namespace Membrane.CapeOpen
             var sb = new StringBuilder();
             sb.AppendLine("<!DOCTYPE html>");
             sb.AppendLine("<html><head><meta charset=\"utf-8\"><style>");
-            sb.AppendLine("body{font-family:Arial,Helvetica,sans-serif;color:#4C4D4E;margin:12px;}");
-            sb.AppendLine("h2{color:#002D40;margin:0 0 4px;} h3{color:#002D40;margin:14px 0 4px;}");
-            sb.AppendLine("table{border-collapse:collapse;margin:6px 0;} th,td{border:1px solid #82979F;padding:3px 8px;text-align:right;}");
-            sb.AppendLine("th{background:#002D40;color:#fff;} td.l,th.l{text-align:left;}");
-            sb.AppendLine(".k{color:#82979F;}");
+            sb.AppendLine("body{font-family:Arial,Helvetica,sans-serif;color:#34495E;margin:12px;}");
+            sb.AppendLine("h2{color:#1F3A5F;margin:0 0 4px;} h3{color:#1F3A5F;margin:14px 0 4px;}");
+            sb.AppendLine("table{border-collapse:collapse;margin:6px 0;} th,td{border:1px solid #7F8C8D;padding:3px 8px;text-align:right;}");
+            sb.AppendLine("th{background:#1F3A5F;color:#fff;} td.l,th.l{text-align:left;}");
+            sb.AppendLine(".k{color:#7F8C8D;}");
             sb.AppendLine("</style></head><body>");
 
-            sb.AppendLine("<h2>ORS Membrane — Gas Permeation</h2>");
+            sb.AppendLine("<h2>Membrane — Gas Permeation</h2>");
             sb.AppendFormat(ci, "<div class='k'>Flow pattern: <b>{0}</b> &nbsp; Feed {1:F2} K, {2:F2} bar &rarr; permeate {3:F2} bar (γ={4:F3}) &nbsp; Feed {5:E3} mol/s</div>",
                 flowPattern, feed.Temperature, pr / 1e5, pp / 1e5, pp / pr, feed.MolarFlow);
             sb.AppendFormat(ci, "<div class='k'>Stage cut θ = <b>{0:F4}</b> &nbsp; mass-balance residual {1:E2}</div>", r.StageCut, r.MassBalanceResidual);
@@ -70,13 +70,13 @@ namespace Membrane.CapeOpen
                 double f = t / 4.0;
                 double gy = Y(f), gx = X(f);
                 s.AppendFormat(ci, "<line x1='{0:F1}' y1='{1:F1}' x2='{2:F1}' y2='{1:F1}' stroke='#e6eaec'/>", L, gy, L + plotW);
-                s.AppendFormat(ci, "<text x='{0:F1}' y='{1:F1}' font-size='10' fill='#4C4D4E' text-anchor='end'>{2:F2}</text>", L - 6, gy + 3, f);
-                s.AppendFormat(ci, "<text x='{0:F1}' y='{1:F1}' font-size='10' fill='#4C4D4E' text-anchor='middle'>{2:F2}</text>", gx, T + plotH + 16, f);
+                s.AppendFormat(ci, "<text x='{0:F1}' y='{1:F1}' font-size='10' fill='#34495E' text-anchor='end'>{2:F2}</text>", L - 6, gy + 3, f);
+                s.AppendFormat(ci, "<text x='{0:F1}' y='{1:F1}' font-size='10' fill='#34495E' text-anchor='middle'>{2:F2}</text>", gx, T + plotH + 16, f);
             }
-            s.AppendFormat(ci, "<line x1='{0}' y1='{1}' x2='{0}' y2='{2}' stroke='#4C4D4E'/>", L, T, T + plotH);
-            s.AppendFormat(ci, "<line x1='{0}' y1='{1}' x2='{2}' y2='{1}' stroke='#4C4D4E'/>", L, T + plotH, L + plotW);
-            s.AppendFormat(ci, "<text x='{0:F1}' y='{1}' font-size='11' fill='#002D40' text-anchor='middle'>membrane position</text>", L + plotW / 2, H - 6);
-            s.AppendFormat(ci, "<text x='14' y='{0:F1}' font-size='11' fill='#002D40' text-anchor='middle' transform='rotate(-90 14 {0:F1})'>mole fraction / stage cut</text>", T + plotH / 2);
+            s.AppendFormat(ci, "<line x1='{0}' y1='{1}' x2='{0}' y2='{2}' stroke='#34495E'/>", L, T, T + plotH);
+            s.AppendFormat(ci, "<line x1='{0}' y1='{1}' x2='{2}' y2='{1}' stroke='#34495E'/>", L, T + plotH, L + plotW);
+            s.AppendFormat(ci, "<text x='{0:F1}' y='{1}' font-size='11' fill='#1F3A5F' text-anchor='middle'>membrane position</text>", L + plotW / 2, H - 6);
+            s.AppendFormat(ci, "<text x='14' y='{0:F1}' font-size='11' fill='#1F3A5F' text-anchor='middle' transform='rotate(-90 14 {0:F1})'>mole fraction / stage cut</text>", T + plotH / 2);
 
             // Component series: retentate (solid) + permeate (dashed).
             int legendY = T + 4;
@@ -85,7 +85,7 @@ namespace Membrane.CapeOpen
                 string color = SeriesColors[i % SeriesColors.Length];
                 s.AppendFormat(ci, "<polyline fill='none' stroke='{0}' stroke-width='2' points='{1}'/>", color, Points(p.Position, p.Retentate[i], X, Y));
                 s.AppendFormat(ci, "<polyline fill='none' stroke='{0}' stroke-width='2' stroke-dasharray='5,4' points='{1}'/>", color, Points(p.Position, p.Permeate[i], X, Y));
-                s.AppendFormat(ci, "<rect x='{0}' y='{1}' width='12' height='3' fill='{2}'/><text x='{3}' y='{4}' font-size='11' fill='#4C4D4E'>{5}</text>",
+                s.AppendFormat(ci, "<rect x='{0}' y='{1}' width='12' height='3' fill='{2}'/><text x='{3}' y='{4}' font-size='11' fill='#34495E'>{5}</text>",
                     L + plotW + 12, legendY, color, L + plotW + 28, legendY + 4, feed.ComponentIds[i]);
                 legendY += 18;
             }

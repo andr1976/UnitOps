@@ -1,6 +1,6 @@
 name: COFEStand flowsheet gate
 
-# END-TO-END GATE. On a clean Windows runner: build the ORS membrane CAPE-OPEN unit,
+# END-TO-END GATE. On a clean Windows runner: build the membrane CAPE-OPEN unit,
 # assemble the portable ZIP, silently install COCO (for the TEA property package +
 # COFEStand), register the unit MACHINE-WIDE (HKLM) via the shipped register.bat, then
 # solve every flowsheet/*.fsd in COFEStand and assert each returns "SOLVE: OK". The job
@@ -50,8 +50,8 @@ jobs:
         run: |
           ./package/Build-Portable.ps1 -Version ci
           $pkgRoot = Join-Path $env:RUNNER_TEMP 'pkg'
-          Expand-Archive -Path 'package/Output/ORS-Membrane-Portable-ci.zip' -DestinationPath $pkgRoot -Force
-          "PKG_DIR=$(Join-Path $pkgRoot 'ORS-Membrane-Portable-ci')" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          Expand-Archive -Path 'package/Output/Membrane-Portable-ci.zip' -DestinationPath $pkgRoot -Force
+          "PKG_DIR=$(Join-Path $pkgRoot 'Membrane-Portable-ci')" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
       - name: Install COCO (silent, with ChemSep/TEA)
         shell: pwsh

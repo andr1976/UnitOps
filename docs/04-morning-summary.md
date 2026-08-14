@@ -47,7 +47,7 @@ it reproduces **Shindo's** cross-flow, which Shindo validated against compiled *
 - Used `S_H₂ = 4.80×10⁻¹⁰` for Case 2 (typo correction, justified above).
 - Config via COFE's **parameter grid** (permeances discovered from the feed) instead of a custom `Edit()`
   GUI for now — functional without extra UI; an Avalonia editor can slot into `Edit()` later.
-- New CLSID `B2E8A6C1-…` / ProgId `ORS.MembraneUnitOperation.1`; vendor "ORS Consulting" in CapeDescription.
+- New CLSID `B2E8A6C1-…` / ProgId `Membrane.MembraneUnitOperation.1`; vendor "Anders Andreasen" in CapeDescription.
 - Did **not** run `git init`/commit (per our commit-only-when-asked rule). Say the word and I'll initialise
   a repo and commit this with a clean history. A `.gitignore` is in place.
 

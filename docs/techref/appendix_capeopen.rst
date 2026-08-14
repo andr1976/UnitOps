@@ -12,9 +12,9 @@ Component identity
    :widths: 26 74
 
    * - Name
-     - ORS Membrane Unit Operation
+     - Membrane Unit Operation
    * - ProgID
-     - ``ORS.MembraneUnitOperation.1``
+     - ``Membrane.MembraneUnitOperation.1``
    * - Category
      - CAPE-OPEN Unit Operation
    * - Runtime

@@ -1,4 +1,4 @@
-# -- ORS Membrane Unit Operation: Technical Reference, Sphinx config --
+# -- Membrane Unit Operation: Technical Reference, Sphinx config --
 #
 # Scaffolding mirrors the GERG-2008 and ThermoCalc technical references
 # (docs/techref) so the sibling references share a look, build, and
@@ -6,9 +6,9 @@
 #     make html       (HTML, alabaster theme)
 #     make latexpdf   (PDF via pdflatex + latexmk)
 
-project = 'ORS Membrane Unit Operation: Technical Reference'
+project = 'Membrane Unit Operation: Technical Reference'
 author = 'Anders Andreasen'
-copyright = '2026, Anders Andreasen / ORS Consulting'
+copyright = '2026, Anders Andreasen'
 release = '0.1'
 
 # -- General --
@@ -42,19 +42,19 @@ latex_elements = {
 \usepackage{longtable}
 \usepackage{pdflscape}
 
-% ORS brand: navy chapter/section headings, red accents.
+% Palette: navy chapter/section headings, red accents.
 \usepackage{xcolor}
-\definecolor{orsnavy}{HTML}{002D40}
-\definecolor{orsred}{HTML}{D61F39}
-\definecolor{orsslate}{HTML}{82979F}
-\definecolor{orsgrey}{HTML}{4C4D4E}
-\definecolor{orsamber}{HTML}{E6A740}
+\definecolor{docnavy}{HTML}{1F3A5F}
+\definecolor{docred}{HTML}{C0392B}
+\definecolor{docslate}{HTML}{7F8C8D}
+\definecolor{docgrey}{HTML}{34495E}
+\definecolor{docamber}{HTML}{D68910}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
 \usepackage{sectsty}
-\chapterfont{\color{orsnavy}}
-\sectionfont{\color{orsnavy}}
-\subsectionfont{\color{orsnavy}}
+\chapterfont{\color{docnavy}}
+\sectionfont{\color{docnavy}}
+\subsectionfont{\color{docnavy}}
 
 % Make stray Unicode from prose (arrows, math symbols, sub/superscripts) safe for pdflatex,
 % so the nicer glyphs can stay in the HTML build without breaking the PDF.
@@ -112,7 +112,7 @@ latex_additional_files = ['figures/tikz/module_body.tex', 'figures/tikz/arch_bod
 
 latex_documents = [
     ('index', 'membrane_techref.tex',
-     'ORS Membrane Unit Operation: Technical Reference',
+     'Membrane Unit Operation: Technical Reference',
      'Anders Andreasen', 'manual'),
 ]
 
@@ -125,10 +125,10 @@ html_theme_options = {
     'sidebar_width': '270px',
     'fixed_sidebar': True,
     'sidebar_collapse': True,
-    # ORS palette
-    'gray_1': '#002D40',     # headings / dark text
-    'link': '#D61F39',
-    'link_hover': '#002D40',
-    'sidebar_header': '#002D40',
-    'sidebar_link': '#002D40',
+    # Palette
+    'gray_1': '#1F3A5F',     # headings / dark text
+    'link': '#C0392B',
+    'link_hover': '#1F3A5F',
+    'sidebar_header': '#1F3A5F',
+    'sidebar_link': '#1F3A5F',
 }

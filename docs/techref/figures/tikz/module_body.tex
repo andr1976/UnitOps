@@ -1,14 +1,14 @@
-% Membrane module schematic (feed -> retentate + permeate). ORS brand colours are
+% Membrane module schematic (feed -> retentate + permeate). Palette colours are
 % defined in the document preamble (PDF build) and in the standalone wrapper (HTML PNG).
 \begin{tikzpicture}[>=Latex, font=\small]
-  \draw[thick, orsnavy, fill=orsnavy!6] (0,0) rectangle (6.6,2.6);
-  \fill[orsslate!45] (0,1.25) rectangle (6.6,1.45);
-  \draw[orsnavy, thin] (0,1.25) rectangle (6.6,1.45);
-  \node[orsnavy] at (3.3,2.05) {feed / retentate side (high pressure $p_\mathrm{r}$)};
-  \node[orsnavy, font=\footnotesize] at (3.3,1.35) {permselective active layer};
-  \node[orsnavy] at (3.3,0.55) {permeate side (low pressure $p_\mathrm{p}$)};
-  \draw[->, very thick, orsred] (-1.9,1.9) -- (-0.05,1.9) node[midway, above] {Feed};
-  \draw[->, very thick, orsred] (6.65,1.9) -- (8.5,1.9) node[midway, above] {Retentate};
-  \draw[->, very thick, orsred] (3.3,-0.05) -- (3.3,-1.35) node[midway, right] {Permeate};
-  \foreach \x in {1.0,2.15,3.3,4.45,5.6} \draw[->, orsslate, thick] (\x,1.25) -- (\x,0.98);
+  \draw[thick, docnavy, fill=docnavy!6] (0,0) rectangle (6.6,2.6);
+  \fill[docslate!45] (0,1.25) rectangle (6.6,1.45);
+  \draw[docnavy, thin] (0,1.25) rectangle (6.6,1.45);
+  \node[docnavy] at (3.3,2.05) {feed / retentate side (high pressure $p_\mathrm{r}$)};
+  \node[docnavy, font=\footnotesize] at (3.3,1.35) {permselective active layer};
+  \node[docnavy] at (3.3,0.55) {permeate side (low pressure $p_\mathrm{p}$)};
+  \draw[->, very thick, docred] (-1.9,1.9) -- (-0.05,1.9) node[midway, above] {Feed};
+  \draw[->, very thick, docred] (6.65,1.9) -- (8.5,1.9) node[midway, above] {Retentate};
+  \draw[->, very thick, docred] (3.3,-0.05) -- (3.3,-1.35) node[midway, right] {Permeate};
+  \foreach \x in {1.0,2.15,3.3,4.45,5.6} \draw[->, docslate, thick] (\x,1.25) -- (\x,0.98);
 \end{tikzpicture}

@@ -1,6 +1,6 @@
 name: Release portable package
 
-# Manual build of the portable, no-installer distribution of the ORS membrane
+# Manual build of the portable, no-installer distribution of the membrane
 # CAPE-OPEN unit operation on a Windows runner. Builds the net48/x64 adapter with
 # the repo-vendored CAPE-OPEN PIA (no COCO needed), assembles a self-contained ZIP
 # (adapter + physics DLL + PIA + register scripts + example flowsheet + docs), and
@@ -64,27 +64,27 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ORS-Membrane-Portable-${{ github.event.inputs.version }}
-          path: package/Output/ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip
+          name: Membrane-Portable-${{ github.event.inputs.version }}
+          path: package/Output/Membrane-Portable-${{ github.event.inputs.version }}.zip
           if-no-files-found: error
 
       - name: Publish GitHub Release (this repo)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag }}
-          name: ORS Membrane Unit Operation ${{ github.event.inputs.version }}
+          name: Membrane Unit Operation ${{ github.event.inputs.version }}
           prerelease: ${{ github.event.inputs.prerelease }}
           fail_on_unmatched_files: true
-          files: package/Output/ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip
+          files: package/Output/Membrane-Portable-${{ github.event.inputs.version }}.zip
           body: |
-            **ORS Membrane (Gas Permeation, Cross-Flow) — CAPE-OPEN 1.0 unit operation. Portable, no-installer build (Windows x64).**
+            **Membrane (Gas Permeation, Cross-Flow) — CAPE-OPEN 1.0 unit operation. Portable, no-installer build (Windows x64).**
 
             Self-contained: bundles the COM adapter, the physics core, the CAPE-OPEN 1.1 PIA, the registration scripts, an example flowsheet, and the Technical Reference (HTML). Registers per-user (HKCU, no admin) or per-machine (HKLM, admin).
 
             ### Install
-            1. Extract `ORS-Membrane-Portable-${{ github.event.inputs.version }}.zip` to a stable folder you will not move (e.g. `%LOCALAPPDATA%\Programs\ORS-Membrane`).
+            1. Extract `Membrane-Portable-${{ github.event.inputs.version }}.zip` to a stable folder you will not move (e.g. `%LOCALAPPDATA%\Programs\Membrane`).
             2. **Per-user (no admin):** run `register-user.ps1`. **Per-machine (admin):** run `register.bat` as administrator. Re-run if you later move the folder.
-            3. In a CAPE-OPEN simulator (COFE/COCO) the block appears in the unit-operation palette as **ORS Membrane (Gas Permeation, Cross-Flow)**.
+            3. In a CAPE-OPEN simulator (COFE/COCO) the block appears in the unit-operation palette as **Membrane (Gas Permeation, Cross-Flow)**.
 
             ### Prerequisites (target PC)
             - Windows x64, .NET Framework 4.8+

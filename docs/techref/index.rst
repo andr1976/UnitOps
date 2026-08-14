@@ -1,7 +1,7 @@
 .. _index:
 
 ==================================================
-ORS Membrane Unit Operation: Technical Reference
+Membrane Unit Operation: Technical Reference
 ==================================================
 
 .. only:: latex
@@ -12,7 +12,7 @@ ORS Membrane Unit Operation: Technical Reference
       \begin{center}
       {\Large Background theory, model equations, numerical solution methods,
       software architecture, validation, and a permeability/permeance data
-      library for the ORS gas-permeation membrane unit operation for
+      library for the gas-permeation membrane unit operation for
       CAPE-OPEN / COFE.}
       \end{center}
       \vspace{1cm}
@@ -21,7 +21,6 @@ ORS Membrane Unit Operation: Technical Reference
       \textbf{Version:}  & 0.1 (draft) \\
       \textbf{Date:}     & August 2026 \\
       \textbf{Author:}   & Anders Andreasen \\
-      \textbf{Org:}      & ORS Consulting \\
       \end{tabular}
 
       \vspace{1cm}

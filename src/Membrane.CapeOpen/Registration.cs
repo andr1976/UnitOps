@@ -37,9 +37,9 @@ namespace Membrane.CapeOpen
                         desc?.SetValue("Name", MembraneUnitIdentity.Name);
                         desc?.SetValue("Description", MembraneUnitIdentity.Description);
                         desc?.SetValue("CapeVersion", "1.0");
-                        desc?.SetValue("About", "ORS-Consulting membrane unit operation. Cross-flow gas permeation.");
+                        desc?.SetValue("About", "Membrane unit operation. Cross-flow gas permeation.");
                         desc?.SetValue("VersionNumber", "1.0.0");
-                        desc?.SetValue("Vendor", "ORS Consulting");
+                        desc?.SetValue("Vendor", "Anders Andreasen");
                     }
                 }
             }
