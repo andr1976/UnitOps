@@ -17,6 +17,9 @@ docs/techref/figures/tikz/build/
 *.synctex.gz
 *.toc
 *.out
+*.bbl
+*.blg
+*.abs
 
 # ---- Diagnostics / logs ----
 *.log

@@ -53,23 +53,27 @@ multicomponent feeds and the :math:`\gamma\to0` and high-selectivity limits.
 Cross-flow integration
 =======================
 
-The cross-flow composition ODE :eq:`eq-cf-composition` is marched in the
-retentate flow :math:`R` from :math:`F` downward with a fixed-step
-**fourth-order Runge--Kutta** integrator (default 4000 steps), evaluating the
-local permeate solver at each stage. Two quantities are accumulated alongside:
+The cross-flow model is integrated by one of two marches, depending on whether
+the stage cut or the membrane area is specified.
 
-* the **area** by the quadrature :eq:`eq-cf-area-quad`,
-  :math:`a \mathrel{+}= \Delta R / J_\mathrm{tot}(x)`, using the local total flux
-  :eq:`eq-total-flux`; and
-* the profile samples (:ref:`sec-profiles`), recorded at 100 evenly spaced
-  positions.
+``SolveByStageCut`` (design mode) marches the composition ODE
+:eq:`eq-cf-composition` in the stage cut :math:`\theta` from zero to the target
+with a fixed-step **fourth-order Runge--Kutta** integrator (default 2000 steps),
+evaluating the local permeate solver at each stage and accumulating the **area**
+by the quadrature :eq:`eq-cf-area-quad`,
+:math:`a \mathrel{+}= \Delta R / J_\mathrm{tot}(x)`, from the local total flux
+:eq:`eq-total-flux`.
 
-``SolveByStageCut`` marches until the target cut :math:`\theta` is reached;
-``SolveByArea`` marches until the accumulated area reaches the specified
-:math:`A`, interpolating the final partial step. The 4000-step default
-reproduces the Shindo benchmark to :math:`\sim2\times10^{-4}`
-(:ref:`sec-val-shindo`); the step count is a compile-time constant that trades
-runtime for accuracy and is far below the point of diminishing returns.
+``SolveByArea`` (rating mode) marches the component molar flows in the area
+:math:`a` from the feed end with an explicit **forward-Euler** step (default 4000
+steps), until the accumulated area reaches the specified :math:`A`, interpolating
+the final partial step.
+
+Both record the profile samples (:ref:`sec-profiles`) at 100 evenly spaced
+positions. The RK4 stage-cut march reproduces the Shindo benchmark to
+:math:`\sim2\times10^{-4}` (:ref:`sec-val-shindo`); the step counts are
+compile-time constants that trade runtime for accuracy and are far below the
+point of diminishing returns.
 
 .. _sec-counter-bvp:
 
@@ -150,7 +154,10 @@ Tolerances and defaults
    * - Quantity
      - Default
      - Set in
-   * - Cross-flow RK4 steps
+   * - Cross-flow RK4 steps (``SolveByStageCut``)
+     - 2000
+     - ``CrossFlowModel``
+   * - Cross-flow forward-Euler steps (``SolveByArea``)
      - 4000
      - ``CrossFlowModel``
    * - Counter-current cells

@@ -1,0 +1,276 @@
+% ===========================================================================
+% Paper bibliography — curated subset for the Digital Chemical Engineering article.
+% Entries are REUSED VERBATIM from the verified docs/techref/references.bib
+% (single source of truth). Do not edit here without syncing there.
+% "VERIFY" = metadata reconstructed from secondary sources; confirm against the
+% version of record before submission.
+% ===========================================================================
+
+% --- Transport theory / textbooks ---
+
+@article{wijmans1995,
+  author  = {Wijmans, J. G. and Baker, R. W.},
+  title   = {The solution-diffusion model: a review},
+  journal = {Journal of Membrane Science},
+  volume  = {107}, number = {1--2}, pages = {1--21}, year = {1995},
+  doi     = {10.1016/0376-7388(95)00102-I},
+}
+
+@book{baker2004,
+  author    = {Baker, Richard W.},
+  title     = {Membrane Technology and Applications},
+  edition   = {2nd}, publisher = {John Wiley \& Sons}, address = {Chichester},
+  year      = {2004}, doi = {10.1002/0470020393},
+}
+
+@book{geankoplis,
+  author    = {Geankoplis, Christie J.},
+  title     = {Transport Processes and Unit Operations},
+  edition   = {3rd}, publisher = {Prentice Hall}, address = {Englewood Cliffs, NJ},
+  year      = {1993},
+  note      = {Ch. 13, Membrane Separation Processes.},
+}
+
+% --- Flow-pattern / permeator models (benchmarks) ---
+
+@article{weller1950,
+  author  = {Weller, S. and Steiner, W. A.},
+  title   = {Separation of gases by fractional permeation through membranes},
+  journal = {Journal of Applied Physics},
+  volume  = {21}, number = {4}, pages = {279--283}, year = {1950},
+  doi     = {10.1063/1.1699653},
+}
+
+@article{shindo1985,
+  author  = {Shindo, Y. and Hakuta, T. and Yoshitome, H. and Inoue, H.},
+  title   = {Calculation methods for multicomponent gas separation by permeation},
+  journal = {Separation Science and Technology},
+  volume  = {20}, number = {5--6}, pages = {445--459}, year = {1985},
+  doi     = {10.1080/01496398508060692},
+}
+
+@article{pan1986,
+  author  = {Pan, C. Y.},
+  title   = {Gas separation by high-flux, asymmetric hollow-fiber membrane},
+  journal = {AIChE Journal},
+  volume  = {32}, number = {12}, pages = {2020--2027}, year = {1986},
+  doi     = {10.1002/aic.690321212},
+}
+
+@article{coker1998,
+  author  = {Coker, D. T. and Freeman, B. D. and Fleming, G. K.},
+  title   = {Modeling multicomponent gas separation using hollow-fiber membrane contactors},
+  journal = {AIChE Journal},
+  volume  = {44}, number = {6}, pages = {1289--1302}, year = {1998},
+  doi     = {10.1002/aic.690440607},
+}
+
+@article{diaspinto2020,
+  author  = {Dias, Ana Carolina S. and De S{\'a}, Mar{\'i}lia Caroline C. and
+             Fontoura, Tahyn{\'a} B. and Menezes, Diego Q. and Anzai, Thiago K. and
+             Diehl, F{\'a}bio C. and Thompson, Pedro H. and Pinto, Jos{\'e} Carlos},
+  title   = {Modeling of spiral wound membranes for gas separations.
+             Part I: An iterative 2D permeation model},
+  journal = {Journal of Membrane Science},
+  volume  = {611}, pages = {118278}, year = {2020},
+  doi     = {10.1016/j.memsci.2020.118278},
+}
+
+@article{fontoura2022,
+  author  = {Fontoura, Tahyn{\'a} B. and de S{\'a}, Mar{\'i}lia Caroline C. and
+             Faria de Menezes, Diego Q. and Oechsler, Bruno Francisco and
+             Melo, Afr{\^a}nio and de O. Campos, Luiz Felipe and
+             Anzai, Thiago K. and Diehl, F{\'a}bio C. and Thompson, Pedro H. and
+             Pinto, Jos{\'e} Carlos},
+  title   = {Modeling of spiral wound membranes for gas separations.
+             Part III: A nonisothermal 2D permeation model},
+  journal = {Chemical Engineering Research and Design},
+  volume  = {177}, pages = {376--393}, year = {2022},
+  doi     = {10.1016/j.cherd.2021.10.036},
+}
+
+@article{dejaco2020,
+  author  = {DeJaco, Robert F. and Loprete, Kenneth and Pennisi, Kenneth and
+             Majumdar, Sudipto and Siepmann, J. Ilja and Daoutidis, Prodromos and
+             Murnen, Hannah K. and Tsapatsis, Michael},
+  title   = {Modeling and simulation of gas separations with spiral-wound membranes},
+  journal = {AIChE Journal},
+  volume  = {66}, number = {8}, pages = {e16274}, year = {2020},
+  doi     = {10.1002/aic.16274},
+  note    = {Open-source Python package MemPy (Pyomo + IPOPT/HSL); fugacity-based
+             permeance with Peng--Robinson real gas.},
+}
+
+@article{ahmad2012,
+  author  = {Ahmad, F. and Lau, K. K. and Shariff, A. M. and Murshid, G.},
+  title   = {Process simulation and optimal design of membrane separation
+             system for {CO2} capture from natural gas},
+  journal = {Computers \& Chemical Engineering},
+  volume  = {36}, pages = {119--128}, year = {2012},
+  doi     = {10.1016/j.compchemeng.2011.08.002},
+  note    = {Two-dimensional cross-flow model as a Visual Basic user subroutine
+             inside Aspen HYSYS; validated against Pan (1986).},
+}
+
+@article{andreasenvanbaten2025,
+  author  = {Andreasen, Anders and van Baten, Jasper},
+  title   = {Techno-economic analysis and optimization of gray and green methanol
+             synthesis using flowsheet automation and surrogate modeling},
+  journal = {Energy \& Fuels},
+  volume  = {39}, number = {6}, pages = {3359--3374}, year = {2025},
+  doi     = {10.1021/acs.energyfuels.4c05806},
+  note    = {Uses the free CAPE-OPEN environment COCO/COFE; describes the
+             CAPE-OPEN interoperability ecosystem.},
+}
+
+@article{sada1992,
+  author  = {Sada, E. and Kumazawa, H. and Wang, J.-S. and Koizumi, M.},
+  title   = {Separation of carbon dioxide by asymmetric hollow fiber membrane of cellulose triacetate},
+  journal = {Journal of Applied Polymer Science},
+  volume  = {45}, number = {12}, pages = {2181--2186}, year = {1992},
+  doi     = {10.1002/app.1992.070451212},
+}
+
+@article{chowdhury2005,
+  author  = {Chowdhury, M. H. M. and Feng, X. and Douglas, P. and Croiset, E.},
+  title   = {A New Numerical Approach for a Detailed Multicomponent Gas Separation Membrane Model and {AspenPlus} Simulation},
+  journal = {Chemical Engineering \& Technology},
+  volume  = {28}, number = {7}, pages = {773--782}, year = {2005},
+  doi     = {10.1002/ceat.200500077},
+}
+
+@article{aziaba2022,
+  author  = {Aziaba, Kouessan and Jordan, Christian and Haddadi, Bahram and Harasek, Michael},
+  title   = {Design of a gas permeation and pervaporation membrane model for an
+             open source process simulation tool},
+  journal = {Membranes},
+  volume  = {12}, number = {12}, pages = {1186}, year = {2022},
+  doi     = {10.3390/membranes12121186},
+}
+
+% --- CAPE-OPEN standards ---
+
+@techreport{cocolan_uo,
+  author      = {{CO-LaN}},
+  title       = {Unit Operations Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2001},
+  note        = {Version 1.0. https://www.colan.org/},
+}
+
+@techreport{cocolan_param,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2001},
+  note        = {Version 1.0. https://www.colan.org/},
+}
+
+@techreport{cocolan_param_errata,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface --- Errata and Clarifications},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2016},
+  note        = {Errata 1.0.1. https://www.colan.org/},
+}
+
+% --- Membrane unit operations in / for process simulators ---
+
+@article{daconceicao2023,
+  author  = {Da Conceicao, Marcos and Nemetz, Leo and Rivero, Joanna and
+             Hornbostel, Katherine and Lipscomb, Glenn},
+  title   = {Gas separation membrane module modeling: A comprehensive review},
+  journal = {Membranes},
+  volume  = {13}, number = {7}, pages = {639}, year = {2023},
+  doi     = {10.3390/membranes13070639},
+}
+
+@article{alqaheem2024accuracy,
+  author  = {Alqaheem, Yousef},
+  title   = {Accuracy of mathematical models and process simulators for
+             predicting the performance of gas-separation membranes},
+  journal = {Eng},
+  volume  = {5}, number = {4}, pages = {3137--3147}, year = {2024},
+  doi     = {10.3390/eng5040164},
+  note    = {Same cross-flow membrane built in commercial UniSIM and in the free
+             COCO (via Scilab); benchmarked against MTR field data.},
+}
+
+@article{alqaheem2024coco,
+  author  = {Alqaheem, Yousef and Alobaid, Mohammad},
+  title   = {Development of a membrane process in {CAPE-OPEN} to {CAPE-OPEN}
+             ({COCO}) simulator for carbon dioxide separation},
+  journal = {Results in Engineering},
+  volume  = {22}, pages = {102239}, year = {2024},
+  doi     = {10.1016/j.rineng.2024.102239},
+  note    = {Cross-flow membrane coded in Scilab and bridged into COCO via the
+             Scilab CAPE-OPEN plug-in.},
+}
+
+@article{salano2025,
+  author  = {Salano, Loretta and Dagna, Ilaria and Vallerio, Mattia and Manenti, Flavio},
+  title   = {Development and integration of a co-current hollow fiber membrane
+             unit for gas separation in process simulators using {CAPE-OPEN}
+             standards},
+  journal = {Systems and Control Transactions},
+  volume  = {4}, pages = {364--369}, year = {2025},
+  doi     = {10.69997/sct.182712},
+  note    = {ESCAPE-35. Custom CAPE-OPEN unit written in C++ for Aspen HYSYS;
+             source not released.},
+}
+
+@article{bocciardo2013,
+  author  = {Bocciardo, Davide and Ferrari, Maria-Chiara and Brandani, Stefano},
+  title   = {Modelling and multi-stage design of membrane processes applied to
+             carbon capture in coal-fired power plants},
+  journal = {Energy Procedia},
+  volume  = {37}, pages = {932--940}, year = {2013},
+  doi     = {10.1016/j.egypro.2013.05.188},
+  note    = {Proprietary membrane extension unit operation in Honeywell UniSim.},
+}
+
+@article{bozorg2019,
+  author  = {Bozorg, Mohammad and Addis, Bernardetta and Piccialli, Veronica and
+             Ram{\'i}rez-Santos, {\'A}lvaro A. and Castel, Christophe and
+             Pinnau, Ingo and Favre, Eric},
+  title   = {Polymeric membrane materials for nitrogen production from air:
+             A process synthesis study},
+  journal = {Chemical Engineering Science},
+  volume  = {207}, pages = {1196--1213}, year = {2019},
+  doi     = {10.1016/j.ces.2019.07.029},
+  note    = {Bespoke multistage optimization program, not a simulator unit.},
+}
+
+% --- Application context / reviews ---
+
+@article{BakerLokhandwala2008,
+  author  = {Baker, R. W. and Lokhandwala, K.},
+  title   = {Natural Gas Processing with Membranes: An Overview},
+  journal = {Industrial \& Engineering Chemistry Research},
+  volume  = {47}, number = {7}, pages = {2109--2121}, year = {2008},
+  doi     = {10.1021/ie071083w},
+}
+
+@article{Merkel2010,
+  author  = {Merkel, T. C. and Lin, H. and Wei, X. and Baker, R.},
+  title   = {Power plant post-combustion carbon dioxide capture: An opportunity for membranes},
+  journal = {Journal of Membrane Science},
+  volume  = {359}, number = {1-2}, pages = {126--139}, year = {2010},
+  doi     = {10.1016/j.memsci.2009.10.041},
+}
+
+@article{Bernardo2009,
+  author  = {Bernardo, P. and Drioli, E. and Golemme, G.},
+  title   = {Membrane Gas Separation: A Review/State of the Art},
+  journal = {Industrial \& Engineering Chemistry Research},
+  volume  = {48}, number = {10}, pages = {4638--4663}, year = {2009},
+  doi     = {10.1021/ie8019032},
+}
+
+@article{Robeson2008,
+  author  = {Robeson, L. M.},
+  title   = {The upper bound revisited},
+  journal = {Journal of Membrane Science},
+  volume  = {320}, number = {1-2}, pages = {390--400}, year = {2008},
+  doi     = {10.1016/j.memsci.2008.04.030},
+}

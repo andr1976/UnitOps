@@ -15,7 +15,7 @@ scripts in ``figures/`` that read CSVs dumped by the actual solver
 Automated test suite
 ====================
 
-46 automated tests run on every build (``dotnet test``):
+54 automated tests run on every build (``dotnet test``):
 
 .. list-table::
    :header-rows: 1
@@ -28,22 +28,25 @@ Automated test suite
      - 16
      - the singularity-free local permeate root-find (:ref:`sec-local-permeate-solver`), binary and multicomponent, :math:`\gamma\to0` and high-selectivity limits
    * - ``CrossFlowModel``
-     - —
+     - 7
      - cross-flow vs. Shindo cross-flow tables; mass-balance closure
    * - ``PlugFlowModel``
-     - —
+     - 8
      - co-/counter-current vs. Shindo; ranking :eq:`eq-fp-ranking`
    * - ``MembraneProfile``
-     - —
+     - 3
      - profile sampling, collected-permeate balance :eq:`eq-collected`
+   * - ``Fugacity`` (local + table)
+     - 6
+     - real-gas fugacity driving force (:ref:`sec-fugacity`); feed-evaluated and local-:math:`\varphi`
    * - ``NonIsothermalEnergy``
      - 4
      - ideal-gas and Joule--Thomson limits, energy closure, profiles
    * - adapter integration + persistence
-     - 8
+     - 10
      - Validate/Calculate lifecycle, spec-mode round-trip, adiabatic energy path, Save/Load hop
    * - **Total**
-     - **46**
+     - **54**
      -
 
 .. _sec-val-shindo:
@@ -447,16 +450,31 @@ components in the correct N\ :sub:`2` > CH\ :sub:`4` > Ar order throughout,
 provided the argon permeance is taken as 7.0, not the 70 printed in the source
 table.
 
-.. table:: TC3 permeate composition, this unit (counter-current, Ar :math:`=7.0`)
+.. list-table:: TC3 permeate composition, this unit (counter-current, Ar :math:`=7.0`)
+   :header-rows: 1
    :align: center
+   :widths: 20 20 20 20 20
 
-   ===============  ==========  ==========  ==========  ==========
-   :math:`\theta`   H\ :sub:`2`  N\ :sub:`2`  CH\ :sub:`4`  Ar
-   ===============  ==========  ==========  ==========  ==========
-   0.30             0.976       0.0114      0.0087      0.0042
-   0.40             0.966       0.0160      0.0122      0.0059
-   0.50             0.936       0.0304      0.0232      0.0107
-   ===============  ==========  ==========  ==========  ==========
+   * - :math:`\theta`
+     - H\ :sub:`2`
+     - N\ :sub:`2`
+     - CH\ :sub:`4`
+     - Ar
+   * - 0.30
+     - 0.976
+     - 0.0114
+     - 0.0087
+     - 0.0042
+   * - 0.40
+     - 0.966
+     - 0.0160
+     - 0.0122
+     - 0.0059
+   * - 0.50
+     - 0.936
+     - 0.0304
+     - 0.0232
+     - 0.0107
 
 .. admonition:: A corrected source typo (argon permeance)
 
