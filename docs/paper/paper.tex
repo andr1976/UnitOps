@@ -231,14 +231,21 @@ correction that is adequate because the fugacity coefficient varies only weakly
 with the modest composition change along a module and the permeate-side
 coefficient tends to unity at low permeate pressure. If the property package
 cannot supply fugacity coefficients, the unit reverts to the partial-pressure
-form of Eq.~\eqref{eq:flux}.
+form of Eq.~\eqref{eq:flux}. One caveat applies to the input permeances:
+literature values are typically regressed against a partial-pressure driving
+force, so the fugacity form is strictly consistent only with permeances taken at
+low pressure ($\varphi \approx 1$) or themselves referred to fugacity; a permeance
+fitted at high pressure already absorbs part of the non-ideality, and applying
+$\varphi$ to it would count that effect twice.
 
 \subsection{Local permeate composition and module balances}\label{sec:model-balances}
-The permeate leaving the active layer at a given position is composed of the
-local fluxes, so its mole fractions are the flux fractions,
-$y_i = J_i / \sum_k J_k$. Writing $S_i = Q_i/Q_1$ for the permeance ratios and
-$\gamma = p_\mathrm{p}/p_\mathrm{r}$ for the pressure ratio, this becomes a
-coupled implicit set in the permeate composition,
+The composition of the permeate crossing the membrane at a given position is the
+flux fraction $J_i/\sum_k J_k$. In \emph{cross-flow} this freshly formed permeate
+is swept away as it forms, so it also sets the local low-pressure partial pressure
+in the driving force, and the permeate composition is the self-consistent flux
+fraction $y_i = J_i/J_\mathrm{tot}$. Writing $S_i = Q_i/Q_1$ for the permeance
+ratios and $\gamma = p_\mathrm{p}/p_\mathrm{r}$ for the pressure ratio, this gives
+the cross-flow local permeate relationship
 
 \begin{equation}\label{eq:yi}
 y_i = \frac{S_i\,(x_i - \gamma\,y_i)}{\sum_k S_k\,(x_k - \gamma\,y_k)},
@@ -246,22 +253,34 @@ y_i = \frac{S_i\,(x_i - \gamma\,y_i)}{\sum_k S_k\,(x_k - \gamma\,y_k)},
 
 in which the unknown appears on both sides through the downstream partial
 pressure. Equation~\eqref{eq:yi} is the multicomponent generalisation of the
-classical binary local permeate relationship \citep{weller1950} and is solved at
-every position by the reformulated solver of Section~\ref{sec:numerics}. The
-local total flux follows as
-$J_\mathrm{tot} = \sum_k Q_k (p_\mathrm{r} x_k - p_\mathrm{p} y_k)$.
+classical binary local permeate relationship \citep{weller1950}. It is written
+here for the partial-pressure driving force; with the default fugacity driving
+force of Eq.~\eqref{eq:flux-fug} the same relation holds because
+$S_i(\varphi_i^{\mathrm{r}} x_i - \gamma\,\varphi_i^{\mathrm{p}} y_i) =
+\tilde{S}_i(x_i - \tilde{\gamma}_i y_i)$, with the rescaled permeance ratio
+$\tilde{S}_i = S_i\,\varphi_i^{\mathrm{r}}$ and the component-wise pressure ratio
+$\tilde{\gamma}_i = \gamma\,\varphi_i^{\mathrm{p}}/\varphi_i^{\mathrm{r}}$ (the
+partial-pressure case is $\varphi_i \equiv 1$). Equation~\eqref{eq:yi} is solved
+at every position by the reformulated solver of Section~\ref{sec:numerics}. In the
+co- and counter-current patterns (Section~\ref{sec:model-patterns}) the driving
+force instead uses the bulk permeate composition, and $y_i$ in
+Eq.~\eqref{eq:flux} denotes that bulk value.
 
-Integrating the local behaviour over the module, with area $a$ measured from the
-feed end and $R(a)$ the local retentate molar flow, gives the retentate-side
+Integrating the local flux over the module, with area $a$ measured from the feed
+end and $R(a)$ the local retentate molar flow, gives the general retentate-side
 balances
 
 \begin{equation}\label{eq:mass-balance}
 -\,\frac{\mathrm{d}R}{\mathrm{d}a} = J_\mathrm{tot}(a), \qquad
--\,\frac{\mathrm{d}(R\,x_i)}{\mathrm{d}a} = y_i(a)\,J_\mathrm{tot}(a).
+-\,\frac{\mathrm{d}(R\,x_i)}{\mathrm{d}a} = J_i(a),
 \end{equation}
 
-The overall stage cut, the single most important design variable, is the
-fraction of the feed that permeates,
+with $J_\mathrm{tot} = \sum_k J_k = \sum_k Q_k (p_\mathrm{r} x_k - p_\mathrm{p} y_k)$
+and $J_i$ the component flux of Eq.~\eqref{eq:flux}. Only in cross-flow does the
+second balance reduce to $-\,\mathrm{d}(R x_i)/\mathrm{d}a = y_i\,J_\mathrm{tot}$,
+where $y_i = J_i/J_\mathrm{tot}$; in the other patterns the component flux $J_i$
+is used directly. The overall stage cut, the single most important design
+variable, is the fraction of the feed that permeates,
 $\theta = \bigl(F - R(A)\bigr)/F$, with $F$ the feed molar flow and $A$ the total
 membrane area.
 
@@ -317,9 +336,12 @@ its streams is shown in Fig.~\ref{fig:module}.
 \end{figure}
 
 \subsection{Adiabatic energy balance}\label{sec:model-energy}
-The separation is computed isothermally, because the permeance is taken
-temperature independent and the driving force at fixed pressure and composition
-does not depend on temperature. An optional adiabatic energy balance is then
+The separation is computed isothermally. The permeance is taken temperature
+independent, and in the default fugacity mode the fugacity coefficients that enter
+the driving force are evaluated once at the feed temperature
+(Section~\ref{sec:model-flux}) and held fixed along the module, so the separation
+does not respond to the temperature field; in the partial-pressure mode the
+driving force carries no temperature dependence at all. An optional adiabatic energy balance is then
 applied as a post-step that assigns outlet temperatures without changing the
 separation. Crossing the membrane is treated as an isenthalpic (throttling) step:
 the permeating gas retains the molar enthalpy it had on the high-pressure side
@@ -339,7 +361,15 @@ n_\mathrm{r}\,h(T_\mathrm{r}, p_\mathrm{r}, \vec{x}) &=
 which returns the permeate outlet temperature $T_\mathrm{p}$ and the retentate
 outlet temperature $T_\mathrm{r}$. All enthalpies are taken from the property
 package, so the Joule--Thomson behaviour is whatever the selected equation of
-state implies; the unit does not hard-code a caloric correlation. A
+state implies; the unit does not hard-code a caloric correlation. Two points
+follow from using a real equation of state. First, the reference enthalpy
+$h(T_\mathrm{f}, p_\mathrm{r}, \vec{y})$ is that of the permeate-composition
+mixture at the retentate pressure, a state the property package flashes and which,
+for a condensable carbon-dioxide-rich permeate at high pressure, may lie in the
+two-phase region. Second, the excess enthalpy of mixing then makes both outlet
+temperatures differ from the feed temperature in general; the limit in which the
+retentate returns exactly to the feed temperature (Section~\ref{sec:val-energy})
+is specific to a fluid with no excess enthalpy of mixing, such as an ideal gas. A
 fully resolved two-dimensional non-isothermal treatment of spiral-wound modules
 is given by \citet{fontoura2022}; the present balance is a lumped adiabatic
 reduction suited to a flowsheet unit. If the property package cannot deliver
@@ -347,11 +377,17 @@ enthalpies, the unit returns an isothermal result and records the reason.
 
 \subsection{Assumptions}\label{sec:model-assumptions}
 The model assumes steady state, constant per-component permeances (independent of
-temperature, pressure and composition), a negligible pressure drop along the
-retentate channel, and no back-permeation, so a component whose local driving
-force would become negative is capped at zero flux. The real-gas correction is
-applied to the driving force only and not to the density and velocity balances or
-to a channel pressure drop. The consequences of these assumptions are examined in
+temperature, pressure and composition), and a negligible pressure drop along the
+retentate channel. Any component whose local driving force would become negative
+is capped at zero flux (no back-permeation). In cross-flow this cap never binds:
+Eq.~\eqref{eq:yk-t} gives $x_i - \gamma y_i = x_i\,t/(t + S_i\gamma) \ge 0$, so the
+local driving force is structurally non-negative. In the co- and counter-current
+patterns, where the bulk permeate composition can locally exceed the retentate
+partial pressure, the cap does bind and suppresses the physically real
+back-permeation, a one-way-permeation approximation
+(Section~\ref{sec:discussion}). The real-gas correction is applied to the driving
+force only and not to the density and velocity balances or to a channel pressure
+drop. The consequences of these assumptions are examined in
 Sections~\ref{sec:validation} and~\ref{sec:discussion}.
 
 %% ============================================================================
@@ -364,8 +400,8 @@ operating limits, and converge deterministically.
 \subsection{Local permeate solver}\label{sec:numerics-local}
 At every integration step the local permeate composition must be found from the
 implicit set of Eq.~\eqref{eq:yi}. A direct fixed-point iteration becomes
-ill-conditioned as the pressure ratio tends to zero, where the common denominator
-collapses. The implementation instead reduces the problem to a single scalar
+ill-conditioned as the driving force vanishes (the pressure ratio approaching
+unity, or near retentate exhaustion), where the common denominator collapses. The implementation instead reduces the problem to a single scalar
 root-find. Introducing the scalar $t = \sum_k S_k (x_k - \gamma y_k)$, each
 permeate mole fraction is explicit in $t$,
 
@@ -379,14 +415,25 @@ and the closure $\sum_k y_k = 1$ becomes the single equation
 H(t) = \sum_k \frac{S_k\,x_k}{t + S_k\,\gamma} - 1 = 0.
 \end{equation}
 
-Because $S_k$, $x_k$, $\gamma$ and $t$ are non-negative, every denominator is
-strictly positive and the singularity is removed. The function $H(t)$ is strictly
-decreasing, is positive at $t \to 0^{+}$ and negative at $t = \sum_k S_k x_k$, so
-the root is unique and bracketed in $\bigl(0, \sum_k S_k x_k\bigr)$. It is solved
+For $0 < \gamma < 1$ (permeate pressure below the feed pressure and above
+vacuum) and $t \ge 0$, every denominator $t + S_k\gamma$ is bounded below by
+$S_k\gamma > 0$, so the singularity is removed. The function $H(t)$ is strictly
+decreasing, is positive as $t \to 0^{+}$ and negative at $t = \sum_k S_k x_k$, so
+the root is unique and bracketed in $\bigl(0, \sum_k S_k x_k\bigr)$; at the edges
+$\gamma = 0$ or $\gamma = 1$ the root coincides with an endpoint of that interval. It is solved
 by bisection with a Newton acceleration, the derivative
 $H'(t) = -\sum_k S_k x_k / (t + S_k \gamma)^2$ being available in closed form,
 which gives fast convergence with a guaranteed bracket. The permeate composition
-then follows explicitly from Eq.~\eqref{eq:yk-t}.
+then follows explicitly from Eq.~\eqref{eq:yk-t}. In the default fugacity mode the
+same reduction is used with $S_k$ and $\gamma$ replaced by the rescaled
+$\tilde{S}_k = S_k\varphi_k^{\mathrm{r}}$ and
+$\tilde{\gamma}_k = \gamma\,\varphi_k^{\mathrm{p}}/\varphi_k^{\mathrm{r}}$ of
+Section~\ref{sec:model-balances}, giving
+$y_k = \tilde{S}_k x_k/(t + \tilde{S}_k\tilde{\gamma}_k)
+= S_k\varphi_k^{\mathrm{r}} x_k/(t + S_k\gamma\varphi_k^{\mathrm{p}})$;
+$H(t)$ remains strictly decreasing and bracketed in
+$\bigl(0, \sum_k \tilde{S}_k x_k\bigr)$ when $0 < \tilde{\gamma}_k < 1$ for every
+component.
 
 \subsection{Integration of the module equations}\label{sec:numerics-march}
 In design mode, where the target is a stage cut, the cross-flow composition
@@ -398,9 +445,16 @@ molar flows are integrated over area with an explicit first-order (forward Euler
 scheme at a fine step, marching until the accumulated area reaches the specified
 value and interpolating the final partial step. Position profiles are recorded at
 one hundred evenly spaced positions. The step counts are compile-time constants
-set well beyond the point of diminishing returns; the default reproduces the
-Shindo benchmark to a relative agreement of order $10^{-4}$
-(Section~\ref{sec:validation}).
+set well beyond the point of diminishing returns. The quantitative benchmark
+comparisons of Section~\ref{sec:validation} (Shindo, Weller--Steiner and the
+air-separation experiment) are computed in design mode with the fourth-order
+stage-cut march, which reaches an agreement of order $10^{-4}$. The first-order
+rating march, used for area-specified solves and for the profiles, converges
+first-order in the step count: for the Weller--Steiner case its outlet
+composition approaches the fourth-order result with an error that halves as the
+step count doubles, reaching about $1.5\times10^{-5}$ at the default of 4000 steps,
+so it stays well below the benchmark tolerance and is not the accuracy
+bottleneck.
 
 The counter-current pattern is a two-point boundary-value problem, because the
 permeate enters with zero flow at the retentate outlet while its composition at
@@ -774,8 +828,9 @@ better than $10^{-9}$ in relative terms (Fig.~\ref{fig:energy}).
   \includegraphics[width=0.8\linewidth]{val_energy_jt}
   \caption{Adiabatic energy layer: permeate and retentate outlet temperatures
   against feed pressure for a synthetic Joule--Thomson fluid, with the ideal-gas
-  result and the analytic line. The permeate carries all the temperature change
-  and the retentate none.}\label{fig:energy}
+  result and the analytic line. For this synthetic fluid, which has no excess
+  enthalpy of mixing, the permeate carries all the temperature change and the
+  retentate none.}\label{fig:energy}
 \end{figure}
 
 %% ============================================================================
@@ -816,7 +871,13 @@ of the ideal-gas error, but it does not reproduce a fully coupled
 equation-of-state model (Section~\ref{sec:val-igrg}). The retentate channel
 pressure drop is neglected, and the permeances are taken constant, independent of
 temperature, pressure and composition, which is adequate for screening but not
-for membranes with strongly composition-dependent or plasticising behaviour. The
+for membranes with strongly composition-dependent or plasticising behaviour. Flux
+is capped at zero rather than allowed to reverse; this cap is inert in cross-flow,
+where the local driving force is structurally non-negative
+(Section~\ref{sec:model-assumptions}), but in the co- and counter-current patterns
+it suppresses the physically real back-permeation that occurs where the bulk
+permeate partial pressure exceeds the retentate value, a one-way-permeation
+approximation. The
 energy balance is a lumped adiabatic reduction that assigns outlet temperatures
 rather than a distributed non-isothermal model such as that of
 \citet{fontoura2022}, and the separation is treated as decoupled from
@@ -840,10 +901,11 @@ simulator-independent core, and a thin adapter exposes the model as a CAPE-OPEN
 unit operation that registers in COCO/COFE, and in any other compliant
 environment, without external numerical tools or recompilation. The unit
 reproduces the Shindo multicomponent benchmark and the Weller--Steiner analytic
-cross-flow solution to an absolute agreement of order $10^{-4}$, matches the
-spiral-wound cases of Dias and the hollow-fibre counter-current data compiled by
-Aziaba, and tracks a twelve-point air-separation experiment to within $0.010$
-mole fraction. The real-gas driving force captures the high-pressure deviation
+cross-flow solution to an absolute agreement of order $10^{-4}$, reproduces the
+hollow-fibre counter-current data compiled by Aziaba, tracks the permeate
+composition of a twelve-point air-separation experiment to within $0.010$ mole
+fraction, and recovers the $\sim$90\,\% carbon dioxide recovery reported for a
+spiral-wound flue-gas capture case. The real-gas driving force captures the high-pressure deviation
 from ideal-gas behaviour that a partial-pressure model misses. By combining an
 open licence, a free flowsheet environment and a standard interface, the unit
 makes rigorous, validated membrane calculations available for flowsheet-level

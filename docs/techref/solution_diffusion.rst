@@ -84,7 +84,12 @@ on the permeate side --- and held constant along the module. This is a
 first-order correction: :math:`\varphi` varies only weakly with the modest
 composition change along the module, and the permeate-side coefficient tends to
 unity at low :math:`p_\mathrm{p}`. If the property package cannot supply
-:math:`\varphi`, the unit falls back to the partial-pressure form.
+:math:`\varphi`, the unit falls back to the partial-pressure form. The input
+permeances must be consistent with this driving force: values regressed against a
+partial-pressure driving force at high pressure already absorb part of the
+non-ideality, so applying :math:`\varphi` to them counts it twice; the fugacity
+form is clean only for permeances taken at low pressure (:math:`\varphi\approx1`)
+or themselves referred to fugacity.
 
 The reformulated local solver (:ref:`sec-local-permeate-solver`) absorbs the
 coefficients without loss of robustness: the driving force becomes
@@ -171,8 +176,9 @@ permeance ratios and :math:`\gamma = p_\mathrm{p}/p_\mathrm{r}`,
    y_i \;=\; \frac{S_i\,(x_i - \gamma\,y_i)}{\sum_k S_k\,(x_k - \gamma\,y_k)} .
 
 Solving :eq:`eq-yi-reduced` robustly, without an initial guess and without the
-numerical singularity that a naive fixed-point iteration hits as
-:math:`\gamma\to0`, is the job of the reformulated local permeate solver
+numerical singularity that a naive fixed-point iteration hits as the driving
+force vanishes (pressure ratio approaching unity), is the job of the reformulated
+local permeate solver
 described in :ref:`sec-local-permeate-solver`. Once :math:`\{y_i\}` is known at a
 position, the **local total flux** follows from the denominator of
 :eq:`eq-yi-flux`,

@@ -23,9 +23,11 @@ The separation is decoupled from the temperature
 
 A deliberate and important property of the model is that **temperature does not
 feed back into the separation**. The permeance is taken temperature-independent
-(:ref:`sec-limitations`) and the driving force :eq:`eq-flux` uses partial
-pressures :math:`p\,x_i`, which are independent of temperature at fixed pressure
-and composition. Consequently the composition and stage-cut results of
+(:ref:`sec-limitations`); in the default fugacity mode the fugacity coefficients
+in the driving force :eq:`eq-flux-fug` are evaluated once at the feed temperature
+(:ref:`sec-fugacity`) and held fixed along the module, and in the partial-pressure
+form :eq:`eq-flux` the driving force is temperature-independent outright.
+Consequently the composition and stage-cut results of
 :ref:`crossflow`/:ref:`flow_patterns` are unchanged by the energy balance; the
 non-isothermal layer is a **post-step** that takes the solved separation and
 assigns outlet temperatures. This keeps the validated separation numbers exactly

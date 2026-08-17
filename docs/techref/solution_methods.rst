@@ -17,7 +17,8 @@ The local permeate solver (singularity-free)
 At every integration step the local permeate composition must be found from the
 implicit set :eq:`eq-yi-reduced`. A naive fixed-point iteration
 :math:`y_i \leftarrow S_i(x_i-\gamma y_i)/\sum_k S_k(x_k-\gamma y_k)` is slow and
-becomes ill-conditioned as :math:`\gamma \to 0` (large permeate pull), where the
+becomes ill-conditioned as the driving force vanishes (the pressure ratio
+:math:`\gamma` approaching unity, or near retentate exhaustion), where the
 denominator collapses. The implementation instead reformulates the problem as a
 **single scalar root-find** with no singularity.
 
@@ -37,11 +38,12 @@ and the closure :math:`\sum_k y_k = 1` becomes a single equation in :math:`t`,
 
    H(t) \;=\; \sum_k \frac{S_k\,x_k}{t + S_k\,\gamma} - 1 \;=\; 0 .
 
-Because :math:`S_k, x_k, \gamma \ge 0` and :math:`t \ge 0`, every denominator is
-strictly positive --- **the singularity is gone**. :math:`H(t)` is strictly
-decreasing, with :math:`H(0^+) > 0` (for any non-zero feed) and
-:math:`H(\sum_k S_k x_k) < 0`, so the root is unique and bracketed in
-:math:`\bigl(0,\ \sum_k S_k x_k\bigr)`. It is solved by **bisection with a Newton
+For :math:`0 < \gamma < 1` and :math:`t \ge 0`, every denominator
+:math:`t + S_k\gamma` is bounded below by :math:`S_k\gamma > 0` --- **the
+singularity is gone**. :math:`H(t)` is strictly decreasing, with
+:math:`H(0^+) > 0` and :math:`H(\sum_k S_k x_k) < 0`, so the root is unique and
+bracketed in :math:`\bigl(0,\ \sum_k S_k x_k\bigr)`; at the edges
+:math:`\gamma = 0` or :math:`\gamma = 1` the root sits on an endpoint. It is solved by **bisection with a Newton
 acceleration** (:math:`H'(t) = -\sum_k S_k x_k/(t+S_k\gamma)^2` is available in
 closed form), giving quadratic convergence with a guaranteed-bracket fallback.
 The permeate mole fractions then follow explicitly from :eq:`eq-yk-t`. This
