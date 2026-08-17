@@ -349,7 +349,7 @@ is that MemPy couples the equation of state *throughout* the molar-density and
 velocity balances (and resolves a channel pressure drop), whereas the unit
 applies :math:`\varphi` to the **driving force only**. That is the real limit of
 a driving-force fugacity correction, constant or local (:ref:`sec-limitations`).
-Even so it captures the right sign and trend and removes :math:`\sim40\text{--}45\%`
+Even so it captures the right sign and trend and removes roughly half
 of the ideal-gas error --- a genuine screening-level improvement over ideal gas.
 
 .. _sec-real-gas:

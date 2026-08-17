@@ -105,7 +105,7 @@ Most of these models express the driving force as a partial-pressure difference
 and assume ideal-gas behaviour. \citet{dejaco2020} instead defined permeance in
 terms of fugacities and solved the module equations with a Peng-Robinson
 equation of state, and reported that the ideal-gas assumption can overpredict
-the stage cut by more than six percent at elevated pressure. Real-gas behaviour
+the stage cut by more than 10 percent for a high-pressure propane and propylene separation. Real-gas behaviour
 and, for high-pressure or condensable mixtures, the temperature change caused by
 permeation \citep{fontoura2022} are therefore relevant to accurate module
 predictions.
@@ -114,10 +114,10 @@ Despite the maturity of the underlying models, membrane gas separation remains
 poorly supported in general-purpose process simulators. \citet{alqaheem2024accuracy}
 notes that process simulators contain many unit operations such as distillation
 columns and reactors but lack a membrane unit for gas separation, in part
-because there is no single standard module geometry. The same limitation is
+because there is no standard membrane design and the performance depends on the setup. The same limitation is
 reported for commercial tools by \citet{ahmad2012}, who states that a membrane
 separation model is not available in the standard version of Aspen HYSYS and
-must be added through a Visual Basic or C++ subroutine, and by
+must be added through a Visual Basic subroutine, and by
 \citet{aziaba2022}, who observes that membrane models are represented in process
 simulation tools mainly through commercial systems and are commonly delivered as
 black-box models that cannot be inspected or modified. As a consequence, much of
@@ -268,7 +268,7 @@ membrane area.
 \subsection{Flow patterns}\label{sec:model-patterns}
 The way the permeate side is treated distinguishes the three flow patterns
 \citep{shindo1985,pan1986}. In \emph{cross-flow}, the realistic idealisation for
-spiral-wound modules \citep{coker1998}, the permeate formed at a point leaves
+spiral-wound modules \citep{baker2004,diaspinto2020}, the permeate formed at a point leaves
 normal to the membrane and is swept away without mixing with permeate formed
 elsewhere, so the local driving force uses only the local retentate composition.
 For cross-flow the two balances in Eq.~\eqref{eq:mass-balance} combine, after
@@ -560,11 +560,13 @@ composition at the benchmark stage cut is reproduced to an absolute agreement of
 order $10^{-4}$ for both cross-flow and counter-current, as shown in
 Table~\ref{tbl:shindo} for Case~1 and in Fig.~\ref{fig:shindo}. Reproducing
 Case~2 requires the hydrogen permeance to be taken as
-$4.80\times10^{-10}$ rather than the $4.80\times10^{-9}$ printed in the source
-table \citep{diaspinto2020}, which is a factor-of-ten typographical error: with
-the printed value the reported enrichment is unreachable, whereas the corrected
-value reproduces the benchmark and preserves the expected ordering of the
-microporous-glass permeances.
+$4.80\times10^{-10}$ rather than the
+$4.80\times10^{-9}$~$\mathrm{mol\,m^{-2}\,s^{-1}\,Pa^{-1}}$ listed in the
+tabulation of \citet{diaspinto2020}; with the larger value the reported
+enrichment is unreachable, so it appears to be a factor-of-ten transcription
+error in that reproduction of the Shindo case. The corrected value reproduces the
+benchmark and preserves the expected ordering of the microporous-glass
+permeances.
 
 \begin{table}[t]
 \caption{Shindo Case~1 permeate composition
@@ -631,13 +633,20 @@ Retentate $x_{\mathrm{O_2}}$ at $\theta=0.20$ & 0.1190 & 0.1190 \\
 \subsection{Spiral-wound case set: Dias et al.}\label{sec:val-dias}
 \citet{diaspinto2020} tabulate four cases spanning distinct membrane materials
 and separations. Cases 1 and 2 carry the Shindo benchmark outputs reproduced
-above. Cases 3 and 4 give no tabulated outputs, so the unit runs them as
-application checks. Case 3, a carbon dioxide removal from natural gas through
-cellulose acetate at a pressure ratio of $0.04$, gives a leading-edge permeate of
-about 86\,\% carbon dioxide from an 18\,\% feed. Case 4, a carbon dioxide capture
-from flue gas through a commercial membrane at a pressure ratio of $0.12$,
-reaches about 90\,\% carbon dioxide recovery at a stage cut of $0.36$, which
-matches the recovery reported in the source.
+above. Cases 3 and 4 report no tabulated composition profiles. Case 3 uses
+permeances given as a confidential communication in the source and is therefore
+not reproduced here. Case 4 is a post-combustion carbon dioxide capture from flue
+gas with the Polaris membrane, for which the source states an overall carbon
+dioxide recovery of about 90\,\% rather than a composition profile. With the
+permeances quoted in the source (carbon dioxide, oxygen and nitrogen of
+$3.89\times10^{-7}$, $3.11\times10^{-8}$ and
+$1.44\times10^{-8}$~$\mathrm{mol\,m^{-2}\,s^{-1}\,Pa^{-1}}$), a feed of 20\,\%
+carbon dioxide and a pressure ratio of $0.12$, the unit reaches that 90\,\%
+recovery at a stage cut of $0.36$ (permeate about 50\,\% and retentate about
+3\,\% carbon dioxide). The recovery is consistent with the $\sim$90\,\% reported
+for spiral-wound membrane post-combustion capture \citep{Merkel2010,diaspinto2020},
+although that industrial process also uses a permeate-side sweep that the present
+unit does not model.
 
 \subsection{Hollow-fibre counter-current against experiment}\label{sec:val-aziaba}
 Two counter-current hollow-fibre cases compiled by \citet{aziaba2022} exercise
@@ -647,14 +656,17 @@ against stage cut, which depends only on the feed, the permeance ratios and the
 pressure ratio, so the membrane area is not required. For the Sada carbon
 dioxide, oxygen and nitrogen separation through cellulose triacetate at feed
 pressures from 5.9 to 15.7 bar, this unit's counter-current carbon dioxide curves
-track the digitised reference curves with a mean absolute deviation of about
-$0.002$ mole fraction, the largest deviation being about $0.008$ near a stage cut
-of $0.60$ at the lowest feed pressure (Fig.~\ref{fig:aziaba}). For the Chowdhury
+track the digitised reference curves closely; the residuals are a few thousandths
+of a mole fraction, which is within the uncertainty of digitising the source
+figure (Fig.~\ref{fig:aziaba}). For the Chowdhury
 hydrogen, nitrogen, methane and argon separation at a feed pressure of 69.6 bar,
 the unit reproduces the hydrogen permeate fraction stated in the source, about
 $0.975$ at a stage cut of $0.30$, and preserves the correct ordering of the minor
-components, provided the argon permeance is taken as $7.0$ rather than the $70$
-printed in the source table, again a factor-of-ten typographical error.
+components, provided the argon permeance is read as $7.0$ rather than the
+$70$ (in units of $10^{-10}\,\mathrm{mol\,m^{-2}\,s^{-1}\,Pa^{-1}}$) listed in the
+compiled table of \citet{aziaba2022}; the larger value would make argon the most
+permeable of the minor components, inconsistent with the reported ordering, so it
+appears to be a factor-of-ten transcription error in that compilation.
 
 \begin{figure}[t]
   \centering
@@ -690,11 +702,15 @@ exhaustion.
 
 \subsection{Real-gas against ideal-gas driving force}\label{sec:val-igrg}
 With the fugacity driving force the unit reproduces the real-gas effect directly.
-For a carbon dioxide and methane cross-flow at fixed membrane area, using
-Peng--Robinson fugacity coefficients on the retentate and permeate sides, the
-ideal-gas partial-pressure assumption progressively over-predicts the stage cut
-as the feed pressure rises and the fugacity coefficient falls below unity, by
-about 9\,\% at 60 bar and about 15\,\% at 100 bar (Fig.~\ref{fig:igrg}). This is
+For a cross-flow separation of a 10\,\% carbon dioxide, 90\,\% methane feed at
+313~K, with carbon dioxide and methane permeances of $3.0\times10^{-8}$ and
+$1.5\times10^{-9}$~$\mathrm{mol\,m^{-2}\,s^{-1}\,Pa^{-1}}$ (selectivity 20), a
+permeate at 2 bar, and the membrane area fixed to give an ideal-gas stage cut of
+$0.30$ at 40 bar, and using Peng--Robinson fugacity coefficients on the retentate
+and permeate sides, the ideal-gas partial-pressure assumption progressively
+over-predicts the stage cut as the feed pressure rises and the fugacity
+coefficient falls below unity, by about 9\,\% at 60 bar and 15\,\% at 100 bar
+relative to the real-gas value (Fig.~\ref{fig:igrg}). This is
 the qualitative high-pressure trend reported by \citet{dejaco2020}. The analytic
 benchmarks above are ideal-gas models and are therefore run in partial-pressure
 mode to match those references, and the low-pressure air-separation experiment is
@@ -714,8 +730,10 @@ A quantitative cross-check is available on the propane and propylene system that
 \citet{dejaco2020} study with an equation-of-state-coupled model. Care is needed
 with the convention: the difference between the ideal-gas and real-gas stage cut
 can be quoted either as an absolute difference in stage-cut points or as a
-relative fraction of the smaller real-gas value, and the two differ by roughly a
-factor of two. Reported in the absolute convention of the source, the
+relative fraction of the smaller real-gas value. The relative figure equals the
+absolute one divided by the real-gas stage cut, so for this case, where the
+real-gas stage cut is close to one half, the relative value is about twice the
+absolute one. Reported in the absolute convention of the source, the
 equation-of-state-coupled model shows an ideal-gas over-prediction of about 13
 stage-cut points near 0.8 MPa. Running this unit at the same stage cut and
 pressure, so that only the equation of state differs, gives the same
@@ -728,8 +746,8 @@ the constant-coefficient approximation but the fact that this unit applies the
 fugacity coefficient to the driving force only, whereas the reference model
 couples the equation of state through the density and velocity balances and
 resolves a channel pressure drop. The driving-force correction nonetheless
-captures the correct sign and trend and removes about 40 to 45\,\% of the
-ideal-gas error, which is a useful screening-level improvement.
+captures the correct sign and trend and removes roughly half of the ideal-gas
+error (about 6 of the 13 stage-cut points), a useful screening-level improvement.
 
 \begin{figure}[t]
   \centering

@@ -84,7 +84,7 @@ flow pattern is **cross-flow**, which is the realistic idealisation for
 spiral-wound modules (the dominant industrial geometry for gas separation): the
 permeate leaves the active layer normal to the membrane and is swept away, so
 the local permeate composition is set by the *local* flux ratio rather than by a
-bulk permeate stream :cite:`shindo1985,coker1998`. Co-current and
+bulk permeate stream :cite:`shindo1985,diaspinto2020`. Co-current and
 counter-current are provided as the bounding cases (:ref:`flow_patterns`).
 
 The fuller 1-D spiral-wound permeator of :cite:`dejaco2020`, which couples a

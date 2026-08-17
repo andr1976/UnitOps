@@ -9,7 +9,7 @@ Physical picture
 
 Cross-flow is the default and the realistic idealisation for **spiral-wound**
 modules, the dominant industrial geometry for gas separation
-:cite:`coker1998,baker2004`. The permeate that forms at a point on the active
+:cite:`baker2004,diaspinto2020`. The permeate that forms at a point on the active
 layer leaves *normal* to the membrane and is immediately swept into the permeate
 channel, so it does **not** mix back with permeate formed elsewhere. Two
 consequences follow:
@@ -24,7 +24,7 @@ consequences follow:
 
 This is exactly the Weller--Steiner / Shindo cross-flow model
 :cite:`weller1950,shindo1985`; the multicomponent, area-resolved form
-implemented here follows the spiral-wound treatment of :cite:`coker1998`.
+implemented here follows the spiral-wound treatment of :cite:`diaspinto2020`.
 
 .. figure:: figures/geankoplis_flowpaths.png
    :width: 80%
