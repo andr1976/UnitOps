@@ -132,7 +132,7 @@ namespace Membrane.CapeOpen
             ComponentName = MembraneUnitIdentity.Name;
             ComponentDescription = MembraneUnitIdentity.Description;
             BuildPorts();
-            RebuildParameters();
+            BuildFixedParameters();
         }
 
         // =================== ICapeUnit ===================
@@ -214,10 +214,8 @@ namespace Membrane.CapeOpen
                 var feed = MaterialObjectAdapter.ReadFeed(_feed.ConnectedObject!);
                 Diagnostics.Log("Calculate: feed read OK");
 
-                // Re-seed permeance parameters from the feed compounds (safe on a fresh/restored instance
-                // that COFE may create for the solve without a preceding Edit/Validate).
-                EnsurePermeanceParameters(feed.ComponentIds);
-
+                // Per CO UO errata 2.7 the parameter collection is not changed during Calculate; permeance
+                // parameters are created in Validate/Edit/Load. A missing one is reported by the guard below.
                 double pr = feed.Pressure;
                 double pp = _permeatePressure.ValueCore;
                 if (pp >= pr)
@@ -357,11 +355,12 @@ namespace Membrane.CapeOpen
             // when the collection changed prompts the PME to re-read the parameters.
             try
             {
-                ApplySpecMode();   // reflect any SpecMode change in the Area/StageCut read/write modes
+                // Edit (with Initialize and Load) is a sanctioned place to change the collection (CO UO errata 2.7).
+                bool changed = ApplySpecMode();   // may flip Area/StageCut direction if SpecMode changed
                 if (_feed.ConnectedObject != null)
-                    EnsurePermeanceParameters(MaterialObjectAdapter.ReadComponentIds(_feed.ConnectedObject));
-                // Return S_OK so the PME re-reads the parameter collection and updated modes.
-                return 0;
+                    changed |= EnsurePermeanceParameters(MaterialObjectAdapter.ReadComponentIds(_feed.ConnectedObject));
+                // S_OK (0) tells the PME the collection changed and it should re-read; S_FALSE (1) = unchanged.
+                return changed ? 0 : 1;
             }
             catch (Exception ex) { Diagnostics.Log("Edit discovery failed: " + ex.Message); return 1; }
         }
@@ -454,12 +453,17 @@ namespace Membrane.CapeOpen
             }
         }
 
-        /// <summary>Sets Area/StageCut parameter modes so the PME greys out the computed one.</summary>
-        private void ApplySpecMode()
+        /// <summary>Sets Area/StageCut parameter modes so the PME greys out the computed one. Returns true if a
+        /// mode actually changed (used by Edit to tell the PME whether to re-read).</summary>
+        private bool ApplySpecMode()
         {
             bool sc = IsStageCutSpec();
-            _membraneArea.Mode = sc ? CapeParamMode.CAPE_OUTPUT : CapeParamMode.CAPE_INPUT;
-            _stageCut.Mode = sc ? CapeParamMode.CAPE_INPUT : CapeParamMode.CAPE_OUTPUT;
+            var areaMode = sc ? CapeParamMode.CAPE_OUTPUT : CapeParamMode.CAPE_INPUT;
+            var cutMode = sc ? CapeParamMode.CAPE_INPUT : CapeParamMode.CAPE_OUTPUT;
+            bool changed = _membraneArea.Mode != areaMode || _stageCut.Mode != cutMode;
+            _membraneArea.Mode = areaMode;
+            _stageCut.Mode = cutMode;
+            return changed;
         }
 
         private string DrivingMode() => _drivingForce.value?.ToString() ?? DrivingFugacity;
@@ -697,7 +701,13 @@ namespace Membrane.CapeOpen
                         string df = r.ReadString();
                         if (Array.IndexOf(new[] { DrivingFugacity, DrivingFugacityLocal, DrivingPartial }, df) >= 0) _drivingForce.value = df;
                     }
-                    // Seed any already-known permeance/profile params; the rest are seeded on discovery.
+                    // Recreate the persisted permeance/profile params now — Load is a sanctioned place to change
+                    // the collection (CO UO errata 2.7) — so information-stream bindings to them resolve on reload
+                    // instead of only after the first Validate. EnsurePermeanceParameters seeds new params from the
+                    // saved maps; the loops below additionally re-seed params that already existed (re-Load).
+                    var restoredIds = new List<string>(_savedPermeances.Keys);
+                    restoredIds.Sort(StringComparer.OrdinalIgnoreCase);
+                    EnsurePermeanceParameters(restoredIds.ToArray());
                     foreach (var kv in _savedPermeances)
                         if (_permeanceParams.TryGetValue(kv.Key, out var p)) p.value = kv.Value;
                     foreach (var kv in _savedRetentateProfile)
@@ -723,18 +733,18 @@ namespace Membrane.CapeOpen
             _ports.Add(_permeate);
         }
 
-        private void RebuildParameters()
+        // Builds the fixed (compound-independent) parameters into the stable collection exactly once, from the
+        // constructor. Per CO UO errata 2.7 the collection is never replaced or reordered afterwards; per-compound
+        // permeance/profile parameters are appended by EnsurePermeanceParameters as compounds are discovered.
+        private void BuildFixedParameters()
         {
-            var c = new CapeCollection();
+            var c = _params;
             c.Add(_permeatePressure);
             c.Add(_membraneArea);
             c.Add(_flowPattern);
             c.Add(_specMode);
             c.Add(_energyMode);
             c.Add(_drivingForce);
-            var ids = new List<string>(_permeanceParams.Keys);
-            ids.Sort(StringComparer.OrdinalIgnoreCase);
-            foreach (var id in ids) c.Add(_permeanceParams[id]);
             c.Add(_stageCut);
             c.Add(_retentateTemperature);
             c.Add(_permeateTemperature);
@@ -743,36 +753,43 @@ namespace Membrane.CapeOpen
             c.Add(_stageCutProfile);
             c.Add(_retentateTempProfile);
             c.Add(_permeateTempProfile);
-            foreach (var id in ids)
-            {
-                if (_retentateProfileParams.TryGetValue(id, out var rp)) c.Add(rp);
-                if (_permeateProfileParams.TryGetValue(id, out var pp)) c.Add(pp);
-                if (_permeateCollectedProfileParams.TryGetValue(id, out var cp)) c.Add(cp);
-            }
-            _params = c;
         }
 
-        private void EnsurePermeanceParameters(string[] componentIds)
+        // Creates a permeance parameter (and its three position-profile array parameters) for any feed compound
+        // not seen yet, seeding values restored from persistence, and APPENDS them to the stable collection so
+        // existing entries keep their identity, order and direction (CO UO errata 2.7). Returns true if the
+        // collection grew. Called from Edit, Load and (as a fallback) Validate — never during Calculate.
+        private bool EnsurePermeanceParameters(string[] componentIds)
         {
             bool changed = false;
             foreach (var id in componentIds)
             {
                 if (_permeanceParams.ContainsKey(id)) continue;
                 double seed = _savedPermeances.TryGetValue(id, out var v) ? v : 0.0;
-                _permeanceParams[id] = new RealParameter(
+                var perm = new RealParameter(
                     "Permeance_" + id, $"Permeance of {id}", seed, 0.0, 1.0, CapeParamMode.CAPE_INPUT, DimPermeance);
-                _retentateProfileParams[id] = new ArrayParameter(
+                var rp = new ArrayParameter(
                     "Profile_Retentate_" + id, $"Retentate mole fraction of {id} vs position", ProfilePoints);
-                _permeateProfileParams[id] = new ArrayParameter(
+                var pp = new ArrayParameter(
                     "Profile_Permeate_" + id, $"Local permeate mole fraction of {id} vs position", ProfilePoints);
-                _permeateCollectedProfileParams[id] = new ArrayParameter(
+                var cp = new ArrayParameter(
                     "Profile_PermeateCollected_" + id, $"Cumulative collected permeate mole fraction of {id} (product so far) vs position", ProfilePoints);
-                if (_savedRetentateProfile.TryGetValue(id, out var savedRet)) _retentateProfileParams[id].SetInternal(savedRet);
-                if (_savedPermeateProfile.TryGetValue(id, out var savedPerm)) _permeateProfileParams[id].SetInternal(savedPerm);
-                if (_savedPermeateCollectedProfile.TryGetValue(id, out var savedColl)) _permeateCollectedProfileParams[id].SetInternal(savedColl);
+                if (_savedRetentateProfile.TryGetValue(id, out var savedRet)) rp.SetInternal(savedRet);
+                if (_savedPermeateProfile.TryGetValue(id, out var savedPerm)) pp.SetInternal(savedPerm);
+                if (_savedPermeateCollectedProfile.TryGetValue(id, out var savedColl)) cp.SetInternal(savedColl);
+                _permeanceParams[id] = perm;
+                _retentateProfileParams[id] = rp;
+                _permeateProfileParams[id] = pp;
+                _permeateCollectedProfileParams[id] = cp;
+                // Append only — never touch entries already present in the collection.
+                _params.Add(perm);
+                _params.Add(rp);
+                _params.Add(pp);
+                _params.Add(cp);
                 changed = true;
             }
-            if (changed) { RebuildParameters(); _dirty = true; }
+            if (changed) _dirty = true;
+            return changed;
         }
 
         private static string BuildReport(FeedState feed, MembraneCore.MembraneResult r, double pr, double pp)

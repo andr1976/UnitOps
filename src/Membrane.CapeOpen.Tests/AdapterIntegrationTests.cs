@@ -316,6 +316,70 @@ namespace Membrane.CapeOpen.Tests
             Assert.False(string.IsNullOrEmpty(msg));
             Assert.Equal(CapeValidationStatus.CAPE_INVALID, unit.ValStatus);
         }
+
+        [Fact]
+        public void ParameterCollection_IsStableAcrossValidateAndCalculate()
+        {
+            // CO Unit Operations spec, errata 2.7: the (parameter) collection must stay constant — same object,
+            // order, names and directions — after a value change, a (dis)connection or a solve; it may only
+            // change during Edit/Initialize/Load. COFE binds information streams to public parameters, so a
+            // collection that is replaced or reordered during a solve desyncs those bindings (the reference-
+            // counting failure). This test locks the collection identity and order across the solve lifecycle.
+            var unit = new MembraneUnitOperation();
+            unit.Initialize();
+            var ports = (ICapeCollection)unit.ports;
+            ((ICapeUnitPort)ports.Item("Feed")).Connect(MockMaterialObject.Feed(Ids, Tk, Pr, Nf, Feed));
+            ((ICapeUnitPort)ports.Item("Retentate")).Connect(new MockMaterialObject(Ids));
+            ((ICapeUnitPort)ports.Item("Permeate")).Connect(new MockMaterialObject(Ids));
+
+            // The collection object and the fixed parameters exist before any solve (built in the constructor).
+            var coll = (ICapeCollection)unit.parameters;
+            var permPressure = Param(unit.parameters, "PermeatePressure");
+            int fixedCount = coll.Count();
+            Assert.Same(permPressure, (ICapeParameter)coll.Item(1));   // first entry
+
+            Param(unit.parameters, "PermeatePressure").value = Pp;
+            Param(unit.parameters, "MembraneArea").value = Area;
+
+            // First Validate discovers the compounds and APPENDS permeance params — without replacing the
+            // collection object or moving the fixed entries.
+            string msg = "";
+            unit.Validate(ref msg);
+            Assert.Same(coll, (ICapeCollection)unit.parameters);
+            Assert.Same(permPressure, Param(unit.parameters, "PermeatePressure"));
+            Assert.Same(permPressure, (ICapeParameter)((ICapeCollection)unit.parameters).Item(1));
+            Assert.True(coll.Count() > fixedCount, "permeance parameters were appended");
+            var permAmmonia = Param(unit.parameters, "Permeance_ammonia");
+
+            // A second Validate and a Calculate must not disturb the collection identity, order or item refs.
+            Param(unit.parameters, "Permeance_ammonia").value = Perm[0];
+            Param(unit.parameters, "Permeance_hydrogen").value = Perm[1];
+            Param(unit.parameters, "Permeance_nitrogen").value = Perm[2];
+            Assert.True(unit.Validate(ref msg), msg);
+            int countAfterValidate = ((ICapeCollection)unit.parameters).Count();
+            unit.Calculate();
+
+            Assert.Same(coll, (ICapeCollection)unit.parameters);
+            Assert.Same(permPressure, (ICapeParameter)((ICapeCollection)unit.parameters).Item(1));
+            Assert.Same(permAmmonia, Param(unit.parameters, "Permeance_ammonia"));
+            Assert.Equal(countAfterValidate, ((ICapeCollection)unit.parameters).Count());
+        }
+
+        [Fact]
+        public void Edit_ReturnsChangedOnFirstDiscovery_ThenUnchanged()
+        {
+            var unit = new MembraneUnitOperation();
+            unit.Initialize();
+            var ports = (ICapeCollection)unit.ports;
+            ((ICapeUnitPort)ports.Item("Feed")).Connect(MockMaterialObject.Feed(Ids, Tk, Pr, Nf, Feed));
+            ((ICapeUnitPort)ports.Item("Retentate")).Connect(new MockMaterialObject(Ids));
+            ((ICapeUnitPort)ports.Item("Permeate")).Connect(new MockMaterialObject(Ids));
+
+            // First Edit discovers the compounds → collection changed → S_OK (0) so the PME re-reads.
+            Assert.Equal(0, unit.Edit());
+            // Second Edit changes nothing → S_FALSE (1), so the PME does not needlessly re-read.
+            Assert.Equal(1, unit.Edit());
+        }
     }
 
     internal static class ComErrorHr

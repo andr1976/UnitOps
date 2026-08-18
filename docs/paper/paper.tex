@@ -1,4 +1,4 @@
-%% Digital Chemical Engineering (Elsevier) — CAS double-column manuscript.
+%% Computers & Chemical Engineering (Elsevier) — CAS double-column manuscript.
 %% Built on the Elsevier CAS template (cas-dc.cls, LPPL). DRAFT SKELETON:
 %% bracketed [[...]] items are placeholders; results/case-study are marked TODO.
 %% Do NOT insert unverified numbers — pull them from docs/techref/validation.rst.
@@ -53,8 +53,8 @@ balance; all thermodynamic properties are delegated to the host flowsheet's
 property package through the CAPE-OPEN Material Object, so the unit carries
 no thermodynamics of its own. The implementation is validated against
 independent analytical and numerical benchmarks from the literature
-[[quantified in Section~\ref{sec:validation}]] and illustrated on a
-flowsheet-level case study [[Section~\ref{sec:casestudy}, pending]].
+(Section~\ref{sec:validation}) and illustrated on a flowsheet-level
+carbon dioxide / methane separation case study (Section~\ref{sec:casestudy}).
 The software is released under the MIT licence [[repository URL / DOI]].
 \end{abstract}
 
@@ -136,7 +136,7 @@ These implementations are tied to a licensed simulator, and their source code is
 generally not released. A second route reconstructs a membrane inside the
 simulator from a component splitter combined with a spreadsheet and adjust
 functions, which is laborious and specific to the flowsheet at hand
-\citep{alqaheem2024accuracy}. A third route keeps the calculation in an external
+\citep{alqaheem2024accuracy,alqaheem2021}. A third route keeps the calculation in an external
 numerical environment and connects it to the simulator, as in the COCO membrane
 model of \citet{alqaheem2024coco}, where the balances are coded in Scilab and
 linked through the Scilab plug-in. Rigorous open implementations also exist
@@ -835,13 +835,185 @@ better than $10^{-9}$ in relative terms (Fig.~\ref{fig:energy}).
 
 %% ============================================================================
 \section{Illustrative case study}\label{sec:casestudy}
-% ===================== PARKED — DECISION PENDING =============================
-% Candidate showcases: (a) CO2/CH4 NG sweetening at high pressure;
-% (b) H2 recovery/purification; (c) O2/N2 air separation;
-% (d) multi-stage with recycle + compression.
-% Goal: demonstrate in-simulator value (membrane solved with compressors/
-% exchangers using the host thermodynamics). Flowsheet + results to follow.
-[[Case study pending; see repository \texttt{docs/paper/outline.md}.]]
+The purpose of the unit operation is that a membrane can be solved inside a
+flowsheet, together with the compressors, coolers and recycle streams that
+surround it and under the same property package as the rest of the flowsheet.
+This section demonstrates that use on a two-stage carbon dioxide / methane
+separation representative of natural gas sweetening. The configuration, a two
+stage arrangement with interstage recompression and recycle of the second-stage
+retentate, is the one identified by \citet{ahmad2012} as the economic optimum
+for this separation. In that study the membrane was added to Aspen HYSYS as a
+user-defined unit operation, which is tied to a licensed simulator and was not
+released; the same configuration is built here from the released unit and the
+native units of the free COCO/COFE environment.
+
+\subsection{Flowsheet and specification}\label{sec:case-flowsheet}
+The feed is a binary mixture of 10 mol\% carbon dioxide and 90 mol\% methane at
+313.15~K and 60~bar, with a molar flow of 138~mol\,s$^{-1}$ (about
+10~MMSCFD). The sweet-gas specification is a retentate carbon dioxide content of
+2~mol\%, a representative pipeline limit and the same specification used by
+\citet{ahmad2012}. The membrane has a carbon dioxide permeance of 100~GPU and a
+methane permeance of 5~GPU, a carbon dioxide / methane selectivity of 20 typical
+of a carbon dioxide selective polymeric membrane; a permeance of 1~GPU
+corresponds to $3.348\times10^{-10}$~mol\,m$^{-2}$\,s$^{-1}$\,Pa$^{-1}$.
+
+The flowsheet is shown as a simplified schematic in Fig.~\ref{fig:case-bfd} and
+as built in COCO/COFE in Fig.~\ref{fig:case-cofe}. The fresh feed is combined
+with the recycle stream and enters the primary membrane, whose area is set by a
+flowsheet controller (the controller block in Fig.~\ref{fig:case-cofe}) that
+adjusts the stage cut until the retentate reaches the 2~mol\% specification. The
+retentate leaves as sweet gas at feed pressure. The carbon dioxide enriched
+permeate leaves at 2~bar and is recompressed to 60~bar in three intercooled
+stages of equal pressure ratio, $(60/2)^{1/3}\approx3.1$, set by a calculator
+block (Fig.~\ref{fig:case-cofe}), and fed to the secondary membrane. The secondary permeate, at 1.2~bar, is the carbon
+dioxide vent; the secondary retentate is recycled to the primary feed at a fixed
+stage cut of 0.5. The flowsheet is solved in COCO/COFE with the ChemSep
+Peng--Robinson property package. The compressors, intercoolers and mixer are the
+environment's native units, and the two membranes obtain their enthalpies and
+fugacities from the same property package through the Material Object. The
+real-gas fugacity driving force and the adiabatic energy balance are both active,
+so the membrane is solved consistently with the equation of state used for the
+recompression train. The flowsheet file is provided in the repository.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.86\linewidth]{case_bfd}
+  \caption{Simplified schematic of the two-stage carbon dioxide / methane
+  separation with interstage recompression and recycle of the second-stage
+  retentate. The membranes are the unit operation described here; the mixer,
+  compressor and intercoolers are the native COCO/COFE units. All streams are
+  solved under one Peng--Robinson property package.}\label{fig:case-bfd}
+\end{figure*}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\linewidth]{case_flowsheet}
+  \caption{The same flowsheet as built in COCO/COFE. The recompression is
+  resolved into three native compressor and intercooler pairs; a pressure and
+  temperature indicator (PT) reads the feed, a controller adjusts the primary
+  membrane area until the sweet-gas carbon dioxide content reaches the 2~mol\%
+  specification, and a calculator block sets the three interstage pressures to a
+  common ratio. Streams are numbered 1 to 9.}\label{fig:case-cofe}
+\end{figure*}
+
+\subsection{Base case}\label{sec:case-base}
+The converged base-case results are summarised in Table~\ref{tbl:casebase}. The
+sweet gas meets the 2~mol\% specification at a primary stage cut of 0.20, with a
+methane recovery of 96.9\% and a carbon dioxide content in the vent of
+74.4~mol\%. The primary membrane accounts for most of the total area, and the
+recompression of the primary permeate requires 0.38~MW.
+
+The parametric studies below each vary one quantity at a time and are run as COFE
+parametric studies, so their membrane areas, methane recovery and recompression
+power come directly from the flowsheet solved under the property package, with the
+controller re-converging on the 2~mol\% specification at every point. The
+feed-pressure study is run in both driving-force modes; the permeate-pressure and
+selectivity studies use the real-gas fugacity driving force. A
+simulator-independent reproduction of the same physics core agrees with these
+solves to within about one percent on membrane area and 0.1~points on methane
+recovery, and shows that an ideal-gas isentropic estimate of the recompression
+power would over-predict the real-gas value by about seven percent.
+
+\begin{table}[t]
+\caption{Converged base-case results for the separation of
+Fig.~\ref{fig:case-bfd}, solved in COCO/COFE with the ChemSep Peng--Robinson
+property package. The values are the 2~bar point of the permeate-pressure
+parametric study (Fig.~\ref{fig:case-perm}).}\label{tbl:casebase}
+\begin{tabular*}{\tblwidth}{@{}LR@{}}
+\toprule
+Quantity & Value \\
+\midrule
+Sweet-gas carbon dioxide content & 2.0~mol\% \\
+Methane recovery & 96.9\% \\
+Carbon dioxide in vent & 74.4~mol\% \\
+Primary membrane stage cut & 0.20 \\
+Primary membrane area & $2.23\times10^{3}$~m$^2$ \\
+Secondary membrane area & $5.1\times10^{2}$~m$^2$ \\
+Total membrane area & $2.74\times10^{3}$~m$^2$ \\
+Interstage compression power & 0.38~MW \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\subsection{Parametric behaviour}\label{sec:case-param}
+Fig.~\ref{fig:case-igrg} shows the effect of feed pressure on the required
+primary membrane area between 30 and 80~bar, run as a COFE parametric study in
+both driving-force modes so that the two curves differ only by the setting of the
+membrane driving force. The area falls as the pressure rises, because the
+transmembrane driving force increases. At every pressure the
+real-gas fugacity driving force returns a larger required area than the ideal
+partial-pressure model, and the difference widens with pressure, from about 15\%
+at 30~bar to about 24\% at the 60~bar base case and about 29\% at 80~bar. This is
+the same real-gas deviation quantified in Section~\ref{sec:val-igrg}; at
+sweetening pressures a partial-pressure model under-sizes the membrane by a
+margin that is not negligible for design.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{case_realgas}
+  \caption{Required primary membrane area against feed pressure for the base-case
+  specification, from a COFE parametric study run with the real-gas fugacity
+  driving force and with the ideal partial-pressure driving force. The right axis
+  shows the fraction by which the partial-pressure model under-predicts the
+  area.}\label{fig:case-igrg}
+\end{figure}
+
+Fig.~\ref{fig:case-perm} shows the effect of the primary permeate pressure
+between 1.5 and 6~bar. Throughout the study the secondary stage cut and the vent
+pressure are held fixed and only the primary stage cut floats, set by the
+controller, which holds the sweet-gas specification at every point. A lower
+permeate pressure raises the driving force, so the total membrane area falls, from
+about $5.8\times10^{3}$~m$^2$ at 6~bar to about $2.5\times10^{3}$~m$^2$ at
+1.5~bar, and the methane recovery rises from 90.7 to 97.4\%. The recompression
+power is highest at the lowest permeate pressure, about 0.40~MW at 1.5~bar, and
+passes through a shallow minimum of about 0.365~MW near 4~bar, because a lower
+permeate pressure raises the compression ratio but also reduces the permeate flow
+that has to be recompressed. The base case at 2~bar lies below the pressure of
+minimum power; relative to that optimum it gives a smaller area and a higher
+methane recovery at the cost of a small increase in recompression power, about
+0.38 against 0.365~MW.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{case_permeate}
+  \caption{Total membrane area and recompression power against the primary
+  permeate pressure from a COFE parametric study, with the methane recovery
+  labelled at each point. Lower permeate pressure reduces the area and improves
+  the recovery; the recompression power has a shallow minimum near
+  4~bar.}\label{fig:case-perm}
+\end{figure}
+
+Fig.~\ref{fig:case-alpha} shows the effect of the carbon dioxide / methane
+selectivity between 5 and 40 at a fixed carbon dioxide permeance, obtained by
+varying the methane permeance of both membranes in a COFE parametric study. The
+methane recovery rises steeply at low selectivity and saturates at high
+selectivity, from about 78\% at a selectivity of 5 to about 99\% at a selectivity
+of 40. The selectivity of 5 corresponds to the cellulose-acetate membrane used by
+\citet{alqaheem2021}, who reports carbon dioxide and methane permeances of 67 and
+13~GPU; the low recovery at that selectivity is consistent with the low
+hydrocarbon recovery reported there for a high carbon dioxide feed. The total area
+is comparatively insensitive to selectivity, between about $2.7\times10^{3}$ and
+$3.0\times10^{3}$~m$^2$, but the recompression power rises sharply at low
+selectivity, from about 0.30~MW at a selectivity of 40 to about 1.0~MW at a
+selectivity of 5, because more methane permeates and must be recompressed and
+recycled.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{case_selectivity}
+  \caption{Methane recovery against the carbon dioxide / methane selectivity at a
+  fixed carbon dioxide permeance, from a COFE parametric study varying the methane
+  permeance of both membranes. The selectivity of the cellulose-acetate membrane
+  of \citet{alqaheem2021} and the base-case selectivity are
+  marked.}\label{fig:case-alpha}
+\end{figure}
+
+The case study demonstrates the intended use of the unit. The membrane is solved
+together with the recompression train, the intercoolers and the recycle under a
+single property package in a free environment, with the real-gas and
+non-isothermal options active, and the parametric trends reproduce established
+behaviour for this separation without leaving the flowsheet or re-implementing
+the model.
 
 %% ============================================================================
 \section{Discussion}\label{sec:discussion}
@@ -906,7 +1078,11 @@ hollow-fibre counter-current data compiled by Aziaba, tracks the permeate
 composition of a twelve-point air-separation experiment to within $0.010$ mole
 fraction, and recovers the $\sim$90\,\% carbon dioxide recovery reported for a
 spiral-wound flue-gas capture case. The real-gas driving force captures the high-pressure deviation
-from ideal-gas behaviour that a partial-pressure model misses. By combining an
+from ideal-gas behaviour that a partial-pressure model misses. A two-stage carbon
+dioxide / methane sweetening flowsheet, solved in the free environment with
+interstage recompression and recycle, illustrates the unit in use and reproduces
+both the real-gas sensitivity of the required membrane area and the optimality of
+the two-stage recycle configuration reported for this separation. By combining an
 open licence, a free flowsheet environment and a standard interface, the unit
 makes rigorous, validated membrane calculations available for flowsheet-level
 studies without the barriers of the earlier approaches, and its architecture
