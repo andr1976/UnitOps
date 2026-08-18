@@ -499,13 +499,13 @@ adapter, so the model can be moved to a non-CAPE-OPEN host by writing a new
 adapter alone. This ports-and-adapters arrangement is the same one used in
 related open thermodynamic components.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
   \includegraphics[width=\linewidth]{tikz_arch}
   \caption{The two-assembly architecture. The CAPE-OPEN adapter depends on the
   physics core; the core has no dependency on the adapter or on any
   simulator.}\label{fig:arch}
-\end{figure}
+\end{figure*}
 
 \subsection{CAPE-OPEN interfaces and the solve lifecycle}\label{sec:software-co}
 The unit is a CAPE-OPEN unit operation \citep{cocolan_uo}. The primary class
@@ -520,10 +520,10 @@ because temperature, pressure and composition are undefined until the flowsheet
 is solved. On calculation the unit reads the feed state, solves the selected
 model, and writes and flashes the two product streams.
 
-\begin{table}[t]
+\begin{table*}[t]
 \caption{CAPE-OPEN interfaces implemented by the unit
 operation.}\label{tbl:interfaces}
-\begin{tabular*}{\tblwidth}{@{}LL@{}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}LL@{}}
 \toprule
 Interface & Role \\
 \midrule
@@ -535,7 +535,7 @@ Interface & Role \\
 \texttt{ECapeRoot}, \texttt{ECapeUser} & Readable error name and description. \\
 \bottomrule
 \end{tabular*}
-\end{table}
+\end{table*}
 
 Because the component set is unknown until a feed is connected, the permeance
 parameters are created dynamically. On the first validation the adapter reads the
