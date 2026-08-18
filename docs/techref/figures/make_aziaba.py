@@ -20,7 +20,7 @@ plt.rcParams.update({
     "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
     "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
     "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
-    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+    "axes.linewidth": 0.8, "savefig.dpi": 400, "figure.dpi": 400,
 })
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -65,5 +65,5 @@ axB.legend(h1 + h2, l1 + l2, fontsize=7, loc="center left")
 axB.set_title("TC3: H$_2$/N$_2$/CH$_4$/Ar (Ar=7.0), model output", color=NAVY, fontsize=10)
 
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_aziaba.png"), dpi=300)
+fig.savefig(os.path.join(HERE, "val_aziaba.png"), dpi=400)
 print("wrote val_aziaba.png")

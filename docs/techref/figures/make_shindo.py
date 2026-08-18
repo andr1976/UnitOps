@@ -13,7 +13,7 @@ plt.rcParams.update({
     "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
     "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
     "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
-    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+    "axes.linewidth": 0.8, "savefig.dpi": 400, "figure.dpi": 400,
 })
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,5 +44,5 @@ axes[0].set_ylabel("permeate mole fraction")
 axes[0].set_ylim(0, 0.9)
 axes[0].legend(loc="upper right", fontsize=7)
 fig.tight_layout(rect=[0, 0, 1, 0.95])
-fig.savefig(os.path.join(HERE, "val_shindo_case1.png"), dpi=300)
+fig.savefig(os.path.join(HERE, "val_shindo_case1.png"), dpi=400)
 print("wrote val_shindo_case1.png")

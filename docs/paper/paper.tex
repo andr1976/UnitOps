@@ -16,19 +16,19 @@
 \def\floatpagepagefraction{1}
 \def\textpagefraction{.001}
 
-\shorttitle{An open CAPE-OPEN gas-permeation membrane unit operation}
+\shorttitle{A free open-source CAPE-OPEN membrane unit operation}
 \shortauthors{Andreasen}
 
-\title[mode=title]{An open, CAPE-OPEN gas-permeation membrane unit operation for process simulators}
+\title[mode=title]{A free open-source CAPE-OPEN compliant multicomponent gas-permeation membrane unit operation for process simulation environments}
 %% Alternative title:
 %% \title[mode=title]{A portable CAPE-OPEN unit operation for multicomponent
 %%   gas-permeation membranes with real-gas and non-isothermal effects}
 
 %% ---- Authors (placeholders) -------------------------------------------------
-\author[1]{Anders Andreasen}
+\author[1]{Anders Andreasen}[orcid=0000-0003-0475-323X]
 \cormark[1]
 \ead{anra@ors-consulting.com}
-\credit{Conceptualization, Methodology, Software, Validation, Writing}
+\credit{Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Visualization, Writing -- original draft, Writing -- review \& editing}
 
 \affiliation[1]{organization={ORS Consulting},
             addressline={Borgergade 66 st.\ th.},
@@ -69,10 +69,11 @@ The source is released under the MIT licence.
 
 %% ---- Highlights -------------------------------------------------------------
 \begin{highlights}
-\item Open CAPE-OPEN membrane unit op runs in any compliant process simulator
-\item Thermodynamics delegated to the host property package (Material Object)
-\item Real-gas fugacity driving force and adiabatic non-isothermal layer
-\item Validated against multiple independent literature benchmarks
+\item Open-source membrane unit operation fills a gap in process simulators
+\item Runs unchanged in any CAPE-OPEN simulator; thermodynamics from the host
+\item Cross-, co- and counter-current models with real-gas and non-isothermal options
+\item Validated against analytic, numerical and experimental benchmarks
+\item Two-stage CO$_2$/CH$_4$ sweetening solved in-simulator with recompression, recycle
 \end{highlights}
 
 %% ---- Keywords ---------------------------------------------------------------
@@ -1101,12 +1102,32 @@ studies without the barriers of the earlier approaches, and its architecture
 provides a basis for further membrane and other unit-operation models.
 
 %% ---- Back matter ------------------------------------------------------------
-\section*{Code availability}
-The source code is available at [[repository URL]] under the MIT licence; the
-release described here is archived at [[Zenodo DOI]]. The technical reference
-(model, numerics, validation) is provided in the repository.
-
 \printcredits
+
+\section*{Declaration of competing interest}
+%% [[Anders to confirm. Note employment at ORS Consulting and authorship of the
+%%   software; if that is an interest to declare, replace the sentence below.]]
+The author declares that he has no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Funding}
+%% [[Anders to confirm.]]
+This research did not receive any specific grant from funding agencies in the
+public, commercial, or not-for-profit sectors.
+
+\section*{Code and data availability}
+The source code is released under the MIT licence at [[repository URL]], and the
+release described here is archived at [[Zenodo DOI]]. The same repository provides
+the technical reference (model, numerics and validation), the validation and
+case-study datasets, and the scripts that regenerate every figure in this article.
+
+\section*{Declaration of generative AI and AI-assisted technologies in the manuscript preparation process}
+During the preparation of this work the author used Claude Code (Anthropic) in
+order to assist with manuscript drafting and editing, literature review
+structuring, development and debugging of plotting and analysis scripts, and
+further development of the CAPE-OPEN membrane unit operation software. After using
+this tool, the author reviewed and edited the content as needed and takes full
+responsibility for the content of the published article.
 
 \bibliographystyle{cas-model2-names}
 \bibliography{references}
