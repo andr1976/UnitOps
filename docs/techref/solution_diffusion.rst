@@ -115,8 +115,9 @@ components' fugacity coefficients differ enough that** :math:`\varphi_\mathrm{mi
 it is within :math:`<0.02` stage-cut points of the feed-evaluated value
 (:ref:`sec-val-ig-rg`). The residual gap to a fully EOS-coupled model is
 dominated not by *where* :math:`\varphi` is evaluated but by the fact that the
-unit applies :math:`\varphi` to the driving force alone (not to the density and
-velocity balances). The feed-evaluated ``Fugacity`` remains the default.
+unit applies :math:`\varphi` to the driving force alone, whereas such a model
+also lets the equation of state set the molar density and, through it, the local
+velocity and the channel pressure drop. The feed-evaluated ``Fugacity`` remains the default.
 
 .. _sec-pressure-ratio-limit:
 

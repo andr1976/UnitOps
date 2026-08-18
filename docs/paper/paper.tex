@@ -1036,11 +1036,14 @@ separate numerical environment, an external solver, or recompilation, with the
 source released under an open licence.
 
 The model has clear limitations, some shared with the models it is compared
-against. The real-gas correction is applied to the driving force only and not to
-the density and velocity balances or to a channel pressure drop, so it captures
-the sign and trend of the high-pressure deviation and removes a useful fraction
-of the ideal-gas error, but it does not reproduce a fully coupled
-equation-of-state model (Section~\ref{sec:val-igrg}). The retentate channel
+against. The real-gas correction enters only through the fugacity coefficient in
+the driving force. The unit solves component molar balances at a prescribed,
+uniform pressure and does not resolve the channel flow field, so, unlike a fully
+coupled equation-of-state model, the equation of state does not also set the molar
+density and, through it, the local velocity and the momentum (channel
+pressure-drop) balance (Section~\ref{sec:val-igrg}). The correction captures the
+sign and trend of the high-pressure deviation and removes a useful fraction of the
+ideal-gas error, but it does not reproduce such a coupled model. The retentate channel
 pressure drop is neglected, and the permeances are taken constant, independent of
 temperature, pressure and composition, which is adequate for screening but not
 for membranes with strongly composition-dependent or plasticising behaviour. Flux
