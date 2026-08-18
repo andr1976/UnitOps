@@ -16,7 +16,7 @@ plt.rcParams.update({
     "axes.labelsize": 9, "axes.titlesize": 9,
     "xtick.labelsize": 8, "ytick.labelsize": 8,
     "legend.fontsize": 7, "lines.linewidth": 1.6, "lines.markersize": 4.5,
-    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+    "axes.linewidth": 0.8, "savefig.dpi": 400, "figure.dpi": 400,
 })
 FIG = (3.5, 2.65)  # single-column, ~1:1 at \linewidth in cas-dc
 HERE = os.path.dirname(os.path.abspath(__file__))

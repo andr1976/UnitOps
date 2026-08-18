@@ -13,7 +13,7 @@ plt.rcParams.update({
     "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
     "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
     "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
-    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+    "axes.linewidth": 0.8, "savefig.dpi": 400, "figure.dpi": 400,
 })
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -42,5 +42,5 @@ ax.set_ylim(0.10, 0.70)
 ax.grid(True, color=SLATE, alpha=0.25, lw=0.5)
 ax.legend(loc="center right", framealpha=0.95, fontsize=6.5)
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_geankoplis.png"), dpi=300)
+fig.savefig(os.path.join(HERE, "val_geankoplis.png"), dpi=400)
 print("wrote val_geankoplis.png")
