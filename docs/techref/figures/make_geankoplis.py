@@ -9,9 +9,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NAVY, RED, AMBER, SLATE, GREY = "#1F3A5F", "#C0392B", "#D68910", "#7F8C8D", "#34495E"
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 9
-plt.rcParams["mathtext.default"] = "regular"
+plt.rcParams.update({
+    "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
+    "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
+    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+})
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 rows = list(csv.DictReader(open(os.path.join(HERE, "data", "geankoplis_crossflow_profile.csv"))))
@@ -25,7 +28,7 @@ G_th = [0.0, 0.04876, 0.0992, 0.1482, 0.2000]
 G_x = [0.209, 0.1870, 0.1642, 0.1420, 0.1190]
 G_y = [0.6550, 0.6383, 0.6158, 0.5940, 0.5690]
 
-fig, ax = plt.subplots(figsize=(6.2, 4.2))
+fig, ax = plt.subplots(figsize=(3.5, 2.65))
 ax.plot(th, y_col, "-", color=NAVY, lw=2, label="collected permeate $y_{O_2}$ (this work)")
 ax.plot(th, y_loc, "--", color=RED, lw=1.6, label="local permeate $y_{O_2}$ (this work)")
 ax.plot(th, x_o2, "-", color=SLATE, lw=2, label="retentate $x_{O_2}$ (this work)")
@@ -37,9 +40,7 @@ ax.set_ylabel(r"O$_2$ mole fraction")
 ax.set_xlim(0, 0.20)
 ax.set_ylim(0.10, 0.70)
 ax.grid(True, color=SLATE, alpha=0.25, lw=0.5)
-ax.legend(loc="center right", framealpha=0.95, fontsize=8)
-ax.set_title("Cross-flow vs. Geankoplis Ex. 13.6-1 (O$_2$/N$_2$, $\\alpha^*$=10, $\\gamma$=0.10)",
-             color=NAVY, fontsize=10)
+ax.legend(loc="center right", framealpha=0.95, fontsize=6.5)
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_geankoplis.png"), dpi=150)
+fig.savefig(os.path.join(HERE, "val_geankoplis.png"), dpi=300)
 print("wrote val_geankoplis.png")

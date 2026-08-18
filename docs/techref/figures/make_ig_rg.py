@@ -9,9 +9,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NAVY, RED, AMBER, SLATE, GREY = "#1F3A5F", "#C0392B", "#D68910", "#7F8C8D", "#34495E"
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 9
-plt.rcParams["mathtext.default"] = "regular"
+plt.rcParams.update({
+    "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
+    "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
+    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+})
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 rows = list(csv.DictReader(open(os.path.join(HERE, "data", "ig_rg.csv"))))
@@ -20,14 +23,14 @@ tig = np.array([float(r["theta_ig"]) for r in rows])
 trg = np.array([float(r["theta_rg"]) for r in rows])
 phiCO2 = np.array([float(r["phiCO2"]) for r in rows])
 
-fig, ax = plt.subplots(figsize=(6.4, 4.3))
+fig, ax = plt.subplots(figsize=(3.5, 2.65))
 ax.plot(pr, tig, "o-", color=NAVY, lw=2, label=r"ideal gas ($\varphi$=1), partial pressure")
 ax.plot(pr, trg, "s--", color=RED, lw=2, label=r"real gas (fugacity), PR EOS")
 ax.fill_between(pr, trg, tig, color=AMBER, alpha=0.25, label="over-prediction")
 ax.set_xlabel("feed (retentate) pressure $p_r$ [bar]")
 ax.set_ylabel(r"stage cut $\theta$")
 ax.grid(True, color=SLATE, alpha=0.25, lw=0.5)
-ax.legend(loc="upper left", fontsize=8)
+ax.legend(loc="upper left", fontsize=7)
 
 # secondary axis: CO2 fugacity coefficient (the source of the correction)
 ax2 = ax.twinx()
@@ -41,8 +44,6 @@ i60 = int(np.argmin(np.abs(pr - 60)))
 gap = 100 * (tig[i60] - trg[i60]) / trg[i60]
 ax.annotate(f"+{gap:.0f}% at 60 bar", (pr[i60], 0.5 * (tig[i60] + trg[i60])),
             fontsize=8, color=GREY, ha="left")
-ax.set_title("Ideal-gas vs. real-gas driving force (this solver): CO$_2$/CH$_4$, fixed area",
-             color=NAVY, fontsize=10)
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_ig_rg.png"), dpi=150)
+fig.savefig(os.path.join(HERE, "val_ig_rg.png"), dpi=300)
 print("wrote val_ig_rg.png")

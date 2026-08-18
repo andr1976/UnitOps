@@ -10,9 +10,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NAVY, RED, AMBER, SLATE, GREY = "#1F3A5F", "#C0392B", "#D68910", "#7F8C8D", "#34495E"
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 9
-plt.rcParams["mathtext.default"] = "regular"
+plt.rcParams.update({
+    "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
+    "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
+    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+})
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 rows = list(csv.DictReader(open(os.path.join(HERE, "data", "energy_jt.csv"))))
@@ -24,7 +27,7 @@ Tfeed = 313.15
 pp_bar = 2.0
 mu = 1.0e-6  # K/Pa
 
-fig, ax = plt.subplots(figsize=(6.2, 4.2))
+fig, ax = plt.subplots(figsize=(3.5, 2.65))
 ax.axhline(Tfeed, color=GREY, lw=1, ls=":", label=f"feed T = {Tfeed:.2f} K")
 ax.plot(pr, tp_jt, "o-", color=RED, lw=2, label="permeate T (JT fluid)")
 ax.plot(pr, tr_jt, "s-", color=NAVY, lw=2, label="retentate T (JT fluid)")
@@ -38,10 +41,7 @@ ax.plot(pr, Tfeed + mu * (pp_bar * 1e5 - pr_pa), "-", color=AMBER, lw=1,
 ax.set_xlabel("feed (retentate) pressure $p_r$ [bar]")
 ax.set_ylabel("outlet temperature [K]")
 ax.grid(True, color=SLATE, alpha=0.25, lw=0.5)
-ax.legend(loc="lower left", fontsize=8)
-ax.set_title("Adiabatic energy layer: Joule-Thomson cooling of the permeate\n"
-             "(CO$_2$/CH$_4$, $\\theta$=0.30, $p_p$=2 bar, $\\mu$=1$\\times$10$^{-6}$ K/Pa)",
-             color=NAVY, fontsize=10)
+ax.legend(loc="lower left", fontsize=7)
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_energy_jt.png"), dpi=150)
+fig.savefig(os.path.join(HERE, "val_energy_jt.png"), dpi=300)
 print("wrote val_energy_jt.png")

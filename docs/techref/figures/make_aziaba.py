@@ -16,14 +16,18 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NAVY, RED, AMBER, SLATE, GREY = "#1F3A5F", "#C0392B", "#D68910", "#7F8C8D", "#34495E"
-plt.rcParams["font.family"] = "Arial"; plt.rcParams["font.size"] = 9
-plt.rcParams["mathtext.default"] = "regular"
+plt.rcParams.update({
+    "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
+    "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
+    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+})
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 def load(name):
     return list(csv.DictReader(open(os.path.join(HERE, "data", name))))
 
-fig, (axA, axB) = plt.subplots(1, 2, figsize=(9.6, 4.3))
+fig, (axA, axB) = plt.subplots(1, 2, figsize=(7.2, 3.0))
 
 # --- Panel A: TC2 (Sada), yCO2 vs theta, three feed pressures: this work vs digitized DWSIM ---
 r2 = load("aziaba_tc2.csv")
@@ -61,5 +65,5 @@ axB.legend(h1 + h2, l1 + l2, fontsize=7, loc="center left")
 axB.set_title("TC3: H$_2$/N$_2$/CH$_4$/Ar (Ar=7.0), model output", color=NAVY, fontsize=10)
 
 fig.tight_layout()
-fig.savefig(os.path.join(HERE, "val_aziaba.png"), dpi=150)
+fig.savefig(os.path.join(HERE, "val_aziaba.png"), dpi=300)
 print("wrote val_aziaba.png")
