@@ -849,13 +849,14 @@ The purpose of the unit operation is that a membrane can be solved inside a
 flowsheet, together with the compressors, coolers and recycle streams that
 surround it and under the same property package as the rest of the flowsheet.
 This section demonstrates that use on a two-stage carbon dioxide / methane
-separation representative of natural gas sweetening. The configuration, a two
-stage arrangement with interstage recompression and recycle of the second-stage
-retentate, is the one identified by \citet{ahmad2012} as the economic optimum
-for this separation. In that study the membrane was added to Aspen HYSYS as a
-user-defined unit operation, which is tied to a licensed simulator and was not
-released; the same configuration is built here from the released unit and the
-native units of the free COCO/COFE environment.
+separation representative of natural gas sweetening. The configuration is a
+two-stage arrangement with interstage recompression and recycle of the
+second-stage retentate, a common way of raising hydrocarbon recovery in a
+single-pass membrane system. A two-stage membrane sweetening flowsheet of this
+kind was simulated by \citet{alqaheem2021}, assembled in the licensed UniSim
+environment from a component splitter and a spreadsheet in the absence of a
+membrane unit; here the same configuration is built directly from the released
+unit and the native units of the free COCO/COFE environment.
 
 \subsection{Flowsheet and specification}\label{sec:case-flowsheet}
 The feed is a binary mixture of 10 mol\% carbon dioxide and 90 mol\% methane at
@@ -1094,8 +1095,7 @@ spiral-wound flue-gas capture case. The real-gas driving force captures the high
 from ideal-gas behaviour that a partial-pressure model misses. A two-stage carbon
 dioxide / methane sweetening flowsheet, solved in the free environment with
 interstage recompression and recycle, illustrates the unit in use and reproduces
-both the real-gas sensitivity of the required membrane area and the optimality of
-the two-stage recycle configuration reported for this separation. By combining an
+the real-gas sensitivity of the required membrane area. By combining an
 open licence, a free flowsheet environment and a standard interface, the unit
 makes rigorous, validated membrane calculations available for flowsheet-level
 studies without the barriers of the earlier approaches, and its architecture
