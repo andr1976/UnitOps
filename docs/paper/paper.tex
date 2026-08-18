@@ -40,22 +40,31 @@
 
 %% ---- Abstract ---------------------------------------------------------------
 \begin{abstract}
-Membrane gas separation is increasingly attractive for natural-gas
-sweetening, hydrogen recovery, air separation and post-combustion carbon
-capture, yet general-purpose process simulators still lack rigorous,
-reusable membrane models. We present an open-source unit operation for
-multicomponent gas permeation that complies with the CAPE-OPEN standard and
-therefore runs unchanged in any compliant process modelling environment.
-The physics core implements cross-flow, co-current and counter-current
-solution--diffusion models, with an optional real-gas fugacity driving
-force and an optional adiabatic (Joule--Thomson) non-isothermal energy
-balance; all thermodynamic properties are delegated to the host flowsheet's
-property package through the CAPE-OPEN Material Object, so the unit carries
-no thermodynamics of its own. The implementation is validated against
-independent analytical and numerical benchmarks from the literature
-(Section~\ref{sec:validation}) and illustrated on a flowsheet-level
-carbon dioxide / methane separation case study (Section~\ref{sec:casestudy}).
-The software is released under the MIT licence [[repository URL / DOI]].
+Membrane gas separation is used for natural-gas sweetening, hydrogen
+recovery, air separation, biogas upgrading and post-combustion carbon
+dioxide capture, yet general-purpose process simulators, both free and
+commercial, still lack a ready multicomponent membrane unit operation. The
+model is instead rebuilt for each study: as a custom block inside a licensed
+simulator that is not released, as a spreadsheet specific to one flowsheet,
+or as a rigorous code that runs outside the simulator and needs its own
+toolchain. We present an open, standards-based gas-permeation membrane unit
+operation that avoids this re-implementation. It complies with the CAPE-OPEN
+standard, so it registers and runs unchanged in any compliant environment,
+including the free COCO/COFE suite, and delegates all thermodynamics to the
+host property package through the Material Object, so the membrane is solved
+under the same equation of state as the rest of the flowsheet. A
+simulator-independent physics core implements the solution--diffusion
+cross-flow, co-current and counter-current models, with a choice of ideal
+partial-pressure or real-gas fugacity driving force and an optional adiabatic
+Joule--Thomson energy balance. The unit is validated against analytic,
+numerical and experimental references, reproducing the Weller--Steiner and
+Shindo benchmarks to order $10^{-4}$, tracking a twelve-point air-separation
+experiment to within $0.010$ mole fraction, and recovering a spiral-wound
+flue-gas capture case. A two-stage carbon dioxide / methane sweetening
+flowsheet with interstage recompression and recycle, solved in-simulator,
+demonstrates membrane sizing and the feed-pressure, permeate-pressure and
+selectivity trade-offs alongside the surrounding compressors and coolers.
+The source is released under the MIT licence.
 \end{abstract}
 
 %% ---- Highlights -------------------------------------------------------------
