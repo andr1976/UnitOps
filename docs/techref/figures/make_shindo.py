@@ -9,8 +9,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 NAVY, RED, AMBER, SLATE, GREY = "#1F3A5F", "#C0392B", "#D68910", "#7F8C8D", "#34495E"
-plt.rcParams["font.family"] = "Arial"
-plt.rcParams["font.size"] = 9
+plt.rcParams.update({
+    "font.family": "Arial", "font.size": 8, "mathtext.default": "regular",
+    "axes.labelsize": 9, "xtick.labelsize": 8, "ytick.labelsize": 8,
+    "legend.fontsize": 7, "lines.linewidth": 1.4, "lines.markersize": 4.5,
+    "axes.linewidth": 0.8, "savefig.dpi": 300, "figure.dpi": 300,
+})
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 rows = list(csv.DictReader(open(os.path.join(HERE, "data", "shindo_case1.csv"))))
@@ -22,7 +26,7 @@ ref_counter = [float(r["ref_counter"]) for r in rows]
 
 x = np.arange(len(comp))
 w = 0.38
-fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.8), sharey=True)
+fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.0), sharey=True)
 for ax, mine, ref, title in [
     (axes[0], mine_cross, ref_cross, "Cross-flow ($\\theta$=0.373)"),
     (axes[1], mine_counter, ref_counter, "Counter-current ($\\theta$=0.375)"),
@@ -38,9 +42,7 @@ for ax, mine, ref, title in [
 
 axes[0].set_ylabel("permeate mole fraction")
 axes[0].set_ylim(0, 0.9)
-axes[0].legend(loc="upper right", fontsize=8)
-fig.suptitle("Multicomponent benchmark: Shindo et al. (1985) Case 1 (NH$_3$/H$_2$/N$_2$)",
-             color=NAVY, fontsize=11)
+axes[0].legend(loc="upper right", fontsize=7)
 fig.tight_layout(rect=[0, 0, 1, 0.95])
-fig.savefig(os.path.join(HERE, "val_shindo_case1.png"), dpi=150)
+fig.savefig(os.path.join(HERE, "val_shindo_case1.png"), dpi=300)
 print("wrote val_shindo_case1.png")
