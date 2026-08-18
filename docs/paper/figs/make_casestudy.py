@@ -42,7 +42,7 @@ fig.tight_layout(); fig.savefig(os.path.join(HERE, "case_realgas.png"))
 # B: permeate pressure trade-off (COFE parametric study)
 B = load("sweepB_permP.csv")
 fig, ax = plt.subplots(figsize=FIG)
-ax.plot(B["Pp1_bar"], B["areaTot"], "o-", color=NAVY)
+ax.plot(B["Pp1_bar"], B["areaTot"], "o-", color=NAVY); ax.margins(y=0.13)
 ax.set_xlabel("stage-1 permeate pressure [bar]"); ax.set_ylabel("total area [m$^2$]", color=NAVY)
 ax.tick_params(axis="y", colors=NAVY); grid(ax)
 ax2 = ax.twinx(); ax2.plot(B["Pp1_bar"], B["power"], "s--", color=RED)
@@ -51,7 +51,8 @@ n = len(B["Pp1_bar"])
 for i in range(n):
     if i % 2 == 0 or i == n - 1:
         ax.annotate(f"{B['ch4rec'][i]:.0f}%", (B["Pp1_bar"][i], B["areaTot"][i]),
-                    fontsize=6.5, color=GREY, xytext=(2, 3), textcoords="offset points")
+                    fontsize=6.5, color=GREY, xytext=(0, 10), textcoords="offset points",
+                    ha="center", va="bottom")
 fig.tight_layout(); fig.savefig(os.path.join(HERE, "case_permeate.png"))
 
 # C: membrane selectivity
