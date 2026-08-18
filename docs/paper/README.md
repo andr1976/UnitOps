@@ -3,10 +3,12 @@
 Draft materials for a journal article about the gas-permeation membrane CAPE-OPEN
 unit operation in this repository.
 
-- **Target journal:** *Digital Chemical Engineering* (Elsevier, Gold open access).
+- **Target journal:** *Computers & Chemical Engineering* (Elsevier, hybrid —
+  subscription with optional open access, **no mandatory APC**). CAPE-OPEN
+  interoperability sits squarely in its computer-aided-process-engineering scope.
 - **Framing:** software / tool paper (full-length article) — the validated, open,
-  standards-based unit operation is the contribution; model + numerics + validation
-  are included because the format allows it.
+  standards-based unit operation is the contribution; model, numerics, validation
+  and an illustrative flowsheet case study are included.
 - **Status:** skeleton only. Nothing here is submission-ready.
 
 ## Files

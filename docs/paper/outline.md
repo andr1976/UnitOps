@@ -1,5 +1,5 @@
 <!--
-  DRAFT SKELETON — Digital Chemical Engineering (full-length software/tool article).
+  DRAFT SKELETON — Computers & Chemical Engineering (full-length software/tool article).
   Bracketed [[...]] items are placeholders. Bulleted notes under each heading are
   authoring guidance, not final prose. Do NOT invent results: pull validated numbers
   and figures from docs/techref/ (validation.rst, figures/) or the test suite.
@@ -19,7 +19,7 @@ Candidates:
 ---
 
 ## Highlights
-<!-- DCE/Elsevier: 3–5 bullets, ≤85 characters each. -->
+<!-- Elsevier highlights: 3–5 bullets, ≤85 characters each. -->
 - [[Open-source CAPE-OPEN membrane unit op runs in any compliant process simulator]]
 - [[Thermodynamics delegated to the flowsheet property package via the Material Object]]
 - [[Real-gas fugacity driving force + adiabatic non-isothermal (JT) layer]]
