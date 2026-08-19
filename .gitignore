@@ -31,6 +31,10 @@ docs/techref/figures/tikz/build/
 # Vendored third-party code (DeJaco et al. MemPy).
 membrane/other/MemPy-1.0/
 
+# ---- Submission artifacts (kept out of version control) ----
+docs/paper/cover-letter.docx
+~$*.docx
+
 # ---- OS cruft ----
 Thumbs.db
 .DS_Store
