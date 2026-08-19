@@ -162,6 +162,9 @@ namespace Membrane.CapeOpen
 
         // ---- ICapeOptionParameterSpec ----
         string ICapeOptionParameterSpec.DefaultValue => DefaultValueCore;
+        // Must marshal as SAFEARRAY(BSTR) i.e. a plain string[] (VT_ARRAY|VT_BSTR): DWSIM casts OptionList directly
+        // to String() (CapeOpenUO.vb) and COFE also expects the string array. (An object[]/VARIANT array breaks DWSIM
+        // with "Unable to cast Object[] to String[]".)
         public object OptionList => _options;
         public bool RestrictedToList => true;
         public bool Validate(string v, ref string message)

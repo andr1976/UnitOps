@@ -1,7 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <!-- net8.0-windows + EnableComHosting: a native Membrane.CapeOpen.comhost.dll is generated and registered as
+         the COM InprocServer32. This makes .NET-based hosts (DWSIM) receive a real COM RCW instead of the raw
+         managed object, so their managed CType/TryCast to CapeOpen.* interfaces becomes a COM QI-by-IID and succeeds.
+         Native hosts (COFE/COCO, Aspen, UniSim) are unaffected. Requires the .NET 8 runtime on the target machine. -->
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <EnableComHosting>true</EnableComHosting>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
@@ -10,9 +17,7 @@
     <AssemblyName>Membrane.CapeOpen</AssemblyName>
     <!-- COM server: class is [ComVisible(true)] individually; assembly default is not visible. -->
     <ComVisible>false</ComVisible>
-    <EnableComHosting>false</EnableComHosting>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Deterministic>true</Deterministic>
     <Description>CAPE-OPEN 1.0 gas-permeation membrane unit operation (cross-flow). Delegates physics to MembraneCore; delegates thermodynamics to the PME material object.</Description>
   </PropertyGroup>
@@ -38,9 +43,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Private=true: the PIA must sit next to the DLL so the comhost-bootstrapped .NET 8 runtime can load it
+         (the net8 runtime loads the .NET-Framework interop assembly fine). -->
     <Reference Include="CAPE-OPENv1-1-0">
       <HintPath>$(CapeOpenPia)</HintPath>
-      <Private>false</Private>
+      <Private>true</Private>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
   </ItemGroup>

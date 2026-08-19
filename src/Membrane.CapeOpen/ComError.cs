@@ -41,8 +41,12 @@ namespace Membrane.CapeOpen
     {
         private static readonly object Gate = new object();
         private static string? _path;
+        private static bool _bannerWritten;
 
-        internal static bool Enabled { get; set; } = true;
+        // Off by default (no log file, no overhead). Set the env var MEMBRANE_CAPEOPEN_LOG (to any value)
+        // to write membrane_capeopen.log next to the DLL for troubleshooting inside a PME.
+        internal static bool Enabled { get; set; } =
+            !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MEMBRANE_CAPEOPEN_LOG"));
 
         private static string Path
         {
@@ -64,9 +68,34 @@ namespace Membrane.CapeOpen
             try
             {
                 lock (Gate)
+                {
+                    if (!_bannerWritten) { _bannerWritten = true; WriteBanner(); }
                     System.IO.File.AppendAllText(Path, $"{DateTime.Now:HH:mm:ss.fff}  {message}{Environment.NewLine}");
+                }
             }
             catch { /* never let logging throw across the COM boundary */ }
+        }
+
+        /// <summary>One-time-per-process banner: names the host PME, its bitness/PID and the adapter build,
+        /// so a shared log file can be read back per session and attributed to COFE vs DWSIM vs Aspen etc.</summary>
+        private static void WriteBanner()
+        {
+            try
+            {
+                var p = System.Diagnostics.Process.GetCurrentProcess();
+                string host;
+                try { host = p.MainModule?.FileName ?? p.ProcessName; } catch { host = p.ProcessName; }
+                var asm = System.Reflection.Assembly.GetExecutingAssembly();
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine(new string('=', 78));
+                sb.AppendLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ===== SESSION START =====");
+                sb.AppendLine($"  HOST     : {host}  (PID {p.Id})");
+                sb.AppendLine($"  Bitness  : {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} process");
+                sb.AppendLine($"  Adapter  : v{asm.GetName().Version}  @ {asm.Location}");
+                sb.AppendLine(new string('=', 78));
+                System.IO.File.AppendAllText(Path, sb.ToString());
+            }
+            catch { /* banner is best-effort */ }
         }
     }
 }
