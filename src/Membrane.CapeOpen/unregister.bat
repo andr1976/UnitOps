@@ -1,8 +1,3 @@
 @echo off
-REM Unregister the membrane unit operation COM server (run as Administrator).
-setlocal
-set DLL=%~dp0Membrane.CapeOpen.dll
-set REGASM=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe
-echo Unregistering "%DLL%" ...
-"%REGASM%" "%DLL%" /unregister
-endlocal
+REM Unregister the membrane unit operation COM server (per-machine, HKLM; run as Administrator).
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0unregister-user.ps1" -Machine

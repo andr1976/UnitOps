@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
@@ -25,9 +26,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Membrane.CapeOpen\Membrane.CapeOpen.csproj" />
     <ProjectReference Include="..\MembraneCore\MembraneCore.csproj" />
+    <!-- Private=true so the .NET 8 test host can load the interop assembly at runtime. -->
     <Reference Include="CAPE-OPENv1-1-0">
       <HintPath>$(CapeOpenPia)</HintPath>
-      <Private>false</Private>
+      <Private>true</Private>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
   </ItemGroup>

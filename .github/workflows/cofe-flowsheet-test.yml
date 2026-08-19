@@ -7,9 +7,11 @@ name: COFEStand flowsheet gate
 # FAILS if any flowsheet does not solve.
 #
 # Why HKLM: a GitHub runner's COFE discovers CAPE-OPEN components from the machine
-# (HKLM) class store only, not a per-user (HKCU) overlay. register.bat uses RegAsm
-# /codebase which, under the runner's elevated steps, writes HKLM -- and also dogfoods
-# the per-machine script we ship. Desktop users can still use per-user register-user.ps1.
+# (HKLM) class store only, not a per-user (HKCU) overlay. register.bat runs
+# register-user.ps1 -Machine which, under the runner's elevated steps, writes HKLM
+# (InprocServer32 -> the native comhost shim + CATIDs + CapeDescription) -- and also
+# dogfoods the per-machine script we ship. Desktop users can still use register-user.ps1.
+# The unit is a .NET 8 assembly, so the runner needs the .NET 8 runtime for comhost.
 #
 # "SOLVE: OK" / "SOLVE: FAIL" are emitted by COFE.exe (which COFEStand drives) on
 # COCO 3.10.0.0 -- verified against the installed binary. COFEStand prints the verdict
@@ -37,12 +39,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up .NET SDK
+      - name: Set up .NET SDK (8 for the comhost runtime + 9)
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          dotnet-version: |
+            8.0.x
+            9.0.x
 
-      - name: Build CAPE-OPEN unit operation (Release, net48/x64)
+      - name: Build CAPE-OPEN unit operation (Release, net8/x64 comhost)
         run: dotnet build src/Membrane.CapeOpen/Membrane.CapeOpen.csproj -c Release -v minimal
 
       - name: Assemble + extract portable package

@@ -1,8 +1,8 @@
 # UnitOps — CAPE-OPEN Membrane Unit Operation
 
-A CAPE-OPEN 1.0 compliant **gas-permeation membrane** unit operation for COFE/COCO, plus its validated
-calculation core. Converts the membrane model to a COM component usable in any CAPE-OPEN flowsheet
-environment.
+A CAPE-OPEN 1.0 compliant **gas-permeation membrane** unit operation, plus its validated
+calculation core. It is a COM component **verified in COCO/COFE and DWSIM**, built as a .NET 8
+assembly activated through the comhost shim so both native and .NET-based hosts load it.
 
 ## Layout
 
@@ -19,8 +19,8 @@ src/           The implementation (see below)
 |---|---|---|
 | `MembraneCore` | netstandard2.0 | Pure physics engine (cross-flow permeation). No COM/CAPE-OPEN deps. |
 | `MembraneCore.Tests` | net8.0 (xUnit) | Physics validation vs literature (Shindo/Dias). |
-| `Membrane.CapeOpen` | net48, x64 | CAPE-OPEN 1.0 Unit Operation adapter (COM). Delegates physics to Core, thermo to the PME. |
-| `Membrane.CapeOpen.Tests` | net48 (xUnit) | Headless end-to-end adapter tests via a mock Material Object. |
+| `Membrane.CapeOpen` | net8.0-windows, x64 (comhost) | CAPE-OPEN 1.0 Unit Operation adapter (COM). Delegates physics to Core, thermo to the PME. |
+| `Membrane.CapeOpen.Tests` | net8.0-windows (xUnit) | Headless end-to-end adapter tests via a mock Material Object. |
 
 ## Model
 
@@ -37,18 +37,23 @@ from the feed); output: stage cut. Thermodynamic flashes are delegated to the fl
 
 ```sh
 cd src
-dotnet build MembraneUnitOp.sln -c Release      # requires .NET SDK + .NET Framework 4.8 targeting pack
-dotnet test  MembraneUnitOp.sln                 # 26 tests
+dotnet build MembraneUnitOp.sln -c Release      # requires the .NET 8 SDK
+dotnet test  MembraneUnitOp.sln                 # 56 tests
 ```
 
-## Register for COFE (Windows, Administrator)
+## Register for COCO/COFE and DWSIM (Windows)
+
+Requires the **.NET 8 Desktop runtime**. Registration points the COM `InprocServer32` at the generated
+`Membrane.CapeOpen.comhost.dll` shim — so .NET-based hosts (DWSIM) receive a real COM object, not the raw
+managed instance — and adds the CAPE-OPEN CATIDs + CapeDescription.
 
 ```sh
-cd src/Membrane.CapeOpen/bin/x64/Release
-register.bat            # regasm /codebase; adds CAPE-OPEN CATIDs + CapeDescription
+cd src/Membrane.CapeOpen/bin/Release/net8.0-windows/win-x64
+powershell -ExecutionPolicy Bypass -File register-user.ps1     # per-user (HKCU), no admin
+# or, as Administrator, per-machine (HKLM):   register.bat
 ```
-The unit then appears in COFE's unit-operation palette as *"Membrane (Gas Permeation, Cross-Flow)"*.
-`unregister.bat` removes it.
+The unit then appears in the unit-operation palette as *"Membrane (Gas Permeation, Cross-Flow)"* in both
+COCO/COFE and DWSIM. `unregister-user.ps1` (add `-Machine` for HKLM) or `unregister.bat` removes it.
 
 ## Status
 

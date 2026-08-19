@@ -1,18 +1,5 @@
 @echo off
-REM Register the membrane unit operation as a CAPE-OPEN COM server (per-machine; run as Administrator).
-REM RegAsm invokes the [ComRegisterFunction] which writes the CAPE-OPEN CATIDs and CapeDescription keys.
-setlocal
-set DLL=%~dp0Membrane.CapeOpen.dll
-set REGASM=%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe
-if not exist "%DLL%" (
-  echo ERROR: %DLL% not found. Build the project first ^(x64, Release^).
-  exit /b 1
-)
-echo Registering "%DLL%" ...
-"%REGASM%" "%DLL%" /codebase
-if %ERRORLEVEL% NEQ 0 (
-  echo Registration FAILED ^(are you running as Administrator?^).
-  exit /b %ERRORLEVEL%
-)
-echo Done. The unit should now appear in COFE's unit-operation palette as "%~n0".
-endlocal
+REM Register the membrane unit operation as a CAPE-OPEN COM server (per-machine, HKLM; run as Administrator).
+REM The unit is a .NET 8 assembly activated via the comhost shim (Membrane.CapeOpen.comhost.dll); this writes
+REM InprocServer32 -> comhost.dll plus the CAPE-OPEN CATIDs and CapeDescription. Requires the .NET 8 Desktop runtime.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0register-user.ps1" -Machine

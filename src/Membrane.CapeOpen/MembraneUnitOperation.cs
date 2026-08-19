@@ -25,7 +25,8 @@ namespace Membrane.CapeOpen
     [ProgId(MembraneUnitIdentity.ProgId)]
     [ComDefaultInterface(typeof(ICapeUnit))]
     public class MembraneUnitOperation :
-        ICapeUnit, ICapeIdentification, ICapeUtilities, ICapeUnitReport, IPersistStreamInit
+        ICapeUnit, ICapeIdentification, ICapeUtilities, ICapeUnitReport, IPersistStreamInit,
+        ECapeUser, ECapeRoot
     {
         private const int PersistVersion = 7;   // v2 StageCut; v3 profiles; v4 collected; v5 SpecMode; v6 energy; v7 driving force
         private const string CrossFlow = "CrossFlow";
@@ -119,20 +120,24 @@ namespace Membrane.CapeOpen
         private MembraneCore.MembraneResult? _lastResult;
         private double _lastPr, _lastPp;
         private string _lastFlowPattern = CrossFlow;
+        private CapeError? _lastError;   // last CAPE-OPEN error; exposed via ECapeUser/ECapeRoot so PMEs (e.g. DWSIM) can read error details after a failed call
 
         static MembraneUnitOperation()
         {
             // Ensure sibling managed DLLs (MembraneCore) resolve when hosted by a PME. The static ctor runs
             // before any instance is created and before Calculate() JITs its MembraneCore references.
             AssemblyResolver.Ensure();
+            Diagnostics.Log("static ctor: type loaded, AssemblyResolver ready");
         }
 
         public MembraneUnitOperation()
         {
+            Diagnostics.Log("ctor: begin (COM CreateInstance)");
             ComponentName = MembraneUnitIdentity.Name;
             ComponentDescription = MembraneUnitIdentity.Description;
             BuildPorts();
             BuildFixedParameters();
+            Diagnostics.Log("ctor: end (ports + fixed parameters built)");
         }
 
         // =================== ICapeUnit ===================
@@ -267,6 +272,11 @@ namespace Membrane.CapeOpen
                 }
                 var result = SolveAt(feed, permeance, pr, pp, fp, area, ProfilePoints, aRet, bPerm, phiTable);
                 Diagnostics.Log($"Calculate: [{fp}] area={area:E4}m2 solved theta={result.StageCut:F4} mbRes={result.MassBalanceResidual:E2}");
+                if (result.StageCut <= 1e-9)
+                    throw ComError.SolvingError(
+                        $"No measurable permeation: stage cut is essentially zero, so the permeate stream has no flow. " +
+                        $"Increase the component permeances, the membrane area ({area:G4} m2), or the pressure driving force " +
+                        $"(feed {pr:F0} Pa, permeate {pp:F0} Pa, delta P {pr - pp:F0} Pa).");
 
                 // Optional adiabatic energy balance -> outlet temperatures. The separation is unchanged;
                 // this only assigns temperatures (permeate carries the Joule-Thomson drop). Falls back to
@@ -314,13 +324,26 @@ namespace Membrane.CapeOpen
                 _lastReport = BuildReport(feed, result, pr, pp);
                 Diagnostics.Log($"Calculate -> OK: theta={result.StageCut:F4}");
             }
-            catch (CapeError) { throw; }
+            catch (CapeError ce) { _lastError = ce; throw; }
             catch (Exception ex)
             {
                 Diagnostics.Log("Calculate failed: " + ex);
-                throw ComError.SolvingError("Membrane calculation failed: " + ex.Message);
+                _lastError = ComError.SolvingError("Membrane calculation failed: " + ex.Message);
+                throw _lastError;
             }
         }
+
+        // =================== ECapeRoot / ECapeUser ===================
+        // Standard CAPE-OPEN error interfaces. After a method (e.g. Calculate) throws, a PME QIs the unit for
+        // these to read structured error details. DWSIM casts the unit to ECapeUser in its Calculate catch
+        // (CapeOpenUO.vb) — without these the cast throws E_NOINTERFACE and masks the real error message.
+        public string name => _lastError?.name ?? "ECapeUnknown";
+        public int code => _lastError?.code ?? unchecked((int)0x80040501);
+        public string description => _lastError?.description ?? string.Empty;
+        public string scope => _lastError?.scope ?? string.Empty;
+        public string interfaceName => _lastError?.interfaceName ?? "ICapeUnit";
+        public string operation => _lastError?.operation ?? string.Empty;
+        public string moreInfo => _lastError?.moreInfo ?? "See membrane_capeopen.log next to the DLL.";
 
         // =================== ICapeIdentification ===================
 
