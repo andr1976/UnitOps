@@ -1,9 +1,9 @@
 name: Build & test
 
 # Fast compile + unit-test gate on every push / PR to main. No COCO, no COM
-# registration: the net8 physics core and the net48 COM adapter both build with the
-# repo-vendored CAPE-OPEN PIA (lib/CAPE-OPENv1-1-0.dll), and the adapter tests drive
-# the unit through an in-memory mock Material Object. Full end-to-end flowsheet
+# registration: the net8 physics core and the net8 COM adapter (comhost) both build
+# with the repo-vendored CAPE-OPEN PIA (lib/CAPE-OPENv1-1-0.dll), and the adapter tests
+# drive the unit through an in-memory mock Material Object. Full end-to-end flowsheet
 # solving lives in cofe-flowsheet-test.yml.
 
 on:
