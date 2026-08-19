@@ -29,8 +29,9 @@ The code is split into two assemblies with a strict dependency direction:
   (:class:`IEnthalpyProvider`) that the caller supplies. This lets the entire
   physics be unit-tested headlessly on modern .NET with synthetic inputs
   (:ref:`validation`).
-* **Membrane.CapeOpen** is the adapter: a .NET Framework 4.8, x64,
-  COM-visible assembly that implements the CAPE-OPEN interfaces, translates the
+* **Membrane.CapeOpen** is the adapter: a ``net8.0-windows``, x64,
+  COM-visible assembly (activated through the generated ``comhost`` shim) that
+  implements the CAPE-OPEN interfaces, translates the
   PME's Material Objects to and from the core's plain-array API, and delegates
   all thermodynamics to the PME.
 
@@ -199,8 +200,12 @@ Registration and assembly resolution
 ====================================
 
 The unit registers per-user (``HKCU``) via ``register-user.ps1`` --- no
-administrator rights required --- writing the CLSID, the ``InprocServer32``
-pointing ``mscoree.dll`` at the assembly with its ``CodeBase``, and the
-CAPE-OPEN Unit Operation category. A static ``AssemblyResolver`` hooks
-``AppDomain.AssemblyResolve`` so the sibling ``MembraneCore.dll`` resolves when
-the unit is activated inside the PME's process.
+administrator rights required (add ``-Machine`` for ``HKLM``) --- writing the
+CLSID, the ``InprocServer32`` pointing at the native
+``Membrane.CapeOpen.comhost.dll`` shim, and the CAPE-OPEN Unit Operation
+category, CATIDs and ``CapeDescription``. The comhost shim makes .NET-based hosts
+(DWSIM) receive a real COM object rather than the raw managed instance, so their
+managed cast to the CAPE-OPEN interfaces succeeds; native hosts (COCO/COFE) are
+unaffected. It requires the .NET 8 Desktop runtime. A static ``AssemblyResolver``
+hooks ``AppDomain.AssemblyResolve`` so the sibling ``MembraneCore.dll`` resolves
+when the unit is activated inside the PME's process.

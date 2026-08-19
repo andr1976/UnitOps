@@ -18,9 +18,9 @@ Component identity
    * - Category
      - CAPE-OPEN Unit Operation
    * - Runtime
-     - .NET Framework 4.8, x64, COM in-process server
+     - ``net8.0-windows``, x64, COM in-process server via the comhost shim (needs the .NET 8 Desktop runtime)
    * - Registration
-     - per-user (``HKCU``) via ``register-user.ps1`` (no admin)
+     - per-user (``HKCU``) via ``register-user.ps1`` (no admin); ``-Machine`` for ``HKLM``
 
 Ports
 =====

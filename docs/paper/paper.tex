@@ -48,8 +48,8 @@ simulator that is not released, as a spreadsheet specific to one flowsheet,
 or as a rigorous code that runs outside the simulator and needs its own
 toolchain. We present an open, standards-based gas-permeation membrane unit
 operation that avoids this re-implementation. It complies with the CAPE-OPEN
-standard, so it registers and runs unchanged in any compliant environment,
-including the free COCO/COFE suite, and delegates all thermodynamics to the
+standard, registers and runs in the free COCO/COFE suite and in DWSIM, and
+delegates all thermodynamics to the
 host property package through the Material Object, so the membrane is solved
 under the same equation of state as the rest of the flowsheet. A
 simulator-independent physics core implements the solution--diffusion
@@ -69,7 +69,7 @@ The source is released under the MIT licence.
 %% ---- Highlights -------------------------------------------------------------
 \begin{highlights}
 \item Open-source membrane unit operation fills a gap in process simulators
-\item Runs unchanged in any CAPE-OPEN simulator; thermodynamics from the host
+\item Verified in the free COCO/COFE suite and in DWSIM; thermodynamics from the host
 \item Cross-, co- and counter-current models with real-gas and non-isothermal options
 \item Validated against analytic, numerical and experimental benchmarks
 \item Two-stage CO$_2$/CH$_4$ sweetening solved in-simulator with recompression, recycle
@@ -170,16 +170,15 @@ used in both industrial and academic work, and any CAPE-OPEN compliant
 thermodynamic server or unit operation can be added to them
 \citep{andreasenvanbaten2025}. A free flowsheet environment together with a
 standard interface provides a suitable basis for a membrane unit operation that
-is portable across simulators and that reuses the host thermodynamics instead of
+runs in a free environment and reuses the host thermodynamics instead of
 carrying its own.
 
 To the best of our knowledge, an openly available, ready-to-use and thoroughly
 validated gas-permeation membrane unit operation for a free CAPE-OPEN process
 modelling environment has not been reported. The purpose of the present paper is
 to present such a unit operation. The model is provided as a compiled CAPE-OPEN
-unit that is registered directly in COCO/COFE, and in any other compliant
-environment, without recompilation and without a separate numerical environment
-or an external optimisation solver. All thermodynamic and physical properties,
+unit that is registered directly in COCO/COFE and in DWSIM, without recompilation
+and without a separate numerical environment or an external optimisation solver. All thermodynamic and physical properties,
 including fugacities, enthalpies and phase behaviour, are obtained from the
 flowsheet property package through the CAPE-OPEN Material Object, so that the
 unit inherits the real-gas description already selected for the flowsheet. The
@@ -588,7 +587,15 @@ temperature profiles along the module; getting the array parameter contract righ
 \citep{cocolan_param,cocolan_param_errata} is what makes the profiles plot rather
 than appear as invalid values. The unit registers per user, without administrator
 rights, and an assembly resolver ensures the core library is found when the unit
-is activated inside the environment process. Figure~\ref{fig:cofe} shows the unit
+is activated inside the environment process. One host-specific point is worth
+noting. DWSIM is itself written in .NET, and activating an in-process managed
+CAPE-OPEN component from a .NET host returns the managed object rather than a COM
+callable wrapper, so the host's cast to its own CAPE-OPEN interface types fails
+even though the interface identifiers are identical to the reference ones. The
+unit is therefore built with .NET COM host activation, which interposes a small
+native activation shim so that every host, native or managed, receives a genuine
+COM object reached through the standard \texttt{QueryInterface} path; the same
+build then runs in both COCO/COFE and DWSIM. Figure~\ref{fig:cofe} shows the unit
 operating in COFE.
 
 \begin{figure}[t]
@@ -1042,7 +1049,7 @@ and connected through a plug-in requires that environment to be installed
 \citep{alqaheem2024coco}; and rigorous open codes run outside the simulators and
 need a dedicated toolchain \citep{dejaco2020,aziaba2022,bozorg2019}. The unit
 presented here is instead distributed as a compiled component that registers in
-the free COCO/COFE environment, and in any other compliant environment, without a
+the free COCO/COFE environment and in DWSIM, without a
 separate numerical environment, an external solver, or recompilation, with the
 source released under an open licence.
 
@@ -1084,8 +1091,8 @@ partial-pressure or real-gas fugacity driving force and an optional adiabatic
 energy balance, and delegates all thermodynamics to the flowsheet property
 package through the CAPE-OPEN Material Object. The physics are held in a
 simulator-independent core, and a thin adapter exposes the model as a CAPE-OPEN
-unit operation that registers in COCO/COFE, and in any other compliant
-environment, without external numerical tools or recompilation. The unit
+unit operation that registers in COCO/COFE and in DWSIM,
+without external numerical tools or recompilation. The unit
 reproduces the Shindo multicomponent benchmark and the Weller--Steiner analytic
 cross-flow solution to an absolute agreement of order $10^{-4}$, reproduces the
 hollow-fibre counter-current data compiled by Aziaba, tracks the permeate
