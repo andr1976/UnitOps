@@ -9,6 +9,10 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>false</SelfContained>
     <EnableComHosting>true</EnableComHosting>
+    <!-- The Edit() dialog is WinForms (matches native COFE/COCO dialogs; DWSIM's own UI is WinForms too).
+         This switches the framework reference to Microsoft.WindowsDesktop.App = the .NET 8 Desktop runtime,
+         which is already the documented prerequisite. -->
+    <UseWindowsForms>true</UseWindowsForms>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
@@ -31,6 +35,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MembraneCore\MembraneCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Let the headless test project exercise the GUI-free discovery step (EnsureEditableParameters). -->
+    <InternalsVisibleTo Include="Membrane.CapeOpen.Tests" />
   </ItemGroup>
 
   <PropertyGroup>
