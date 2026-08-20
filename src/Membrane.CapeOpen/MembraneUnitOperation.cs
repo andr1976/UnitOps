@@ -372,20 +372,48 @@ namespace Membrane.CapeOpen
 
         public int Edit()
         {
-            // No bespoke GUI yet; configuration is via the flowsheet parameter grid. But this is the
-            // spec-compliant place (Edit/Initialize) to change the parameter collection — so if a feed is
-            // connected, discover its compounds and expose a permeance parameter for each. Returning S_OK
-            // when the collection changed prompts the PME to re-read the parameters.
+            // Edit (with Initialize and Load) is a sanctioned place to change the collection (CO UO errata 2.7):
+            // first keep the modes consistent and discover a permeance parameter for each feed compound, then show
+            // a native configuration dialog. The dialog matters most in DWSIM, whose parameter grid renders option
+            // parameters as plain text cells (no drop-down); COFE already offers drop-downs in its own grid.
+            bool changed;
+            try { changed = EnsureEditableParameters(); }
+            catch (Exception ex) { Diagnostics.Log("Edit discovery failed: " + ex.Message); return 1; }
+
             try
             {
-                // Edit (with Initialize and Load) is a sanctioned place to change the collection (CO UO errata 2.7).
-                bool changed = ApplySpecMode();   // may flip Area/StageCut direction if SpecMode changed
-                if (_feed.ConnectedObject != null)
-                    changed |= EnsurePermeanceParameters(MaterialObjectAdapter.ReadComponentIds(_feed.ConnectedObject));
-                // S_OK (0) tells the PME the collection changed and it should re-read; S_FALSE (1) = unchanged.
+                Diagnostics.Log("Edit: showing configuration dialog");
+                using var form = new MembraneEditForm(
+                    _permeatePressure, _membraneArea, _stageCut,
+                    _flowPattern, _specMode, _energyMode, _drivingForce,
+                    _permeanceParams, SpecStageCut, () => ApplySpecMode());
+                var owner = NativeOwner.TryGet();
+                var result = owner != null ? form.ShowDialog(owner) : form.ShowDialog();
+                if (result == System.Windows.Forms.DialogResult.OK)
+                {
+                    _dirty = true;
+                    return 0;   // S_OK: the dialog changed values; tell the PME to re-read the parameters
+                }
+                // Cancelled: still S_OK if discovery/spec-mode changed the collection, else S_FALSE.
                 return changed ? 0 : 1;
             }
-            catch (Exception ex) { Diagnostics.Log("Edit discovery failed: " + ex.Message); return 1; }
+            catch (Exception ex)
+            {
+                // A GUI failure must never break the solve — fall back to the grid-only behaviour.
+                Diagnostics.Log("Edit dialog failed: " + ex.Message);
+                return changed ? 0 : 1;
+            }
+        }
+
+        /// <summary>Discovery step shared by <see cref="Edit"/> (before showing the dialog) and unit tests:
+        /// keep the spec-mode consistent and expose a permeance parameter for each feed compound. Returns true
+        /// if the parameter collection changed (⇒ the PME should re-read it). Contains no GUI so it is testable.</summary>
+        internal bool EnsureEditableParameters()
+        {
+            bool changed = ApplySpecMode();   // may flip Area/StageCut direction if SpecMode changed
+            if (_feed.ConnectedObject != null)
+                changed |= EnsurePermeanceParameters(MaterialObjectAdapter.ReadComponentIds(_feed.ConnectedObject));
+            return changed;
         }
 
         public object parameters => _params;

@@ -366,8 +366,10 @@ namespace Membrane.CapeOpen.Tests
         }
 
         [Fact]
-        public void Edit_ReturnsChangedOnFirstDiscovery_ThenUnchanged()
+        public void EnsureEditableParameters_DiscoversCompoundsOnce()
         {
+            // Exercises the GUI-free discovery step that Edit() runs before showing its dialog. (Edit() itself
+            // shows a modal WinForms dialog and cannot run headlessly; its return value is dialog-driven.)
             var unit = new MembraneUnitOperation();
             unit.Initialize();
             var ports = (ICapeCollection)unit.ports;
@@ -375,10 +377,10 @@ namespace Membrane.CapeOpen.Tests
             ((ICapeUnitPort)ports.Item("Retentate")).Connect(new MockMaterialObject(Ids));
             ((ICapeUnitPort)ports.Item("Permeate")).Connect(new MockMaterialObject(Ids));
 
-            // First Edit discovers the compounds → collection changed → S_OK (0) so the PME re-reads.
-            Assert.Equal(0, unit.Edit());
-            // Second Edit changes nothing → S_FALSE (1), so the PME does not needlessly re-read.
-            Assert.Equal(1, unit.Edit());
+            // First call discovers the compounds → collection changed (the PME should re-read).
+            Assert.True(unit.EnsureEditableParameters());
+            // Second call changes nothing.
+            Assert.False(unit.EnsureEditableParameters());
         }
     }
 
