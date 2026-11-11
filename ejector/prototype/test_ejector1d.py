@@ -84,3 +84,13 @@ def test_mixture_composition_bookkeeping():
     n_n2 = n_m * 0.005 + n_s * 0.05
     assert z[1] == pytest.approx(n_n2 / (n_m + n_s), rel=1e-12)
     assert sum(z) == pytest.approx(1.0)
+
+
+def test_giacomelli2019_motive_cd():
+    """Motive C_d fitted on 42 R744 points: ~1.2 (HEM under-predicts), MAE < 3 %."""
+    import calibrate_r744 as c
+    pts = c.load_points()
+    assert len(pts) == 42
+    cd, err = c.fit_cd(pts, dict(eta_m=0.90))
+    assert 1.15 < cd < 1.25
+    assert np.abs(err).mean() < 3.0

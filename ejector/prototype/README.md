@@ -12,7 +12,8 @@ The CAPE-OPEN adapter will map them one-to-one onto PME flashes on a scratch mat
 | `validate_huang1999.py` | 39-point R141b gas-ejector benchmark (critical ER + critical back pressure) |
 | `validate_goncalves2024.py` | Subcooled-liquid CO2 motive ejector (motive flow, ER) |
 | `co2_case.py` | Target application: liquid CO2 at 47 bar entraining CO2 vapour at 15 bar |
-| `test_ejector1d.py` | 11 regression/verification tests (`python -m pytest -q`, ~3 s) |
+| `calibrate_r744.py` | Two-stage calibration on Giacomelli 2019 (42 R744 points, ~1 min) |
+| `test_ejector1d.py` | 12 regression/verification tests (`python -m pytest -q`) |
 
 ## Model
 
@@ -77,18 +78,31 @@ All figures are optimum-design results. "Typical" efficiencies are 0.90/0.85/0.9
 The flashing motive adds vapour, so the outlet carries 2.8–4× the vapour that is sucked in. The receiving system must handle this load.
 The 84.5 bar case lies in the regime where HEM is most reliable and most R744 data exist. A ±2 bar outlet window still sits inside the efficiency uncertainty, hence the calibration below.
 
-### Calibration on R744 multi-ejector data (in progress)
+### Calibration on R744 ejector data: Giacomelli et al. 2019
 
-`calibrate_r744.py` fits η_s, η_mix and η_d in rating mode to measured ER, with optional leave-one-out cross-validation.
-The points are the 13 Giacomelli et al. 2019 points (motive about 95 bar, 30–38 °C), taken from the Ringstad 2020 appendix and stored in
-`data/ringstad2020_giacomelli.csv`. The appendix gives no geometry, so the fit waits on the published dimensions (`data/giacomelli2019_geometry.json`).
+`calibrate_r744.py` uses the 42 points of Giacomelli et al., Int. J. Refrig. 107 (2019) 326, stored in `data/giacomelli2019.csv`.
+The source is Tables 3–4 of the open accepted manuscript. Every row passes the check ER = ṁ_s/ṁ_m.
 
-The appendix table also has transcription defects, flagged in the CSV:
-- The suction pressures of the first Palacz block duplicate Giacomelli rows 9–13.
-- Two outlet pressures are printed in bar instead of MPa.
-- The Haida block has no ER column.
+- **Motive:** 71–104 bar, from supercritical through near-critical to subcooled liquid. **Suction:** 24–39 bar.
+- **Outlet:** the P_EJ5 tap at the diffuser end.
+- **Geometry (Fig. 2):** throat 0.9 mm, nozzle exit 1.03 mm, mixing section 2 × 16.9 mm, diffuser 5° to 10 mm.
 
-The Palacz and Haida rows are therefore not used.
+The Ringstad 2020 appendix compilation was dropped. It has no geometry and has transcription defects.
+
+| Step | Result |
+|---|---|
+| Uncalibrated (0.90/0.85/0.90/0.80) | ṁ_m MAE 17 %, ṁ_s MAE 30 %, ER MAE 0.145 |
+| Stage 1: motive C_d on ṁ_m | **C_d = 1.205**: HEM under-predicts this 0.9 mm nozzle by ~17 % (delayed flashing). After the fit, MAE 1.7 %; bias +1.1 / −2.5 / −2.4 % for supercritical / subcritical / subcooled inlets |
+| Stage 2: η_s, η_mix, η_d on ṁ_s | **η_s = 0.65, η_mix = 0.89, η_d = 0.64**. ṁ_s MAE 5.7 % (bias +0.5 %), ER MAE 0.016 |
+| Cross-check (fit on one inlet regime, predict the other) | ṁ_s MAE 7.5 % and 10.1 %; ER MAE ≤ 0.032 |
+
+Worst points: cases 15 and 21, at the lowest suction pressure (~24 bar, lift 1.6), are −47 % and −23 %.
+
+**Applied to the duty case** (84.5 bar / 32 °C motive, 15 bar suction) with the three fitted sets:
+- Outlet pressure at ER 0.146: **24.0–25.1 bar**.
+- At 28 bar: **0.84–1.16 kg/s** suction with 13.66 kg/s motive, or **24–33 kg/s** motive to entrain 2 kg/s.
+
+Both the 15 bar suction and the 1.87 lift lie outside the calibration range. Scale-up from a 2 mm to a ~45 mm mixing section is also untested.
 
 ## Mixtures
 
