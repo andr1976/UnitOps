@@ -1,0 +1,45 @@
+% Ejector schematic with the 1D model stations (m0, t, e | s0, y | 3 | out).
+% Single source: \input by the PDF build (introduction.rst) and rendered to
+% figures/tikz_ejector.png for HTML by figures/tikz/render.py. Palette colours
+% come from the conf.py preamble (PDF) or the standalone wrapper (PNG).
+\begin{tikzpicture}[font=\footnotesize, >=Latex, x=1.15cm, y=1.15cm]
+  % nozzle wall (filled), upper and lower halves
+  \foreach \s in {1,-1} {
+    \fill[docnavy!14] (0,0.50*\s) -- (1.0,0.50*\s) -- (4.3,0.25*\s) -- (4.3,0.20*\s)
+                     -- (2.4,0.12*\s) -- (1.2,0.35*\s) -- (0,0.35*\s) -- cycle;
+    \draw[thick, docnavy] (0,0.35*\s) -- (1.2,0.35*\s) -- (2.4,0.12*\s) -- (4.3,0.20*\s)
+                         -- (4.3,0.25*\s) -- (1.0,0.50*\s);
+    \draw[thick, docnavy] (0,0.50*\s) -- (1.0,0.50*\s) -- (1.0,1.10*\s);
+  }
+  % ejector body: upper wall with the suction inlet, lower wall
+  \draw[thick, docnavy] (1.0,1.10) -- (2.9,1.10) -- (2.9,2.0);
+  \draw[thick, docnavy] (3.5,2.0) -- (3.5,1.10) -- (4.0,1.10) -- (4.6,0.45) -- (7.6,0.45)
+                        -- (9.6,0.90) -- (10.4,0.90);
+  \draw[thick, docnavy] (1.0,-1.10) -- (4.0,-1.10) -- (4.6,-0.45) -- (7.6,-0.45)
+                        -- (9.6,-0.90) -- (10.4,-0.90);
+  % centre line
+  \draw[docslate, dash dot, thin] (-0.2,0) -- (10.6,0);
+  % stations
+  \foreach \x/\n in {0.5/m0, 2.4/t, 4.3/e, 4.6/y, 7.6/3, 10.1/out} {
+    \draw[docamber, densely dashed, thin] (\x,-1.20) -- (\x,1.25);
+    \node[docamber, above] at (\x,1.22) {$\mathrm{\n}$};
+  }
+  \node[docamber, right] at (3.5,1.75) {$\mathrm{s0}$};
+  % areas
+  \node[docgrey, below] at (2.4,-1.18) {$A_\mathrm{t}$};
+  \node[docgrey, below] at (4.3,-1.18) {$A_\mathrm{e}$};
+  \node[docgrey] at (6.1,-0.22) {$A_\mathrm{mix}$};
+  \node[docgrey] at (6.1,0.22) {$P_3,\,u_3$};
+  % flows
+  \draw[->, very thick, docred] (-0.9,0) -- (0.2,0);
+  \node[docred, align=right, left] at (-0.9,0) {motive\\$\dot m_\mathrm{m}$};
+  \draw[->, very thick, docred] (3.2,2.7) -- (3.2,1.6);
+  \node[docred, right] at (3.25,2.55) {suction $\dot m_\mathrm{s}$};
+  \draw[->, very thick, docred] (9.9,0) -- (11.1,0);
+  \node[docred, align=left, right] at (11.1,0) {outlet\\$\dot m_\mathrm{m}+\dot m_\mathrm{s}$};
+  % component spans
+  \draw[|-|, docgrey] (1.2,-1.80) -- (4.3,-1.80) node[midway, below] {motive nozzle ($\eta_\mathrm{m}$)};
+  \draw[|-|, docgrey] (4.6,-1.80) -- (7.6,-1.80) node[midway, below] {mixing ($\eta_\mathrm{mix}$)};
+  \draw[|-|, docgrey] (7.6,-1.80) -- (9.6,-1.80) node[midway, below] {diffuser ($\eta_\mathrm{d}$)};
+  \node[docgrey, align=center, font=\scriptsize] at (3.3,0.76) {suction chamber\\($\eta_\mathrm{s}$)};
+\end{tikzpicture}

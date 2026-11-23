@@ -70,7 +70,12 @@ def fit_cd(points, eta):
     return cd, (cd * G1 - mm) / mm * 100
 
 
-def fit_suction(points, eta0, names=("eta_s", "eta_mix", "eta_d")):
+def fit_suction(points, eta0, names=("eta_s", "eta_mix", "eta_d"), full=False):
+    """Least-squares fit of `names` on suction mass flow.
+
+    full=True also returns the parameter correlation matrix and standard errors
+    from the Gauss-Newton approximation (J^T J)^-1 s^2 at the solution.
+    """
     ms = np.array([p["ms"] for p in points])
     scale = ms.mean()
 
@@ -81,7 +86,13 @@ def fit_suction(points, eta0, names=("eta_s", "eta_mix", "eta_d")):
 
     r = least_squares(resid, [eta0[n] for n in names], bounds=([0.3] * len(names), [1.0] * len(names)),
                       diff_step=0.01, xtol=1e-4, ftol=1e-4)
-    return dict(eta0, **dict(zip(names, r.x)))
+    eta = dict(eta0, **dict(zip(names, r.x)))
+    if not full:
+        return eta
+    dof = max(len(ms) - len(names), 1)
+    cov = np.linalg.pinv(r.jac.T @ r.jac) * (2 * r.cost / dof)
+    se = np.sqrt(np.diag(cov))
+    return eta, cov / np.outer(se, se), se
 
 
 def stats(points, sim, label, verbose=False):

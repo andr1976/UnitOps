@@ -1,0 +1,426 @@
+% ===========================================================================
+% Ejector / Jet-Pump Unit Operation — Technical Reference — Bibliography
+% ---------------------------------------------------------------------------
+% Metadata checked (2026-11) against the version of record: Crossref / DOI
+% landing pages, publisher or repository records (Purdue e-Pubs, NASA NTRS,
+% TAMU OAKTrust, Zenodo), and the local PDFs in docs/ejector/.
+%
+% Comments marked "VERIFY" flag entries whose metadata is partly taken from
+% secondary sources (citing papers, repository stubs); confirm against the
+% version of record before external use.
+%
+% Style note: sphinxcontrib-bibtex 'unsrt' sentence-cases article titles, so
+% acronyms, formulae and proper nouns are brace-protected ({CO2}, {R744}, ...).
+% ===========================================================================
+
+% ---------------------------------------------------------------------------
+% Single-phase (gas / vapour) ejector theory and 1-D models
+% ---------------------------------------------------------------------------
+
+@article{keenan1950,
+  author  = {Keenan, J. H. and Neumann, E. P. and Lustwerk, F.},
+  title   = {An investigation of ejector design by analysis and experiment},
+  journal = {Journal of Applied Mechanics},
+  volume  = {17},
+  number  = {3},
+  pages   = {299--309},
+  year    = {1950},
+  doi     = {10.1115/1.4010131},
+  note    = {Constant-pressure and constant-area mixing ejector theory.},
+}
+
+@article{munday1977,
+  author  = {Munday, John T. and Bagster, David F.},
+  title   = {A new ejector theory applied to steam jet refrigeration},
+  journal = {Industrial \& Engineering Chemistry Process Design and Development},
+  volume  = {16},
+  number  = {4},
+  pages   = {442--449},
+  year    = {1977},
+  doi     = {10.1021/i260064a003},
+  note    = {Hypothetical-throat (secondary-flow choking) concept.},
+}
+
+@article{huang1999,
+  author  = {Huang, B. J. and Chang, J. M. and Wang, C. P. and Petrenko, V. A.},
+  title   = {A {1-D} analysis of ejector performance},
+  journal = {International Journal of Refrigeration},
+  volume  = {22},
+  number  = {5},
+  pages   = {354--364},
+  year    = {1999},
+  doi     = {10.1016/S0140-7007(99)00004-3},
+}
+
+@article{ma2017,
+  author  = {Ma, Zhiwei and Bao, Huashan and Roskilly, Anthony Paul},
+  title   = {Thermodynamic modelling and parameter determination of ejector for
+             ejection refrigeration systems},
+  journal = {International Journal of Refrigeration},
+  volume  = {75},
+  pages   = {117--128},
+  year    = {2017},
+  doi     = {10.1016/j.ijrefrig.2016.12.005},
+  note    = {Open access (CC BY).},
+}
+
+@phdthesis{liao2008,
+  author  = {Liao, Chaqing},
+  title   = {Gas Ejector Modeling for Design and Analysis},
+  school  = {Texas A\&M University},
+  address = {College Station, TX},
+  type    = {{PhD} dissertation},
+  year    = {2008},
+  url     = {https://hdl.handle.net/1969.1/ETD-TAMU-3206},
+  note    = {Nuclear Engineering; December 2008. Advisor F. R. Best.},
+}
+
+% marnier2012: Crossref and HAL (hal-01529405) record the family name as
+% "Antonio" and the given names as "Yveline Marnier".
+@article{marnier2012,
+  author  = {Antonio, Yveline Marnier and P{\'e}rilhon, Christelle and
+             Descombes, Georges and Chacoux, Claude},
+  title   = {Thermodynamic modelling of an ejector with compressible flow by a
+             one-dimensional approach},
+  journal = {Entropy},
+  volume  = {14},
+  number  = {4},
+  pages   = {599--613},
+  year    = {2012},
+  doi     = {10.3390/e14040599},
+}
+
+@article{muhammad2020,
+  author  = {Muhammad, Hafiz Ali and Abdullah, Hafiz Muhammad and Rehman, Zabdur and
+             Lee, Beomjoon and Baik, Young-Jin and Cho, Jongjae and Imran, Muhammad and
+             Masud, Manzar and Saleem, Mohsin and Butt, Muhammad Shoaib},
+  title   = {Numerical modeling of ejector and development of improved methods for
+             the design of ejector-assisted refrigeration system},
+  journal = {Energies},
+  volume  = {13},
+  number  = {21},
+  pages   = {5835},
+  year    = {2020},
+  doi     = {10.3390/en13215835},
+}
+
+% ---------------------------------------------------------------------------
+% Two-phase ejectors: R744 (CO2) expansion-work recovery
+% ---------------------------------------------------------------------------
+
+% VERIFY kornhauser1990: page range 10--19 from citing literature (Elbel and
+% Hrnjak 2008); proceedings pagination not seen on the primary copy.
+@inproceedings{kornhauser1990,
+  author       = {Kornhauser, A. A.},
+  title        = {The use of an ejector as a refrigerant expander},
+  booktitle    = {Proceedings of the 1990 {USNC/IIR}--Purdue Refrigeration Conference},
+  organization = {Purdue University},
+  address      = {West Lafayette, IN},
+  pages        = {10--19},
+  year         = {1990},
+  url          = {https://docs.lib.purdue.edu/iracc/82/},
+  note         = {Purdue e-Pubs, International Refrigeration and Air Conditioning
+                  Conference, Paper 82.},
+}
+
+% VERIFY kohler2007: grey literature (slides, no proceedings volume, pages or
+% DOI); title, venue and initials from citing papers (Elbel and Hrnjak 2008;
+% Lucas et al. 2013); full first names not confirmed.
+@misc{kohler2007,
+  author       = {K{\"o}hler, J. and Richter, C. and Tegethoff, W. and Tischendorf, C.},
+  title        = {Experimental and theoretical study of a {CO2} ejector refrigeration cycle},
+  howpublished = {Presentation at the VDA Alternative Refrigerant Winter Meeting,
+                  Saalfelden, Austria},
+  year         = {2007},
+  note         = {Conference presentation; no proceedings paper.},
+}
+
+@article{elbel2008,
+  author  = {Elbel, Stefan and Hrnjak, Pega},
+  title   = {Experimental validation of a prototype ejector designed to reduce
+             throttling losses encountered in transcritical {R744} system operation},
+  journal = {International Journal of Refrigeration},
+  volume  = {31},
+  number  = {3},
+  pages   = {411--422},
+  year    = {2008},
+  doi     = {10.1016/j.ijrefrig.2007.07.013},
+}
+
+@article{elbel2011,
+  author  = {Elbel, Stefan},
+  title   = {Historical and present developments of ejector refrigeration systems
+             with emphasis on transcritical carbon dioxide air-conditioning applications},
+  journal = {International Journal of Refrigeration},
+  volume  = {34},
+  number  = {7},
+  pages   = {1545--1561},
+  year    = {2011},
+  doi     = {10.1016/j.ijrefrig.2010.11.011},
+}
+
+@article{liu2013,
+  author  = {Liu, Fang and Groll, Eckhard A.},
+  title   = {Study of ejector efficiencies in refrigeration cycles},
+  journal = {Applied Thermal Engineering},
+  volume  = {52},
+  number  = {2},
+  pages   = {360--370},
+  year    = {2013},
+  doi     = {10.1016/j.applthermaleng.2012.12.001},
+}
+
+@article{banasiak2011,
+  author  = {Banasiak, Krzysztof and Hafner, Armin},
+  title   = {{1D} computational model of a two-phase {R744} ejector for expansion
+             work recovery},
+  journal = {International Journal of Thermal Sciences},
+  volume  = {50},
+  number  = {11},
+  pages   = {2235--2247},
+  year    = {2011},
+  doi     = {10.1016/j.ijthermalsci.2011.06.007},
+}
+
+@article{palacz2015,
+  author  = {Palacz, Michal and Smolka, Jacek and Fic, Adam and Bulinski, Zbigniew and
+             Nowak, Andrzej J. and Banasiak, Krzysztof and Hafner, Armin},
+  title   = {Application range of the {HEM} approach for {CO2} expansion inside
+             two-phase ejectors for supermarket refrigeration systems},
+  journal = {International Journal of Refrigeration},
+  volume  = {59},
+  pages   = {251--258},
+  year    = {2015},
+  doi     = {10.1016/j.ijrefrig.2015.07.006},
+}
+
+@article{haida2018,
+  author  = {Haida, Michal and Smolka, Jacek and Hafner, Armin and Palacz, Michal and
+             Banasiak, Krzysztof and Nowak, Andrzej J.},
+  title   = {Modified homogeneous relaxation model for the {R744} trans-critical flow
+             in a two-phase ejector},
+  journal = {International Journal of Refrigeration},
+  volume  = {85},
+  pages   = {314--333},
+  year    = {2018},
+  doi     = {10.1016/j.ijrefrig.2017.10.010},
+}
+
+@article{giacomelli2019,
+  author  = {Giacomelli, Francesco and Mazzelli, Federico and Banasiak, Krzysztof and
+             Hafner, Armin and Milazzo, Adriano},
+  title   = {Experimental and computational analysis of a {R744} flashing ejector},
+  journal = {International Journal of Refrigeration},
+  volume  = {107},
+  pages   = {326--343},
+  year    = {2019},
+  doi     = {10.1016/j.ijrefrig.2019.08.007},
+}
+
+@article{bodys2020,
+  author  = {Bodys, Jakub and Smolka, Jacek and Palacz, Michal and Haida, Michal and
+             Banasiak, Krzysztof},
+  title   = {Non-equilibrium approach for the simulation of {CO2} expansion in
+             two-phase ejector driven by subcritical motive pressure},
+  journal = {International Journal of Refrigeration},
+  volume  = {114},
+  pages   = {32--46},
+  year    = {2020},
+  doi     = {10.1016/j.ijrefrig.2020.02.015},
+}
+
+@article{ringstad2020,
+  author  = {Ringstad, Knut Emil and Allouche, Yosr and Gullo, Paride and
+             Ervik, {\AA}smund and Banasiak, Krzysztof and Hafner, Armin},
+  title   = {A detailed review on {CO2} two-phase ejector flow modeling},
+  journal = {Thermal Science and Engineering Progress},
+  volume  = {20},
+  pages   = {100647},
+  year    = {2020},
+  doi     = {10.1016/j.tsep.2020.100647},
+  note    = {Open access (CC BY).},
+}
+
+@article{goncalves2024,
+  author  = {Gon{\c{c}}alves, Karla and Varga, Szabolcs and Butrymowicz, Dariusz and
+             {\'S}mierciew, Kamil},
+  title   = {Analysis of {HEM} applicability for a subcritical flashing ejector at
+             low motive pressure},
+  journal = {Frontiers in Mechanical Engineering},
+  volume  = {10},
+  pages   = {1410743},
+  year    = {2024},
+  doi     = {10.3389/fmech.2024.1410743},
+}
+
+% ---------------------------------------------------------------------------
+% Liquid jet pumps (liquid/liquid and liquid/gas)
+% ---------------------------------------------------------------------------
+
+@techreport{flugel1939,
+  author      = {Fl{\"u}gel, Gustav},
+  title       = {The design of jet pumps},
+  institution = {National Advisory Committee for Aeronautics},
+  type        = {{NACA} Technical Memorandum},
+  number      = {982},
+  address     = {Washington, DC},
+  year        = {1941},
+  url         = {https://ntrs.nasa.gov/citations/19930094434},
+  note        = {Translated by J. Vanier from ``Berechnung von Strahlapparaten'',
+                 VDI-Forschungsheft 395, March--April 1939, pp. 1--21.
+                 NTRS 19930094434.},
+}
+
+@article{cunningham1974,
+  author  = {Cunningham, R. G.},
+  title   = {Gas compression with the liquid jet pump},
+  journal = {Journal of Fluids Engineering},
+  volume  = {96},
+  number  = {3},
+  pages   = {203--215},
+  year    = {1974},
+  doi     = {10.1115/1.3447143},
+}
+
+% hatziavramidis1991: Crossref/OnePetro list the author as "Hatzlavramidis",
+% an OCR artefact of the scanned original.
+@article{hatziavramidis1991,
+  author  = {Hatziavramidis, D. T.},
+  title   = {Modeling and design of jet pumps},
+  journal = {SPE Production Engineering},
+  volume  = {6},
+  number  = {4},
+  pages   = {413--419},
+  year    = {1991},
+  doi     = {10.2118/19713-PA},
+  note    = {SPE 19713.},
+}
+
+@article{cunningham1995,
+  author  = {Cunningham, R. G.},
+  title   = {Liquid jet pumps for two-phase flows},
+  journal = {Journal of Fluids Engineering},
+  volume  = {117},
+  number  = {2},
+  pages   = {309--316},
+  year    = {1995},
+  doi     = {10.1115/1.2817147},
+}
+
+% ---------------------------------------------------------------------------
+% Two-phase critical (choked) flow
+% ---------------------------------------------------------------------------
+
+@book{wallis1969,
+  author    = {Wallis, Graham B.},
+  title     = {One-Dimensional Two-Phase Flow},
+  publisher = {McGraw-Hill},
+  address   = {New York},
+  year      = {1969},
+  isbn      = {978-0-07-067942-9},
+}
+
+@article{henry1971,
+  author  = {Henry, Robert E. and Fauske, Hans K.},
+  title   = {The two-phase critical flow of one-component mixtures in nozzles,
+             orifices, and short tubes},
+  journal = {Journal of Heat Transfer},
+  volume  = {93},
+  number  = {2},
+  pages   = {179--187},
+  year    = {1971},
+  doi     = {10.1115/1.3449782},
+}
+
+@article{diener2004,
+  author  = {Diener, Ralf and Schmidt, J{\"u}rgen},
+  title   = {Sizing of throttling device for gas/liquid two-phase flow part 1:
+             Safety valves},
+  journal = {Process Safety Progress},
+  volume  = {23},
+  number  = {4},
+  pages   = {335--344},
+  year    = {2004},
+  doi     = {10.1002/prs.10034},
+}
+
+% ---------------------------------------------------------------------------
+% Thermophysical properties and software
+% ---------------------------------------------------------------------------
+
+@article{coolprop,
+  author  = {Bell, Ian H. and Wronski, Jorrit and Quoilin, Sylvain and Lemort, Vincent},
+  title   = {Pure and pseudo-pure fluid thermophysical property evaluation and the
+             open-source thermophysical property library {CoolProp}},
+  journal = {Industrial \& Engineering Chemistry Research},
+  volume  = {53},
+  number  = {6},
+  pages   = {2498--2508},
+  year    = {2014},
+  doi     = {10.1021/ie4033999},
+}
+
+@article{span1996,
+  author  = {Span, Roland and Wagner, Wolfgang},
+  title   = {A new equation of state for carbon dioxide covering the fluid region
+             from the triple-point temperature to 1100 {K} at pressures up to 800 {MPa}},
+  journal = {Journal of Physical and Chemical Reference Data},
+  volume  = {25},
+  number  = {6},
+  pages   = {1509--1596},
+  year    = {1996},
+  doi     = {10.1063/1.555991},
+}
+
+@article{kunz2012,
+  author  = {Kunz, O. and Wagner, W.},
+  title   = {The {GERG-2008} wide-range equation of state for natural gases and
+             other mixtures: an expansion of {GERG-2004}},
+  journal = {Journal of Chemical \& Engineering Data},
+  volume  = {57},
+  number  = {11},
+  pages   = {3032--3091},
+  year    = {2012},
+  doi     = {10.1021/je300655b},
+}
+
+@misc{fluids,
+  author       = {Bell, Caleb and {Contributors}},
+  title        = {{fluids}: Fluid dynamics component of {Chemical Engineering Design
+                  Library} ({ChEDL})},
+  howpublished = {Python package},
+  year         = {2016--2025},
+  url          = {https://github.com/CalebBell/fluids},
+  doi          = {10.5281/zenodo.598390},
+  note         = {Citation form as given in the project README. Zenodo concept DOI
+                  (resolves to the latest release).},
+}
+
+% ---------------------------------------------------------------------------
+% CAPE-OPEN standards
+% ---------------------------------------------------------------------------
+
+@techreport{cocolan_uo,
+  author      = {{CO-LaN}},
+  title       = {Unit Operations Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2012},
+  note        = {Revision of the 2003 edition. https://www.colan.org/},
+}
+
+@techreport{cocolan_param,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface Specification},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2003},
+  note        = {https://www.colan.org/},
+}
+
+@techreport{cocolan_param_errata,
+  author      = {{CO-LaN}},
+  title       = {Parameter Common Interface --- Errata and Clarifications},
+  institution = {CAPE-OPEN Laboratories Network},
+  year        = {2016},
+  note        = {Errata 1.0.1; array-parameter (CAPE\_ARRAY / SAFEARRAY(VARIANT))
+                 clarifications. https://www.colan.org/},
+}

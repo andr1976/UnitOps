@@ -415,6 +415,19 @@ class Ejector:
         if not ok.any():
             raise RuntimeError("no feasible mixing solution (mixing section too small?)")
         k0 = int(np.argmax(ok))                     # most-entraining feasible point
+        if k0 > 0:
+            # The feasibility boundary (mixed flow sonic at the end of the mixing
+            # section) lies between grid points k0-1 and k0: bisect it, otherwise
+            # the critical ER depends on the scan resolution.
+            lo, hi, r_hi = Pys[k0 - 1], Pys[k0], rows[k0]
+            while hi - lo > 1e-6 * s0.P:
+                mid = 0.5 * (lo + hi)
+                r = run(mid)
+                if r:
+                    hi, r_hi = mid, r
+                else:
+                    lo = mid
+            Pys[k0], rows[k0], Pout[k0] = hi, r_hi, r_hi["out"].P
         if P_out <= Pout[k0]:
             res = make("critical", Pys[k0], rows[k0])   # suction choked / max entrainment
             res.P_out = P_out                            # excess lift lost in shocks

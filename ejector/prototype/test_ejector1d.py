@@ -94,3 +94,15 @@ def test_giacomelli2019_motive_cd():
     cd, err = c.fit_cd(pts, dict(eta_m=0.90))
     assert 1.15 < cd < 1.25
     assert np.abs(err).mean() < 3.0
+
+
+def test_critical_er_independent_of_scan_resolution():
+    """Critical regime: the feasibility boundary is bisected, so ER must not depend on n_scan."""
+    import calibrate_r744 as c
+    p = [q for q in c.load_points() if q["case"] == 1][0]
+    ej = Ejector(Thermo("CO2"), eta_m=0.90, Cd_m=1.205, eta_s=0.61, eta_mix=0.84, eta_d=0.80)
+    m0, s0 = ej.inlet(p["PM"], T=p["TM"]), ej.inlet(p["PS"], T=p["TS"])
+    g = c.GEOM
+    ers = [ej.rate(m0, s0, g["A_t"], g["A_e"], g["A_mix"], p["PO"], n_scan=n) for n in (10, 25, 80)]
+    assert all(r.regime == "critical" for r in ers)
+    assert max(r.ER for r in ers) - min(r.ER for r in ers) < 1e-4

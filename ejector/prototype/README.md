@@ -13,7 +13,11 @@ The CAPE-OPEN adapter will map them one-to-one onto PME flashes on a scratch mat
 | `validate_goncalves2024.py` | Subcooled-liquid CO2 motive ejector (motive flow, ER) |
 | `co2_case.py` | Target application: liquid CO2 at 47 bar entraining CO2 vapour at 15 bar |
 | `calibrate_r744.py` | Two-stage calibration on Giacomelli 2019 (42 R744 points, ~1 min) |
-| `test_ejector1d.py` | 12 regression/verification tests (`python -m pytest -q`) |
+| `test_ejector1d.py` | 13 regression/verification tests (`python -m pytest -q`) |
+
+The full technical reference (theory, numerics, planned CAPE-OPEN architecture, validation) is the
+Sphinx project in [`../techref`](../techref). Its figures and tables are regenerated from this code by
+`techref/figures/gen_data.py`.
 
 ## Model
 
@@ -73,7 +77,8 @@ All figures are optimum-design results. "Typical" efficiencies are 0.90/0.85/0.9
 |---|---|---|---|
 | 47 bar, saturated liquid | 21.0 / 23.5 bar | ER 0.005: 28 bar is the zero-entrainment limit | 5.5 kg/s |
 | 47 bar liquid pumped to 90–100 bar | 24.9–25.9 / 28.5–29.6 bar | n/a | n/a |
-| **84.5 bar, 32 °C (dense supercritical)** | **26.9 / 30.8 bar** | 1.64 kg/s; 16.7 kg/s motive needed for 2 kg/s | ~8 kg/s |
+| 84.5 bar, 32 °C (dense supercritical) | 26.9 / 30.8 bar | 1.64 kg/s; 16.7 kg/s motive needed for 2 kg/s | ~8 kg/s |
+| **84.5 bar, 32 °C, calibrated (3 R744 sets)** | **22.6–24.3 bar** | 0–0.92 kg/s; ≈30 kg/s motive or unreachable | ~8.2 kg/s |
 
 The flashing motive adds vapour, so the outlet carries 2.8–4× the vapour that is sucked in. The receiving system must handle this load.
 The 84.5 bar case lies in the regime where HEM is most reliable and most R744 data exist. A ±2 bar outlet window still sits inside the efficiency uncertainty, hence the calibration below.
@@ -93,14 +98,21 @@ The Ringstad 2020 appendix compilation was dropped. It has no geometry and has t
 |---|---|
 | Uncalibrated (0.90/0.85/0.90/0.80) | ṁ_m MAE 17 %, ṁ_s MAE 30 %, ER MAE 0.145 |
 | Stage 1: motive C_d on ṁ_m | **C_d = 1.205**: HEM under-predicts this 0.9 mm nozzle by ~17 % (delayed flashing). After the fit, MAE 1.7 %; bias +1.1 / −2.5 / −2.4 % for supercritical / subcritical / subcooled inlets |
-| Stage 2: η_s, η_mix, η_d on ṁ_s | **η_s = 0.65, η_mix = 0.89, η_d = 0.64**. ṁ_s MAE 5.7 % (bias +0.5 %), ER MAE 0.016 |
-| Cross-check (fit on one inlet regime, predict the other) | ṁ_s MAE 7.5 % and 10.1 %; ER MAE ≤ 0.032 |
+| Stage 2: η_s, η_mix, η_d on ṁ_s | **η_s = 0.61, η_mix = 0.84, η_d = 0.80** (±0.035 / ±0.012 / ±0.032). ṁ_s MAE 5.5 % (bias +0.1 %), ER MAE 0.017 |
+| Cross-check (fit on one inlet regime, predict the other) | supercritical fit → subcritical/subcooled: ṁ_s MAE 5.3 %; reverse: 14.7 % |
 
-Worst points: cases 15 and 21, at the lowest suction pressure (~24 bar, lift 1.6), are −47 % and −23 %.
+Worst points: cases 15 and 21, at the lowest suction pressure (~24 bar, lift 1.6), are −47 % and −20 %.
+
+The efficiencies are partly correlated (|ρ| up to 0.77) and regime-dependent: the subcritical/subcooled
+set is 0.88 / 0.78 / 0.75. An earlier fit (0.65 / 0.89 / 0.64) was distorted by a rating bug. Critical-regime
+results took the first feasible point of the P_y scan, so the critical ER depended on `n_scan` (case 1: 0.192
+at 15 points to 0.216 at 320). `rate()` now bisects the feasibility boundary, and the result is independent of
+`n_scan`.
 
 **Applied to the duty case** (84.5 bar / 32 °C motive, 15 bar suction) with the three fitted sets:
-- Outlet pressure at ER 0.146: **24.0–25.1 bar**.
-- At 28 bar: **0.84–1.16 kg/s** suction with 13.66 kg/s motive, or **24–33 kg/s** motive to entrain 2 kg/s.
+- Outlet pressure at ER 0.146: **22.6–24.3 bar**.
+- At 28 bar: **0–0.92 kg/s** suction with 13.66 kg/s motive. Entraining 2 kg/s needs **≈30 kg/s** motive
+  (all-point and supercritical sets), and the subcritical-fitted set cannot reach 28 bar at all.
 
 Both the 15 bar suction and the 1.87 lift lie outside the calibration range. Scale-up from a 2 mm to a ~45 mm mixing section is also untested.
 
