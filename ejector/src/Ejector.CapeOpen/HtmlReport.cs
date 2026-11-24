@@ -12,7 +12,7 @@ namespace Ejector.CapeOpen
     {
         public ReportData(EjectorResult r, EjectorResult? curve, InletStream mot, InletStream suc, double mM, double mS,
                           FluidState m0, FluidState s0, string mode, string geometry, string preset,
-                          (double EtaM, double EtaS, double EtaMix, double EtaD, double Cd) eff, int flashes, double seconds)
+                          EffSet eff, int flashes, double seconds)
         {
             R = r; CurveSource = curve; Mot = mot; Suc = suc; MM = mM; MS = mS; M0 = m0; S0 = s0;
             Mode = mode; GeometrySpec = geometry; Preset = preset; Eff = eff; Flashes = flashes; Seconds = seconds;
@@ -29,7 +29,7 @@ namespace Ejector.CapeOpen
         public string Mode { get; }
         public string GeometrySpec { get; }
         public string Preset { get; }
-        public (double EtaM, double EtaS, double EtaMix, double EtaD, double Cd) Eff { get; }
+        public EffSet Eff { get; }
         public int Flashes { get; }
         public double Seconds { get; }
     }
@@ -64,6 +64,8 @@ namespace Ejector.CapeOpen
                 ("Ejector efficiency", F(r.EtaEjector, "F4")),
                 ("Solid margin (Pmin / Ptriple)", double.IsInfinity(r.SolidMargin) ? "n/a" : F(r.SolidMargin, "F3")),
                 ("Efficiencies (m / s / mix / d), Cd", $"{F(d.Eff.EtaM, "F3")} / {F(d.Eff.EtaS, "F3")} / {F(d.Eff.EtaMix, "F3")} / {F(d.Eff.EtaD, "F3")}, {F(d.Eff.Cd, "F3")}  [{d.Preset}]"),
+                ("Mixing model", d.Eff.Mixing == Presets.ConstantPressure
+                    ? $"constant pressure (hypothetical throat), phi_p {F(d.Eff.PhiP, "F3")}" : "constant area"),
             };
             if (!double.IsNaN(r.ERCritical))
                 rows.Add(("Critical ER / critical back pressure", $"{F(r.ERCritical, "F5")} / {Bar(r.PbCritical)}"));

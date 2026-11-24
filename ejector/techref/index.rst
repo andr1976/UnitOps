@@ -109,6 +109,7 @@ Ejector Unit Operation: Technical Reference
 
    validation
    data_library
+   parameter_guide
    worked_example
 
 

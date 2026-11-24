@@ -1,0 +1,158 @@
+# Source: GEA product catalogue "Ejectors, jet pumps, mixers, heaters, compressors", BTC0011-EN,
+# 08/01/2018 (docs/ejector/ejectors-jet-pumps-heaters-mixer-vacuum-gea.pdf; each PDF page is a 2-page spread).
+# Chart: printed p.59 (right half of PDF p.30), Figure 1, gas jet compressor: suction pressure vs specific
+# compressed-air consumption A_spec for evacuating a vessel from atmospheric pressure.
+# Method: PDF page rendered at 600 dpi with PyMuPDF. The chart is an embedded raster of ~96 dpi, so one
+# source pixel = ~6.2 render px. Curves traced as dark-line centrelines (perpendicular cross-sections,
+# darkness-weighted centroid); cross-sections widened by labels, dashed construction lines or merging curves
+# were rejected, not guessed. Axes calibrated piecewise (linear, or linear in log10) through ALL labelled
+# gridlines; gridline centres located to sub-pixel precision. Review image with the points overlaid:
+# review_gea_air_evacuation.png (made at digitisation, not kept in the repository; re-plot from these rows to check)
+# Axes: x = A_spec [kg compressed air / m3 of vessel volume to be evacuated], LINEAR, calibrated on labelled
+#   gridlines 0..8; y = suction pressure [mbar abs], LOG scale, calibrated on labelled gridlines
+#   1000,800,600,500,400,300,200,100,80,60,50.
+# Gridline check (unlabelled gridlines): (2.5, 250) reads (2.511, 249.2); (6.5, 150) reads
+#   (6.506, 149.8); (0.5, 700) reads (0.516, 699.7).
+# Curve labels: "p1 = 3 bar", "5 bar", "p1 = 10 bar"; legend "p1 = Pressure compressed air (g)".
+# Conditions quoted verbatim (overdot of Ṁ and sub/superscripts flattened: M0 = Ṁ0) from the spread (pp.58-59): "The compressed air consumption required is found in relation
+#   to the evacuating apparatus volume according to the following formula" M_A ≈ A_spec. · V · 60/t, with
+#   "M_A Compressed air consumption in kg/h", "A_spec. Specific compressed air consumption in kg compressed
+#   air/m³ of volume to be evacuated (Fig. 1)", "V Vessel volume to be evacuated", "t Evacuation time in minutes".
+#   Design example: "A vessel of 2 m³ is to be evacuated from atmospheric pressure to 200 mbar in 10 minutes.
+#   A compressed air pressure of 5 bar is available. From fig. 1, you will find a specific air consumption of
+#   4.15 kg of compressed air/m³ of volume to be evacuated." M_A ≈ 4.15 · 2 · 60/10 ≈ 50 kg/h.
+#   No suction gas temperature or discharge pressure is stated for this chart.
+# Worked-example check: p1=5 bar curve at 200 mbar digitised A_spec = 4.184 vs stated 4.15 (+0.8 %);
+#   the catalogue's own dashed construction line sits at 4.148. The 5-bar curve runs almost tangent to
+#   the dashed 200-mbar line between A ~3.75 and 4.2; that stretch was rejected and is a gap in the data.
+# Not resolved: all three curves start at the (0, 1000 mbar) corner and merge into one band there; the clean
+#   traces end at A = 0.19 (3 bar) and 0.11 (10 bar). The 3- and 5-bar curves coincide within the line
+#   width for A < ~0.5 (p > ~650 mbar); that shared segment is given once (under 3 bar), and the 5-bar curve starts
+#   at A = 0.52.
+# Reading uncertainty: 1 source pixel = 0.039 kg/m3 in A_spec and 1.8 % in p (curves are 1 px wide);
+#   estimated +/-0.05 kg/m3 in A_spec on the flat parts, +/-2 % in p on the steep parts.
+# Sampling: A_spec = 0.1..1.9 step 0.1, 2..8 step 0.25 within each traced curve, plus the last trace point.
+curve_label,A_spec_kg_per_m3,p_suction_mbar_abs
+p1=3 bar g,0.2,866.3
+p1=3 bar g,0.3,815.1
+p1=3 bar g,0.4,768.7
+p1=3 bar g,0.5,731.1
+p1=3 bar g,0.6,692.5
+p1=3 bar g,0.7,664
+p1=3 bar g,0.8,632.9
+p1=3 bar g,0.9,608.7
+p1=3 bar g,1,585.4
+p1=3 bar g,1.1,561.6
+p1=3 bar g,1.2,540.8
+p1=3 bar g,1.3,523.5
+p1=3 bar g,1.4,504.5
+p1=3 bar g,1.5,488.3
+p1=3 bar g,1.6,473.3
+p1=3 bar g,1.7,461.4
+p1=3 bar g,1.8,446.9
+p1=3 bar g,1.9,437.4
+p1=3 bar g,2,424.8
+p1=3 bar g,2.25,401.5
+p1=3 bar g,2.5,379.8
+p1=3 bar g,2.75,359.5
+p1=3 bar g,3,341.9
+p1=3 bar g,3.25,326.1
+p1=3 bar g,3.5,312.9
+p1=3 bar g,3.75,301.5
+p1=3 bar g,4,290.8
+p1=3 bar g,4.25,280.5
+p1=3 bar g,4.5,270.9
+p1=3 bar g,4.75,263.2
+p1=3 bar g,5,256.8
+p1=3 bar g,5.25,250.2
+p1=3 bar g,5.5,243.3
+p1=3 bar g,5.75,238.6
+p1=3 bar g,6,234.3
+p1=3 bar g,6.25,230
+p1=3 bar g,6.5,225.9
+p1=3 bar g,6.75,222.6
+p1=3 bar g,7,220
+p1=3 bar g,7.25,218.1
+p1=3 bar g,7.75,214
+p1=3 bar g,7.947,212.5
+p1=5 bar g,0.6,632.2
+p1=5 bar g,0.7,596.4
+p1=5 bar g,0.8,561.8
+p1=5 bar g,0.9,530.9
+p1=5 bar g,1,504.2
+p1=5 bar g,1.1,479
+p1=5 bar g,1.2,455.8
+p1=5 bar g,1.3,437.7
+p1=5 bar g,1.4,417.1
+p1=5 bar g,1.5,401.9
+p1=5 bar g,1.6,386.6
+p1=5 bar g,1.7,372.1
+p1=5 bar g,1.8,358
+p1=5 bar g,1.9,346.7
+p1=5 bar g,2,335.1
+p1=5 bar g,2.25,307.6
+p1=5 bar g,2.5,285.7
+p1=5 bar g,2.75,266.1
+p1=5 bar g,3,250.7
+p1=5 bar g,3.25,236.8
+p1=5 bar g,3.5,225.4
+p1=5 bar g,3.75,215.6
+p1=5 bar g,4.25,196
+p1=5 bar g,4.5,188.8
+p1=5 bar g,4.75,181.7
+p1=5 bar g,5,175.5
+p1=5 bar g,5.25,169.4
+p1=5 bar g,5.5,164.1
+p1=5 bar g,5.75,160.4
+p1=5 bar g,6,156.6
+p1=5 bar g,6.25,152.8
+p1=5 bar g,6.5,149.7
+p1=5 bar g,6.75,147.4
+p1=5 bar g,7,144.5
+p1=5 bar g,7.25,142.5
+p1=5 bar g,7.5,140.5
+p1=5 bar g,7.75,139.2
+p1=5 bar g,7.96,136.9
+p1=10 bar g,0.2,782.6
+p1=10 bar g,0.3,708.9
+p1=10 bar g,0.4,648.9
+p1=10 bar g,0.5,601.3
+p1=10 bar g,0.6,554
+p1=10 bar g,0.7,517.9
+p1=10 bar g,0.8,484.3
+p1=10 bar g,0.9,456
+p1=10 bar g,1,429.7
+p1=10 bar g,1.1,404.2
+p1=10 bar g,1.2,382.1
+p1=10 bar g,1.3,363.9
+p1=10 bar g,1.4,344.7
+p1=10 bar g,1.5,328.8
+p1=10 bar g,1.6,313.1
+p1=10 bar g,1.7,299.5
+p1=10 bar g,1.8,285.7
+p1=10 bar g,1.9,274.5
+p1=10 bar g,2,261.9
+p1=10 bar g,2.25,236.8
+p1=10 bar g,2.5,215.9
+p1=10 bar g,2.75,196.9
+p1=10 bar g,3,181.8
+p1=10 bar g,3.25,169.2
+p1=10 bar g,3.5,157.9
+p1=10 bar g,3.75,147.5
+p1=10 bar g,4,139.2
+p1=10 bar g,4.25,131.2
+p1=10 bar g,4.5,124.6
+p1=10 bar g,4.75,118.5
+p1=10 bar g,5,113.8
+p1=10 bar g,5.25,109
+p1=10 bar g,5.5,105.5
+p1=10 bar g,5.75,102.2
+p1=10 bar g,6,99.1
+p1=10 bar g,6.25,96.71
+p1=10 bar g,6.5,94.17
+p1=10 bar g,6.75,92.06
+p1=10 bar g,7,90.52
+p1=10 bar g,7.25,88.75
+p1=10 bar g,7.5,87.89
+p1=10 bar g,7.75,86.77
+p1=10 bar g,7.959,85.49

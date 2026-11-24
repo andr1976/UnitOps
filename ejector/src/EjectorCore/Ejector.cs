@@ -13,6 +13,15 @@ namespace EjectorCore
         HNE,
     }
 
+    /// <summary>Mixing-section model (techref sec-mixing-models).</summary>
+    public enum MixingModel
+    {
+        /// <summary>Constant-area mixing: mass, momentum and energy over the mixing section.</summary>
+        CAM,
+        /// <summary>Constant-pressure mixing at a hypothetical throat (Huang et al. 1999), then a normal shock.</summary>
+        CPM,
+    }
+
     /// <summary>
     /// One-dimensional constant-area-mixing ejector (techref chapters 2-5).
     /// Port of ejector/prototype/ejector1d.py (class Ejector); the Python code is the
@@ -44,6 +53,10 @@ namespace EjectorCore
         public double PhiNe { get; set; } = 1.0;
         /// <summary>Motive discharge coefficient on the isentropic critical flux.</summary>
         public double CdM { get; set; } = 1.0;
+        /// <summary>Mixing-section model.</summary>
+        public MixingModel Mixing { get; set; } = MixingModel.CAM;
+        /// <summary>CPM: primary-core area coefficient at the hypothetical throat (Huang's phi_p).</summary>
+        public double PhiP { get; set; } = 1.0;
 
         /// <summary>Total flashes since construction.</summary>
         public int FlashCount => _th.FlashCount;
@@ -195,8 +208,11 @@ namespace EjectorCore
         }
 
         private Pass? DoPass(FluidState m0, FluidState s0, double mM, double pE, FluidState stE, double uE,
-                             double aE, double aMix, double pY, Expansion sexp, double gSMax)
+                             double aE, double aMix, double pY, Expansion sexp, double gSMax,
+                             Expansion? mexp = null)
         {
+            if (Mixing == MixingModel.CPM)
+                return DoPassCpm(m0, s0, mM, pE, stE, uE, aMix, pY, sexp, gSMax, mexp);
             double aSy = aMix - aE;
             if (aSy <= 0) throw new ArgumentException("nozzle exit area >= mixing area");
             var (stY, uY) = sexp.At(pY);
@@ -210,6 +226,87 @@ namespace EjectorCore
             var (p3, u3, st3) = mix.Value;
             var outSt = Diffuser(st3, u3, h0T);
             return new Pass { Ms = mS, StY = stY, Uy = uY, P3 = p3, U3 = u3, St3 = st3, Out = outSt };
+        }
+
+        /// <summary>
+        /// Constant-pressure mixing (Huang et al. 1999, real fluid) at mixing pressure pY: the motive
+        /// core, carried along the motive path from the nozzle exit to pY, takes PhiP*mM/(rho u) of
+        /// the section aMix at the hypothetical throat; the suction stream passes the rest. The
+        /// streams mix at constant pY (EtaMix on the momentum flux); the mixed stream passes a
+        /// loss-free normal shock (none if subsonic) before the diffuser. Port of _pass_cpm.
+        /// </summary>
+        private Pass? DoPassCpm(FluidState m0, FluidState s0, double mM, double pE, FluidState stE, double uE,
+                                double aMix, double pY, Expansion sexp, double gSMax, Expansion? mexp)
+        {
+            FluidState stP; double uP;
+            if (Math.Abs(pE - pY) <= 1e-9 * pY || mexp == null) { stP = stE; uP = uE; }
+            else (stP, uP) = mexp.At(pY);
+            double aSy = aMix - PhiP * mM / (stP.Rho * uP);
+            if (aSy <= 0.0) return null;                       // the motive core fills the section
+            var (stY, uY) = sexp.At(pY);
+            double gS = Math.Min(stY.Rho * uY, gSMax);
+            double mS = gS * aSy;
+            double mT = mM + mS;
+            double h0T = (mM * m0.H + mS * s0.H) / mT;
+            var zT = MixedComposition(m0, s0, mM, mS);
+            double uM = EtaMix * (mM * uP + mS * uY) / mT;
+            var stM = _th.PH(pY, h0T - 0.5 * uM * uM, zT);
+            double aM = mT / (stM.Rho * uM);
+            var shock = Mix(aM, new[] { (pY * aM, mT * uM) }, mT, h0T, zT, eta: 1.0);
+            if (shock == null) return null;
+            var (p3, u3, st3) = shock.Value;
+            var outSt = Diffuser(st3, u3, h0T);
+            return new Pass { Ms = mS, StY = stY, Uy = uY, P3 = p3, U3 = u3, St3 = st3, Out = outSt };
+        }
+
+        /// <summary>
+        /// Index of the most-entraining feasible scan point, made exact in place (port of
+        /// _critical_point). CAM: bisect the feasibility boundary. CPM: the entrainment maximum
+        /// (compound choking), refined with a bounded search; points below it are dropped.
+        /// </summary>
+        private int CriticalPoint(IList<double> pys, IList<Pass?> rows, Func<double, Pass?> run, FluidState s0)
+        {
+            if (rows.All(r => r == null))
+                throw new EjectorException("no feasible mixing solution (mixing section too small?)");
+            if (Mixing == MixingModel.CPM)
+            {
+                int k = 0;
+                double best = double.NegativeInfinity;
+                for (int j = 0; j < rows.Count; j++)
+                {
+                    double e = rows[j] != null ? rows[j]!.Ms / rows[j]!.Mm : double.NegativeInfinity;
+                    if (e > best) { best = e; k = j; }
+                }
+                double lo = pys[Math.Max(k - 1, 0)], hi = pys[Math.Min(k + 1, pys.Count - 1)];
+                double Neg(double p)
+                {
+                    var r = run(p);
+                    return r != null ? -r.Ms / r.Mm : 1.0;
+                }
+                var m = Numerics.Fminbound(Neg, lo, hi, 1e-7 * s0.P);
+                if (-m.F > best) { pys[k] = m.X; rows[k] = run(m.X); }
+                for (int j = 0; j < k; j++) rows[j] = null;
+                return k;
+            }
+            int k0 = 0;
+            while (rows[k0] == null) k0++;
+            if (k0 > 0)
+            {
+                // feasibility boundary (mixed flow sonic at the end of the mixing section) lies
+                // between grid points k0-1 and k0: bisect it, otherwise the critical ER depends on
+                // the scan resolution.
+                double lo = pys[k0 - 1], hi = pys[k0];
+                Pass rHi = rows[k0]!;
+                while (hi - lo > 1e-6 * s0.P)
+                {
+                    double mid = 0.5 * (lo + hi);
+                    var r = run(mid);
+                    if (r != null) { hi = mid; rHi = r; } else lo = mid;
+                }
+                pys[k0] = hi;
+                rows[k0] = rHi;
+            }
+            return k0;
         }
 
         /// <summary>Motive flow, throat/exit pressures and exit state for mixing-inlet pressure pY.</summary>
@@ -337,7 +434,7 @@ namespace EjectorCore
             Pass? Run(double py)
             {
                 var (mM, pt, pe, stE, uE) = MotiveState(mexp, pT, gT, aT, aE, py, pLow, cache);
-                var r = DoPass(m0, s0, mM, pe, stE, uE, aE, aMix, py, sexp, gSMax);
+                var r = DoPass(m0, s0, mM, pe, stE, uE, aE, aMix, py, sexp, gSMax, mexp);
                 if (r != null)
                 {
                     r.Mm = mM; r.Pt = pt; r.Pe = pe; r.StE = stE; r.Ue = uE;
@@ -348,25 +445,8 @@ namespace EjectorCore
 
             var pys = Numerics.Linspace(pYs, s0.P * 0.99999, nScan);
             var rows = pys.Select(Run).ToArray();
-            int k0 = Array.FindIndex(rows, r => r != null);
-            if (k0 < 0) throw new EjectorException("no feasible mixing solution (mixing section too small?)");
-            if (k0 > 0)
-            {
-                // feasibility boundary (mixed flow sonic at the end of the mixing section)
-                // lies between grid points k0-1 and k0: bisect it, otherwise the critical ER
-                // depends on the scan resolution.
-                double lo = pys[k0 - 1], hi = pys[k0];
-                Pass rHi = rows[k0]!;
-                while (hi - lo > 1e-6 * s0.P)
-                {
-                    double mid = 0.5 * (lo + hi);
-                    var r = Run(mid);
-                    if (r != null) { hi = mid; rHi = r; } else lo = mid;
-                }
-                pys[k0] = hi;
-                rows[k0] = rHi;
-            }
-            double erC = rows[k0]!.ER, pbC = rows[k0]!.Out.P;
+            int k0 = CriticalPoint(pys, rows, Run, s0);    // most-entraining feasible point
+            double erC = rows[k0]!.Ms / rows[k0]!.Mm, pbC = rows[k0]!.Out.P;
             EjectorResult? res = null;
             if (pOut <= pbC)
             {
@@ -439,7 +519,7 @@ namespace EjectorCore
                 double at = mM / ThroatFlux(mexp, pT, gT, rE, py, pLow, cache);
                 double ae = rE * at, amix = rMix * at;
                 var (mm, pt, pe, stE, uE) = MotiveState(mexp, pT, gT, at, ae, py, pLow, cache);
-                var r = DoPass(m0, s0, mm, pe, stE, uE, ae, amix, py, sexp, gSMax);
+                var r = DoPass(m0, s0, mm, pe, stE, uE, ae, amix, py, sexp, gSMax, mexp);
                 if (r != null)
                 {
                     r.Mm = mm; r.Pt = pt; r.Pe = pe; r.StE = stE; r.Ue = uE;
@@ -450,21 +530,7 @@ namespace EjectorCore
 
             var pys = Numerics.Linspace(pYs, s0.P * 0.99999, nScan).ToList();
             var rows = pys.Select(Run).ToList();
-            int k0 = rows.FindIndex(r => r != null);
-            if (k0 < 0) throw new EjectorException("no feasible mixing solution (mixing section too small?)");
-            if (k0 > 0)
-            {
-                double lo = pys[k0 - 1], hi = pys[k0];
-                Pass rHi = rows[k0]!;
-                while (hi - lo > 1e-6 * s0.P)
-                {
-                    double mid = 0.5 * (lo + hi);
-                    var r = Run(mid);
-                    if (r != null) { hi = mid; rHi = r; } else lo = mid;
-                }
-                pys[k0] = hi;
-                rows[k0] = rHi;
-            }
+            int k0 = CriticalPoint(pys, rows, Run, s0);    // most-entraining feasible point
             double erC = rows[k0]!.ER, pbC = rows[k0]!.Out.P;
             var curve = new List<(double, double)>();
             if (nCurve > 0)
@@ -543,8 +609,9 @@ namespace EjectorCore
                 double aE = Math.Max(mM / (stE.Rho * uE), aT);
                 var (stY, uY) = sexp.At(py);
                 double aSy = mS > 0 ? mS / Math.Max(stY.Rho * uY, 1e-12) : 0.0;
-                double aMix = aE + aSy;
-                var r = DoPass(m0, s0, mM, py, stE, uE, aE, aMix, py, sexp, gSMax);
+                // CPM: hypothetical throat = PhiP * motive core + suction passage
+                double aMix = Mixing == MixingModel.CPM ? PhiP * mM / (stE.Rho * uE) + aSy : aE + aSy;
+                var r = DoPass(m0, s0, mM, py, stE, uE, aE, aMix, py, sexp, gSMax, mexp);
                 return (r, aE, aMix, uE, stE);
             }
 

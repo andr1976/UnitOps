@@ -54,12 +54,21 @@ DATA = """
 """
 
 
-def run(eta_m=0.95, eta_s=0.85, eta_mix=0.95, eta_d=0.85, verbose=True):
+def huang_phi_m(area_ratio):
+    """Huang et al. (1999) eq. (19): mixing loss coefficient against A3/At."""
+    return 0.80 if area_ratio > 8.3 else (0.82 if area_ratio >= 6.9 else 0.84)
+
+
+def run(eta_m=0.95, eta_s=0.85, eta_mix=0.95, eta_d=0.85, verbose=True, mixing="CAM",
+        phi_p=1.0, Cd_m=1.0):
+    """eta_mix: a number, or a function of A3/At (e.g. huang_phi_m)."""
     th = Thermo("R141b")
-    ej = Ejector(th, eta_m=eta_m, eta_s=eta_s, eta_mix=eta_mix, eta_d=eta_d)
     rows = np.loadtxt(DATA.strip().splitlines())
     err_er, err_pb = [], []
     for Dt, De, D3, Pp, Ps, er_x, Td_x in rows:
+        emix = eta_mix((D3 / Dt) ** 2) if callable(eta_mix) else eta_mix
+        ej = Ejector(th, eta_m=eta_m, eta_s=eta_s, eta_mix=emix, eta_d=eta_d, mixing=mixing,
+                     phi_p=phi_p, Cd_m=Cd_m)
         m0 = ej.inlet(Pp * 1e5, q=1.0)
         s0 = ej.inlet(Ps * 1e5, q=1.0)
         r = ej.rate(m0, s0, area(Dt * 1e-3), area(De * 1e-3), area(D3 * 1e-3), P_out=s0.P)

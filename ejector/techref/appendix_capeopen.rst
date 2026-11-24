@@ -91,7 +91,8 @@ Parameters
 
 Parameters switch between CAPE-OPEN *input* and *output* with ``Mode``,
 ``GeometrySpec`` and ``EfficiencySet``, so the PME greys out whatever the unit
-computes.
+computes. An efficiency set fixes the mixing model it was fitted with, and
+``Custom`` starts from the values of the set shown last.
 
 .. list-table:: Input parameters
    :header-rows: 1
@@ -147,6 +148,16 @@ computes.
      - --
      - 1.0
      - :math:`\varphi` for ``HNE`` (:ref:`sec-hne`)
+   * - ``MixingModel``
+     - option
+     - --
+     - ``ConstantPressure``
+     - ``ConstantPressure`` / ``ConstantArea`` (:ref:`sec-mixing-cpm`): input with ``Custom``, else the set's model
+   * - ``PrimaryCoreCoefficient``
+     - real
+     - --
+     - 1.0
+     - :math:`\varphi_\mathrm{p}` of constant-pressure mixing (:eq:`eq-cpm-area`): input with ``Custom``
    * - ``CurvePoints``
      - real
      - --
@@ -166,7 +177,7 @@ computes.
    * - ``Screening``
      - 0.90 / 0.85 / 0.90 / 0.80
      - 1.0
-     - assumption
+     - assumption; **constant-pressure mixing**, :math:`\varphi_\mathrm{p}` 1
    * - ``R744_AllPoints``
      - 0.90 / 0.610 / 0.825 / 0.820
      - 1.138
@@ -183,6 +194,14 @@ computes.
      - 0.95 / 0.85 / 0.95 / 0.85
      - 1.0
      - single-phase gas ejectors
+   * - ``Vapour_CPM``
+     - 0.90 / 0.85 / 0.908 / 0.85
+     - 1.0
+     - **constant-pressure mixing**, :math:`\varphi_\mathrm{p}` 0.869; three single-phase vapour data sets (:ref:`parameter_guide`)
+
+``Screening`` (the default) and ``Vapour_CPM`` use constant-pressure mixing, which predicts better than
+constant-area mixing when no calibration is available (:ref:`sec-guide-mixing`). The fitted R744 and gas
+sets keep the constant-area mixing they were fitted or validated with.
 
 .. list-table:: Output parameters
    :header-rows: 1

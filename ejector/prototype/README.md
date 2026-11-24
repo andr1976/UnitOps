@@ -14,8 +14,14 @@ its engine is a port of this code and is regression-tested against it (`export_r
 | `validate_goncalves2024.py` | Subcooled-liquid CO2 motive ejector (motive flow, ER) |
 | `co2_case.py` | Target application: liquid CO2 at 47 bar entraining CO2 vapour at 15 bar |
 | `calibrate_r744.py` | Two-stage calibration on Giacomelli 2019 (42 R744 points, ~1 min) |
-| `test_ejector1d.py` | 25 regression/verification tests (`python -m pytest -q`) |
-| `export_regression.py` | Reference results (22 cases) for the C# engine tests (`../src/EjectorCore.Tests`) |
+| `test_ejector1d.py` | 32 regression/verification tests (`python -m pytest -q`) |
+| `export_regression.py` | Reference results (31 cases) for the C# engine tests (`../src/EjectorCore.Tests`) |
+| `water_air.py` | Steam/water + dry air properties (psychrometric: IAPWS water, CoolProp air, ideal mixing) for steam-jet and liquid-jet cases |
+| `validation_sets.py` | Every validation set as model cases (Giacomelli, Huang, Falat, Lawrence, Shestopalov); parallel evaluation and fits |
+| `calibrate_sets.py` | Both mixing models fitted on every set, plus leave-one-set-out transfer (evidence for the techref parameter guide) |
+| `validate_bodys2020.py` | Motive flow of 150 SINTEF R744 points (liquid motive 47-70 bar): C_d and HNE φ required |
+| `validate_gea.py` | GEA catalogue design charts (steam/air, air/air, water/air) against the optimum design |
+| `data/` | Validation data with provenance headers (Giacomelli, Bodys, Falat, Lawrence, Shestopalov, GEA) |
 
 The full technical reference (theory, numerics, CAPE-OPEN architecture, validation) is the
 Sphinx project in [`../techref`](../techref). Its figures and tables are regenerated from this code by
@@ -23,16 +29,19 @@ Sphinx project in [`../techref`](../techref). Its figures and tables are regener
 
 ## Model
 
-Classical constant-area-mixing 1D ejector (Keenan 1950 → Huang 1999 → Liu & Groll / Banasiak & Hafner for CO2),
-written for real fluids:
+1D ejector with constant-area (default) or constant-pressure mixing (Keenan 1950 → Huang 1999 → Liu & Groll /
+Banasiak & Hafner for CO2), written for real fluids:
 
 1. **Motive nozzle.** Isentropic to the throat; isentropic efficiency η_m on the expansion beyond it. The choked mass flux is G* = max_P ρ(P,h)·u(P) on the isentropic HEM path, times a discharge coefficient C_d.
    A supersonic exit pressure follows from G(P_e)·A_e = ṁ_m. An unchoked (liquid) nozzle exhausts at P_y.
    An optional **HNE** delayed-flashing factor φ uses quality x = φ·x_eq in the density only
    (cf. the Henry–Fauske / Diener–Schmidt boiling-delay factor). φ = 1 is HEM.
 2. **Suction.** Expansion s0 → P_y with η_s, capped at its own choked flux. For liquid suction this cap is the cavitation limit.
-3. **Constant-area mixing.** Mass, momentum (η_mix on the inlet momentum flux) and energy give one residual in P3.
-   The subsonic, post-shock root is taken. The mixed composition z_t comes from molar flows.
+3. **Mixing.** `mixing="CAM"` (constant area): mass, momentum (η_mix on the inlet momentum flux) and energy give one
+   residual in P3; the subsonic, post-shock root is taken. `mixing="CPM"` (constant pressure, Huang 1999 with real
+   fluids): the motive core takes φ_p of its isentropic area at a hypothetical throat, the suction passes the rest, the
+   streams mix at P_y (η_mix on momentum), then a loss-free normal shock. The critical point is the entrainment
+   maximum over P_y (compound choking). The mixed composition z_t comes from molar flows.
 4. **Diffuser.** η_d, outlet velocity → 0.
 
 **Rating** (geometry A_t, A_e, A_mix known; P_out given) gives ṁ_m, ṁ_s, ER, and the regime
@@ -40,6 +49,9 @@ written for real fluids:
 **Design** (ṁ_m and ER given) chooses P_y for the maximum outlet pressure and returns the areas
 plus non-dimensional groups (A_mix/A_t, lift ratio, Köhler/Elbel ejector efficiency).
 **design_for_lift** returns the largest ER that reaches a required P_out.
+
+Which mixing model and parameters to use, by application, with the evidence: techref chapter *Parameter
+Guide* (`python ../techref/figures/gen_data.py guide`).
 
 ## Verification and validation
 

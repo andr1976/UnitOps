@@ -304,6 +304,12 @@ class Ejector:
     motive_model: str = "HEM"   # 'HEM' | 'HNE' (delayed flashing in motive nozzle)
     phi_ne: float = 1.0         # 'HNE' vapour-generation fraction (1 = HEM)
     Cd_m: float = 1.0           # motive discharge coefficient on G*
+    mixing: str = "CAM"         # 'CAM' constant-area | 'CPM' constant-pressure (Huang 1999)
+    phi_p: float = 1.0          # CPM: primary-core area coefficient at the hypothetical throat
+
+    def __post_init__(self):
+        if self.mixing not in ("CAM", "CPM"):
+            raise ValueError(f"mixing must be 'CAM' or 'CPM', not {self.mixing!r}")
 
     # ---- inlet helpers
     def inlet(self, P, T=None, q=None, z=None) -> State:
@@ -406,7 +412,9 @@ class Ejector:
         return tuple((n_m * a + n_s * b) / (n_m + n_s) for a, b in zip(m0.z, s0.z))
 
     # ---- one pass for a given suction static pressure P_y and geometry
-    def _pass(self, m0, s0, m_m, P_e, st_e, u_e, A_e, A_mix, P_y, sexp, G_s_max):
+    def _pass(self, m0, s0, m_m, P_e, st_e, u_e, A_e, A_mix, P_y, sexp, G_s_max, mexp=None):
+        if self.mixing == "CPM":
+            return self._pass_cpm(m0, s0, m_m, P_e, st_e, u_e, A_mix, P_y, sexp, G_s_max, mexp)
         A_sy = A_mix - A_e
         if A_sy <= 0:
             raise ValueError("nozzle exit area >= mixing area")
@@ -423,6 +431,85 @@ class Ejector:
         P3, u3, st3 = mix
         out = self._diffuser(st3, u3, h0_t)
         return dict(m_s=m_s, st_y=st_y, u_y=u_y, P3=P3, u3=u3, st3=st3, out=out)
+
+    def _pass_cpm(self, m0, s0, m_m, P_e, st_e, u_e, A_mix, P_y, sexp, G_s_max, mexp):
+        """Constant-pressure mixing (Huang et al. 1999, real fluid) at mixing pressure P_y.
+
+        Hypothetical throat y-y inside the constant-area section A_mix: the
+        motive core, carried isentropically (motive path) from the nozzle exit
+        to P_y, takes phi_p * m_m / (rho u) of the section; the suction stream,
+        expanded to P_y, passes the rest.  The streams then mix at constant
+        pressure P_y, with eta_mix on the momentum flux, and the mixed stream
+        passes a loss-free normal shock (real fluid; none if it is subsonic)
+        before the diffuser.  Continuity of the mixed stream in A_mix is not
+        imposed (as in Huang's model); P_out does not depend on A_mix.
+        """
+        if abs(P_e - P_y) <= 1e-9 * P_y or mexp is None:
+            st_p, u_p = st_e, u_e
+        else:
+            st_p, u_p = mexp.at(P_y)
+        A_sy = A_mix - self.phi_p * m_m / (st_p.rho * u_p)
+        if A_sy <= 0.0:
+            return None                      # the motive core fills the section
+        st_y, u_y = sexp.at(P_y)
+        G_s = min(st_y.rho * u_y, G_s_max)
+        m_s = G_s * A_sy
+        m_t = m_m + m_s
+        h0_t = (m_m * m0.h + m_s * s0.h) / m_t
+        z_t = self._mixed_z(m0, s0, m_m, m_s)
+        u_m = self.eta_mix * (m_m * u_p + m_s * u_y) / m_t
+        st_m = self.th.ph(P_y, h0_t - 0.5 * u_m * u_m, z_t)
+        A_m = m_t / (st_m.rho * u_m)
+        shock = self._mix(A_m, [(P_y * A_m, m_t * u_m)], m_t, h0_t, z_t, eta=1.0)
+        if shock is None:
+            return None
+        P3, u3, st3 = shock
+        out = self._diffuser(st3, u3, h0_t)
+        return dict(m_s=m_s, st_y=st_y, u_y=u_y, P3=P3, u3=u3, st3=st3, out=out)
+
+    def _critical_point(self, Pys, rows, run, s0):
+        """Index of the most-entraining feasible scan point (made exact in place).
+
+        CAM: entrainment rises monotonically towards low P_y; the most-entraining
+        point is the feasibility boundary (mixed flow sonic at the end of the
+        mixing section), which is bisected.  CPM: the suction passage at the
+        hypothetical throat shrinks as P_y falls (the motive core expands), so
+        m_s(P_y) has an interior maximum near the suction choke; the critical
+        point is that maximum (compound choking), refined with a bounded search.
+        Points below it are not reached in operation and are dropped (None).
+        """
+        ok = [r is not None for r in rows]
+        if not any(ok):
+            raise RuntimeError("no feasible mixing solution (mixing section too small?)")
+        if self.mixing == "CPM":
+            er = [r["m_s"] / r["m_m"] if r else -math.inf for r in rows]
+            k = int(np.argmax(er))
+            lo, hi = Pys[max(k - 1, 0)], Pys[min(k + 1, len(Pys) - 1)]
+
+            def neg(p):
+                r = run(p)
+                return -r["m_s"] / r["m_m"] if r else 1.0
+            m = minimize_scalar(neg, bounds=(lo, hi), method="bounded",
+                                options={"xatol": 1e-7 * s0.P})
+            if -m.fun > er[k]:
+                Pys[k], rows[k] = m.x, run(m.x)
+            for j in range(k):
+                rows[j] = None
+            return k
+        k0 = ok.index(True)
+        if k0 > 0:
+            # The feasibility boundary lies between grid points k0-1 and k0: bisect
+            # it, otherwise the critical ER depends on the scan resolution.
+            lo, hi, r_hi = Pys[k0 - 1], Pys[k0], rows[k0]
+            while hi - lo > 1e-6 * s0.P:
+                mid = 0.5 * (lo + hi)
+                r = run(mid)
+                if r:
+                    hi, r_hi = mid, r
+                else:
+                    lo = mid
+            Pys[k0], rows[k0] = hi, r_hi
+        return k0
 
     # ==================================================================== RATING
     def _cd_exit(self, mexp, P_t, G_t, r_e, P_low, cache):
@@ -516,7 +603,7 @@ class Ejector:
 
         def run(py):
             m_m, pt, pe, st_e, u_e = self._motive_state(mexp, P_t, G_t, A_t, A_e, py, P_low, cache)
-            r = self._pass(m0, s0, m_m, pe, st_e, u_e, A_e, A_mix, py, sexp, G_s_max)
+            r = self._pass(m0, s0, m_m, pe, st_e, u_e, A_e, A_mix, py, sexp, G_s_max, mexp)
             if r:
                 r.update(m_m=m_m, P_t=pt, P_e=pe, st_e=st_e, u_e=u_e)
             return r
@@ -534,24 +621,9 @@ class Ejector:
         # scan suction static pressure from its choke to the inlet pressure
         Pys = np.linspace(P_ys, s0.P * 0.99999, n_scan)
         rows = [run(py) for py in Pys]
+        k0 = self._critical_point(Pys, rows, run, s0)   # most-entraining feasible point
         Pout = np.array([r["out"].P if r else np.nan for r in rows])
         ok = np.isfinite(Pout)
-        if not ok.any():
-            raise RuntimeError("no feasible mixing solution (mixing section too small?)")
-        k0 = int(np.argmax(ok))                     # most-entraining feasible point
-        if k0 > 0:
-            # The feasibility boundary (mixed flow sonic at the end of the mixing
-            # section) lies between grid points k0-1 and k0: bisect it, otherwise
-            # the critical ER depends on the scan resolution.
-            lo, hi, r_hi = Pys[k0 - 1], Pys[k0], rows[k0]
-            while hi - lo > 1e-6 * s0.P:
-                mid = 0.5 * (lo + hi)
-                r = run(mid)
-                if r:
-                    hi, r_hi = mid, r
-                else:
-                    lo = mid
-            Pys[k0], rows[k0], Pout[k0] = hi, r_hi, r_hi["out"].P
         ER_c, Pb_c = rows[k0]["m_s"] / rows[k0]["m_m"], Pout[k0]
         z0 = lambda r: self._mixed_z(m0, s0, r["m_m"], r["m_s"])
         if P_out <= Pout[k0]:
@@ -625,7 +697,7 @@ class Ejector:
             At = m_m / self._throat_flux(mexp, P_t, G_t, r_e, py, P_low, cache)
             Ae, Amix = r_e * At, r_mix * At
             mm, pt, pe, st_e, u_e = self._motive_state(mexp, P_t, G_t, At, Ae, py, P_low, cache)
-            r = self._pass(m0, s0, mm, pe, st_e, u_e, Ae, Amix, py, sexp, G_s_max)
+            r = self._pass(m0, s0, mm, pe, st_e, u_e, Ae, Amix, py, sexp, G_s_max, mexp)
             if r:
                 r.update(m_m=mm, P_t=pt, P_e=pe, st_e=st_e, u_e=u_e, A_t=At, A_e=Ae,
                          A_mix=Amix, ER=r["m_s"] / mm)
@@ -633,20 +705,8 @@ class Ejector:
 
         Pys = list(np.linspace(P_ys, s0.P * 0.99999, n_scan))
         rows = [run(py) for py in Pys]
+        k0 = self._critical_point(Pys, rows, run, s0)   # most-entraining feasible point
         ok = [r is not None for r in rows]
-        if not any(ok):
-            raise RuntimeError("no feasible mixing solution (mixing section too small?)")
-        k0 = ok.index(True)
-        if k0 > 0:                       # bisect the feasibility boundary (cf. rate())
-            lo, hi, r_hi = Pys[k0 - 1], Pys[k0], rows[k0]
-            while hi - lo > 1e-6 * s0.P:
-                mid = 0.5 * (lo + hi)
-                r = run(mid)
-                if r:
-                    hi, r_hi = mid, r
-                else:
-                    lo = mid
-            Pys[k0], rows[k0] = hi, r_hi
         ER_c, Pb_c = rows[k0]["ER"], rows[k0]["out"].P
         curve = [(r["out"].P, r["ER"]) for r, o in zip(rows[k0:], ok[k0:]) if o]
         if n_curve > 0:
@@ -715,8 +775,11 @@ class Ejector:
             A_e = max(m_m / (st_e.rho * u_e), A_t)
             st_y, u_y = sexp.at(py)
             A_sy = m_s / max(st_y.rho * u_y, 1e-12) if m_s > 0 else 0.0
-            A_mix = A_e + A_sy
-            r = self._pass(m0, s0, m_m, py, st_e, u_e, A_e, A_mix, py, sexp, G_s_max)
+            if self.mixing == "CPM":         # hypothetical throat: phi_p * core + suction
+                A_mix = self.phi_p * m_m / (st_e.rho * u_e) + A_sy
+            else:
+                A_mix = A_e + A_sy
+            r = self._pass(m0, s0, m_m, py, st_e, u_e, A_e, A_mix, py, sexp, G_s_max, mexp)
             return r, A_e, A_mix, u_e, st_e
 
         def neg_pout(py):

@@ -120,6 +120,12 @@ Interpretation
   statement is an outlet pressure of roughly 22–25 bar at the duty ER:
   probably short of 28 bar, but not with the confidence a single number
   suggests.
+* **The mixing model widens the band upwards.** Constant-pressure mixing,
+  fitted on the same 42 points and equally good there, gives 26.3 bar instead
+  of 24.0 bar at the duty ER, and 1.47 instead of 0.82 kg/s at 28 bar
+  (:ref:`sec-guide-duty`). The calibration data cannot tell the two models
+  apart, so the band runs from about 22 to 26 bar. That is still short of 28
+  bar, but closer to it.
 
 Options a process engineer would weigh next:
 

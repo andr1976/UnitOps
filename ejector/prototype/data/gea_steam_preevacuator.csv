@@ -1,0 +1,251 @@
+# Source: GEA product catalogue "Ejectors, jet pumps, mixers, heaters, compressors", BTC0011-EN,
+# 08/01/2018 (docs/ejector/ejectors-jet-pumps-heaters-mixer-vacuum-gea.pdf; each PDF page is a 2-page spread).
+# Chart: printed p.40 (LEFT half of PDF p.21; the spread is pp.40-41), Figure 3, steam jet ejector as
+# pre-evacuator: final vacuum vs specific steam consumption D_spec.
+# Method: PDF page rendered at 600 dpi with PyMuPDF. The chart is an embedded raster of ~96 dpi, so one
+# source pixel = ~6.2 render px. Curves traced as dark-line centrelines (perpendicular cross-sections,
+# darkness-weighted centroid); cross-sections widened by labels, dashed construction lines or merging curves
+# were rejected, not guessed. Axes calibrated piecewise (linear, or linear in log10) through ALL labelled
+# gridlines; gridline centres located to sub-pixel precision. Review image with the points overlaid:
+# review_gea_steam_preevacuator.png (made at digitisation, not kept in the repository; re-plot from these rows to check)
+# Axes: x = D_spec [kg motive steam / m3 of plant volume to be evacuated], LINEAR, calibrated on labelled
+#   gridlines 0,0.2,...,3.6; y = final vacuum of the pre-evacuator [mbar], LOG scale, calibrated on labelled
+#   gridlines 10,20,30,40,50,60,80,100,200,300,400,500,600,800.
+#   The top frame line is labelled "1013" but lies at 1000 mbar on the log scale defined by the other
+#   gridlines (1013 would be 4.7 px higher); it was not used for calibration.
+# Gridline check (unlabelled gridlines): (1.4, 70 mbar) reads y = 70.4; (3.4, 900) reads y = 902.7; (0.6, 90) reads
+#   y = 89.6. Every x gridline is labelled; a two-point linear fit 0->3.6 leaves them within 4.7 px (0.011).
+# Curve labels: "p1 = 3 bar", "5", "7", "10", "p1 = 20 bar"; legend "p1 = Motive steam pressure gauge".
+# Conditions quoted verbatim (overdot of Ṁ and sub/superscripts flattened: M0 = Ṁ0) from the spread (pp.38/40): "Single-stage start-up jet pumps can, according to the motive
+#   steam pressure, achieve a final pressure of approx. 80 mbar. For lower pressures a two-stage start-up jet
+#   pump must be used." (p.38). Design example (p.40): "A vessel with a volume of 31 m³ is to be evacuated from
+#   1000 mbar to 80 mbar in 15 minutes. Motive steam at 10 bar g is available. From fig. 3 for 80 mbar and
+#   10 bar g one finds a specific motive steam consumption of 2.28 kg motive steam/m³ volume to be evacuated."
+#   M_D = D_spec. · V · 60/t ("M_D Steam consumption in kg/h", "D_spec. kg motive steam/m³ volume to be
+#   evacuated", "V Volume of the plant to be evacuated in m³", "t Required evacuation time in minutes");
+#   M_D = 2.28 · 31 · 60/15 = 283 kg/h. No suction gas or temperature is stated for this chart.
+# Worked-example check: p1=10 bar curve at 80 mbar digitised D_spec = 2.279 vs stated 2.28 (-0.0 %); the
+#   chart's dashed construction line is at 2.290.
+# Not resolved: the 3-bar curve and a second line both start at the (0, 1013) corner. The second line is the
+#   20-bar curve; the 5-, 7- and 10-bar curves branch off it at ~(0.27, 640 mbar). That shared stem is given
+#   only under 20 bar. 5 and 7 bar start at D_spec ~0.39/0.37; 10 bar is not resolved from the 20-bar line
+#   below D_spec = 0.48. Stretches where the 20-bar and 10-bar curves cross or run along the dashed 80-mbar line
+#   were rejected (small gaps).
+# Reading uncertainty: 1 source pixel = 0.015 kg/m3 in D_spec and 1.7 % in p; estimated +/-0.02 kg/m3
+#   in D_spec on the flat parts, +/-2 % in p on the steep parts.
+# Sampling: D_spec = 0.05..1.15 step 0.05, 1.2..3.6 step 0.1 within each traced curve, plus the last trace point.
+curve_label,D_spec_kg_per_m3,p_final_mbar
+p1=3 bar g,0.05,971.4
+p1=3 bar g,0.1,914.6
+p1=3 bar g,0.15,875.5
+p1=3 bar g,0.2,826.5
+p1=3 bar g,0.25,780.8
+p1=3 bar g,0.3,737.2
+p1=3 bar g,0.35,699
+p1=3 bar g,0.4,662.1
+p1=3 bar g,0.45,629.3
+p1=3 bar g,0.5,597.7
+p1=3 bar g,0.55,569
+p1=3 bar g,0.6,544.3
+p1=3 bar g,0.65,520.9
+p1=3 bar g,0.7,498.3
+p1=3 bar g,0.75,477
+p1=3 bar g,0.8,457.4
+p1=3 bar g,0.85,439.5
+p1=3 bar g,0.9,421.5
+p1=3 bar g,0.95,404.9
+p1=3 bar g,1,390
+p1=3 bar g,1.05,375.6
+p1=3 bar g,1.1,362
+p1=3 bar g,1.15,350.2
+p1=3 bar g,1.2,339
+p1=3 bar g,1.3,318.1
+p1=3 bar g,1.4,301.5
+p1=3 bar g,1.5,287.2
+p1=3 bar g,1.6,274.7
+p1=3 bar g,1.7,263.6
+p1=3 bar g,1.8,253.2
+p1=3 bar g,1.9,244.2
+p1=3 bar g,2,235.3
+p1=3 bar g,2.1,228.1
+p1=3 bar g,2.2,221.9
+p1=3 bar g,2.3,215.5
+p1=3 bar g,2.4,210.3
+p1=3 bar g,2.5,205.2
+p1=3 bar g,2.6,201.1
+p1=3 bar g,2.7,197.3
+p1=3 bar g,2.8,194
+p1=3 bar g,2.9,190.6
+p1=3 bar g,3,187.4
+p1=3 bar g,3.1,184.9
+p1=3 bar g,3.2,183
+p1=3 bar g,3.3,181
+p1=3 bar g,3.4,178.9
+p1=3 bar g,3.5,177.9
+p1=3 bar g,3.584,177
+p1=5 bar g,0.4,602.6
+p1=5 bar g,0.45,571.3
+p1=5 bar g,0.5,538.6
+p1=5 bar g,0.55,507.6
+p1=5 bar g,0.6,479.9
+p1=5 bar g,0.65,454
+p1=5 bar g,0.7,430.9
+p1=5 bar g,0.75,408.5
+p1=5 bar g,0.8,388.3
+p1=5 bar g,0.85,369.3
+p1=5 bar g,0.9,351.9
+p1=5 bar g,0.95,335.8
+p1=5 bar g,1,319.7
+p1=5 bar g,1.05,305.5
+p1=5 bar g,1.1,293.3
+p1=5 bar g,1.15,280.9
+p1=5 bar g,1.2,269.8
+p1=5 bar g,1.3,249.7
+p1=5 bar g,1.4,233.4
+p1=5 bar g,1.5,219.5
+p1=5 bar g,1.6,208.6
+p1=5 bar g,1.7,198.4
+p1=5 bar g,1.8,190.4
+p1=5 bar g,1.9,183.2
+p1=5 bar g,2,176.7
+p1=5 bar g,2.1,171
+p1=5 bar g,2.2,166.1
+p1=5 bar g,2.3,161.2
+p1=5 bar g,2.4,157.2
+p1=5 bar g,2.5,153.2
+p1=5 bar g,2.6,150.1
+p1=5 bar g,2.7,146.4
+p1=5 bar g,2.8,143.8
+p1=5 bar g,2.9,140.8
+p1=5 bar g,3,138.6
+p1=5 bar g,3.1,136.7
+p1=5 bar g,3.2,135.1
+p1=5 bar g,3.3,133.3
+p1=5 bar g,3.4,131.5
+p1=5 bar g,3.5,130.6
+p1=5 bar g,3.584,129.7
+p1=7 bar g,0.4,562.2
+p1=7 bar g,0.45,524.4
+p1=7 bar g,0.5,490.2
+p1=7 bar g,0.55,458
+p1=7 bar g,0.6,429.4
+p1=7 bar g,0.65,403.3
+p1=7 bar g,0.7,379.1
+p1=7 bar g,0.75,356.3
+p1=7 bar g,0.8,336.4
+p1=7 bar g,0.85,317.6
+p1=7 bar g,0.9,300.4
+p1=7 bar g,0.95,284.6
+p1=7 bar g,1,269.9
+p1=7 bar g,1.05,256.1
+p1=7 bar g,1.1,243.9
+p1=7 bar g,1.15,231.8
+p1=7 bar g,1.2,220.8
+p1=7 bar g,1.3,200.8
+p1=7 bar g,1.4,184.7
+p1=7 bar g,1.5,171.1
+p1=7 bar g,1.6,159.7
+p1=7 bar g,1.7,149.3
+p1=7 bar g,1.8,140.3
+p1=7 bar g,1.9,133.1
+p1=7 bar g,2,126.2
+p1=7 bar g,2.1,120.7
+p1=7 bar g,2.2,115.6
+p1=7 bar g,2.3,111
+p1=7 bar g,2.4,107.2
+p1=7 bar g,2.5,104.3
+p1=7 bar g,2.6,101.6
+p1=7 bar g,2.7,99.22
+p1=7 bar g,2.8,97.12
+p1=7 bar g,2.9,95.15
+p1=7 bar g,3,93.51
+p1=7 bar g,3.1,92
+p1=7 bar g,3.2,90.64
+p1=7 bar g,3.3,90.03
+p1=7 bar g,3.4,89.14
+p1=7 bar g,3.5,88.61
+p1=7 bar g,3.584,88.45
+p1=10 bar g,0.5,434.4
+p1=10 bar g,0.55,399.9
+p1=10 bar g,0.6,369.4
+p1=10 bar g,0.65,342.6
+p1=10 bar g,0.7,318.2
+p1=10 bar g,0.75,296.9
+p1=10 bar g,0.8,277.7
+p1=10 bar g,0.85,259.8
+p1=10 bar g,0.9,244.1
+p1=10 bar g,0.95,229
+p1=10 bar g,1,214.9
+p1=10 bar g,1.05,202.3
+p1=10 bar g,1.1,191.2
+p1=10 bar g,1.15,181
+p1=10 bar g,1.2,171.7
+p1=10 bar g,1.3,154.8
+p1=10 bar g,1.4,140.4
+p1=10 bar g,1.5,128.6
+p1=10 bar g,1.6,118.5
+p1=10 bar g,1.7,109.4
+p1=10 bar g,1.8,101.7
+p1=10 bar g,1.9,95.7
+p1=10 bar g,2,90.47
+p1=10 bar g,2.1,86.58
+p1=10 bar g,2.2,83.14
+p1=10 bar g,2.3,79.49
+p1=10 bar g,2.4,77.71
+p1=10 bar g,2.5,76.17
+p1=10 bar g,2.6,74.68
+p1=10 bar g,2.7,73.26
+p1=10 bar g,2.8,72.22
+p1=10 bar g,2.9,71.1
+p1=10 bar g,3,70.1
+p1=10 bar g,3.1,69.11
+p1=10 bar g,3.2,68.66
+p1=10 bar g,3.3,67.89
+p1=10 bar g,3.4,67.52
+p1=10 bar g,3.5,66.95
+p1=10 bar g,3.584,66.85
+p1=20 bar g,0.05,973.8
+p1=20 bar g,0.1,860.8
+p1=20 bar g,0.15,776.4
+p1=20 bar g,0.35,518.4
+p1=20 bar g,0.4,466.3
+p1=20 bar g,0.45,421.3
+p1=20 bar g,0.5,380.1
+p1=20 bar g,0.55,342.9
+p1=20 bar g,0.6,310.1
+p1=20 bar g,0.65,280.9
+p1=20 bar g,0.7,253.7
+p1=20 bar g,0.75,229.8
+p1=20 bar g,0.8,207.9
+p1=20 bar g,0.85,187.6
+p1=20 bar g,0.9,169.6
+p1=20 bar g,0.95,153.7
+p1=20 bar g,1,139.2
+p1=20 bar g,1.05,126.5
+p1=20 bar g,1.1,116.1
+p1=20 bar g,1.15,107.6
+p1=20 bar g,1.2,100.4
+p1=20 bar g,1.3,89.09
+p1=20 bar g,1.4,80.57
+p1=20 bar g,1.5,74.86
+p1=20 bar g,1.6,70.2
+p1=20 bar g,1.7,66.32
+p1=20 bar g,1.8,63.05
+p1=20 bar g,1.9,60.38
+p1=20 bar g,2,58.13
+p1=20 bar g,2.1,56.17
+p1=20 bar g,2.2,54.62
+p1=20 bar g,2.3,53.21
+p1=20 bar g,2.4,52.12
+p1=20 bar g,2.5,51.27
+p1=20 bar g,2.6,50.38
+p1=20 bar g,2.7,49.61
+p1=20 bar g,2.8,49.1
+p1=20 bar g,2.9,48.72
+p1=20 bar g,3,48.34
+p1=20 bar g,3.1,48.02
+p1=20 bar g,3.2,47.93
+p1=20 bar g,3.3,47.76
+p1=20 bar g,3.4,47.55
+p1=20 bar g,3.5,47.44
+p1=20 bar g,3.584,47.31

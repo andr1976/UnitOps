@@ -7,7 +7,8 @@ CSVs into figures/data/.  The make_*.py plotting scripts and the tables in the
 Usage (from this directory):
     python gen_data.py                 # everything (~5 min, calibration dominates)
     python gen_data.py nozzle fluids   # selected sections
-Sections: nozzle fluids huang goncalves giacomelli hne offdesign duty
+Sections: nozzle fluids huang goncalves giacomelli hne offdesign duty guide
+('guide' = guide_cd + guide_fits + guide_gea: the evidence of the parameter guide, ~30 min)
 'offdesign' and 'duty' read the fitted efficiencies written by 'giacomelli'.
 """
 import csv
@@ -282,11 +283,110 @@ def duty():
                              "solid_margin", "Tm_C"], pts)
 
 
+# ----------------------------------------------------------------------------- parameter guide
+def guide_cd():
+    """Discharge coefficient needed by the HEM motive flux, per measured point and set."""
+    import validate_bodys2020 as vb
+    import validation_sets as vs
+    rows = []
+    out, _ = vb.analyse()
+    pc = CP.PropsSI("Pcrit", "CO2")
+    for o in out:
+        rows.append(["Bodys2020", "CO2", o["nozzle"], o["P_mn_bar"], o["P_mn_bar"] * 1e5 / pc,
+                     "subcooled liquid" if o["subcool_K"] > 0.5 else "near-saturated liquid",
+                     o["subcool_K"], o["cd_req"], o["phi_req"]])
+    base = dict(eta_m=0.90, eta_s=0.85, eta_mix=0.90, eta_d=0.80, Cd_m=1.0)
+    for name, state in (("Giacomelli2019", None), ("Lawrence2012", "two-phase (flashed)"),
+                        ("Falat2018", "superheated vapour")):
+        cases = vs.SETS[name]()
+        g1 = vs.motive_flow(cases, base)
+        for c, m in zip(cases, g1):
+            fl = c["fluid"]
+            P = c["m0"][1]
+            if name == "Giacomelli2019":
+                st = {"supercritical": "supercritical", "subcritical": "subcritical (dense) liquid",
+                      "subcooled": "subcooled liquid"}[c["group"]]
+                sub = CP.PropsSI("T", "P", P, "Q", 0, fl) - c["m0"][2] if P < CP.PropsSI("Pcrit", fl) else np.nan
+            else:
+                st, sub = state, np.nan
+            rows.append([name, fl, c["group"], P / 1e5, P / CP.PropsSI("Pcrit", fl), st, sub,
+                         c["m_m"] / m, np.nan])
+    write("guide_cd.csv", ["set", "fluid", "group", "P_bar", "P_r", "state", "subcool_K", "cd_req",
+                           "phi_req"], rows)
+    # Bodys: required Cd by motive-pressure band and nozzle
+    a = [r for r in rows if r[0] == "Bodys2020"]
+    bands = []
+    for lo, hi in [(45, 52), (52, 56), (56, 60), (60, 64), (64, 67), (67, 71)]:
+        for nz in "AB":
+            c = np.array([r[7] for r in a if r[2] == nz and lo <= r[3] < hi])
+            if len(c):
+                bands.append([f"{lo}-{hi}", nz, len(c), c.mean(), c.std(), c.min(), c.max()])
+    write("guide_cd_bodys_bands.csv", ["P_band_bar", "nozzle", "n", "cd_mean", "cd_sd", "cd_min", "cd_max"],
+          bands)
+
+
+def guide_fits():
+    """Both mixing models calibrated on every set; vapour-class transfer (calibrate_sets.py)."""
+    import calibrate_sets as cs
+    fits, transfer = cs.run_all(verbose=False)
+    keys = list(fits[0])
+    write("guide_fits.csv", keys, [[f[k] for k in keys] for f in fits])
+    keys = list(transfer[0])
+    write("guide_transfer.csv", keys, [[t.get(k, np.nan) for k in keys] for t in transfer])
+
+
+def guide_gea():
+    """GEA catalogue charts against the optimum design, both mixing models."""
+    import validate_gea as vg
+    pooled = [r for r in read("guide_transfer.csv") if r["mixing"] == "CPM" and r["fitted_on"] == "all three"][0]
+    vg.EFF["Vapour_CPM"] = (0.90, 0.85, float(pooled["eta_mix"]), float(pooled["eta_d"]))
+    effs = ("Screening", "GasEjector_Ma2017", "Vapour_CPM")
+    rows = []
+    for kind, tasks in (("steam", vg.steam_tasks()), ("vent", vg.vent_tasks()), ("liquid", vg.liquid_tasks())):
+        for r in vg.run(tasks, effs=effs):
+            x = r.get("p0", r.get("m"))
+            rows.append([kind, r["curve"], r["p1"], x, r["chart"], r["mixing"], r["eff"], r["model"],
+                         r.get("error", "")])
+    write("guide_gea.csv", ["chart", "curve", "p1_bar_g", "x", "chart_value", "mixing", "eff_set",
+                            "model_value", "error"], rows)
+
+
+def guide_duty():
+    """The worked-example duty with the R744 fits of both mixing models (guide_fits.csv)."""
+    fits = {r["mixing"]: r for r in read("guide_fits.csv") if r["set"] == "Giacomelli2019"}
+    th = Thermo("CO2")
+    s0 = th.pq(15e5, 1.0)
+    motives = {"84.5 bar, 32 C": th.pt(84.5e5, 305.15), "47 bar sat. liquid": th.pq(47e5, 0.0)}
+    rows = []
+    for mixing, f in fits.items():
+        p = dict(eta_m=float(f["eta_m"]), eta_s=float(f["eta_s"]), eta_mix=float(f["eta_mix"]),
+                 eta_d=float(f["eta_d"]), Cd_m=float(f["Cd_m"]), phi_p=float(f["phi_p"]), mixing=mixing)
+        ej = Ejector(th, **p)
+        for name, m0 in motives.items():
+            d = ej.design(m0, s0, 13.66, 2.0 / 13.66)
+            try:
+                ms28 = ej.design_for_lift(m0, s0, 13.66, 28e5).m_s
+            except RuntimeError:
+                ms28 = 0.0
+            rows.append([name, mixing, p["eta_s"], p["eta_mix"], d.P_out / 1e5, ms28, d.eta_ejector])
+    write("guide_duty.csv", ["motive", "mixing", "eta_s", "eta_mix", "Pout_bar_at_2kgs", "ms_at_28bar",
+                             "eta_ej"], rows)
+
+
+def guide():
+    guide_cd()
+    guide_fits()
+    guide_gea()
+    guide_duty()
+
+
 SECTIONS = dict(nozzle=nozzle, fluids=fluids_limit, huang=huang, goncalves=goncalves,
-                giacomelli=giacomelli, hne=hne, offdesign=offdesign, duty=duty)
+                giacomelli=giacomelli, hne=hne, offdesign=offdesign, duty=duty, guide=guide,
+                guide_cd=guide_cd, guide_fits=guide_fits, guide_gea=guide_gea, guide_duty=guide_duty)
 
 if __name__ == "__main__":
-    for name in (sys.argv[1:] or list(SECTIONS)):
+    default = [s for s in SECTIONS if s not in ("guide_cd", "guide_fits", "guide_gea", "guide_duty")]
+    for name in (sys.argv[1:] or default):
         t = time.time()
         print(f"[{name}]")
         SECTIONS[name]()

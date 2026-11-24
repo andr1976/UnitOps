@@ -1,0 +1,113 @@
+# Geometry of the R245fa ejectors of Shestopalov et al., Int. J. Refrig. 55 (2015) 212-223 (Part 2).
+# Companion to shestopalov2015.csv. Printed values, no unit conversion. Long format: one printed number
+# per line. Sources: Table 1 (nozzles, p.217), Table 2 (cylindrical mixing chambers + diffusers, p.217),
+# Table 4 (conical-cylindrical chambers, p.218), Table 3 (p.217) / Table 6 (p.219) area ratios and NXP,
+# text p.214 and Fig. 5 (p.215, symbols and datums). All tables checked against 150 dpi page images;
+# Fig. 5 read at 300 dpi.
+# Datums (Fig. 5): section t = nozzle throat, 1 = nozzle exit, 2 = mixing-chamber entrance, 3 = end of
+# constant-area section / diffuser inlet, 4 = diffuser exit. ldiv = throat -> nozzle exit;
+# ln = nozzle exit -> mixing-chamber entrance (2); lmch = mixing-chamber length; in Fig. 5b (CCMC) the lmch
+# dimension spans from section 2 through the cone (lcs) to the end of the cylinder, i.e. lcs is part of
+# lmch; ld = diffuser length. psi1..psi4 are cone angles ("A cone angle of the divergent part of the
+# supersonic nozzles was psi1 = 6 deg", p.214). QA arithmetic (not data): the printed diameters/lengths are
+# consistent with psi being the FULL included angle (e.g. N1: (7.8-4.515)/2/31.48 -> 3.0 deg half-angle;
+# chamber B diffuser: (32-13.02)/2/135.75 -> 4.0 deg half-angle; CCMC 1: (13.848-12.155)/2/48.85 -> 1.0
+# deg). Small printed inconsistencies: nozzle ldiv is 0.1-0.8 mm longer than the 6 deg cone implies;
+# chamber A ld = 142.9 vs ~141.9 implied by 8 deg (B, C agree to 0.05 mm). Areas use pi = 3.14 (A4 = 803.84).
+# NOT PRINTED: nozzle inlet diameter and converging length (only psi2 = 30 deg); throat land length;
+# nozzle lip thickness / outer cone; suction chamber and the "two retrofract symmetrical suction inlet
+# ducts" dimensions (Fig. 5 draws the ducts at 30 deg to the axis, no diameters); length of the
+# cylindrical part of the CCMC as a number; ln for CCMC ejectors other than 2-2; surface roughness.
+component,id,parameter,symbol,value,unit,source,note
+nozzle,N1,design Te,Te,8,degC,Table 1,"Operating conditions Te = 8 C, Tg = 90 C"
+nozzle,N1,design Tg,Tg,90,degC,Table 1,
+nozzle,N1,throat diameter,dt,4.515,mm,Table 1,
+nozzle,N1,throat area,At,16.0,mm2,Table 1,
+nozzle,N1,exit diameter,d1,7.8,mm,Table 1,
+nozzle,N1,exit area,A1,47.76,mm2,Table 1,
+nozzle,N1,area ratio,A1/At,2.985,-,Table 1,
+nozzle,N1,diverging angle at nozzle exit,psi1,6.0,deg,Table 1,
+nozzle,N1,converging angle at nozzle enter,psi2,30,deg,Table 1,
+nozzle,N1,diverging part length,ldiv,31.48,mm,Table 1,
+nozzle,N2,design Te,Te,12,degC,Table 1,"Operating conditions Te = 12 C, Tg = 95 C"
+nozzle,N2,design Tg,Tg,95,degC,Table 1,
+nozzle,N2,throat diameter,dt,4.212,mm,Table 1,
+nozzle,N2,throat area,At,13.93,mm2,Table 1,
+nozzle,N2,exit diameter,d1,7.11,mm,Table 1,
+nozzle,N2,exit area,A1,39.68,mm2,Table 1,
+nozzle,N2,area ratio,A1/At,2.85,-,Table 1,
+nozzle,N2,diverging angle at nozzle exit,psi1,6.0,deg,Table 1,
+nozzle,N2,converging angle at nozzle enter,psi2,30,deg,Table 1,
+nozzle,N2,diverging part length,ldiv,28.33,mm,Table 1,
+nozzle,N3,design Te,Te,16,degC,Table 1,"Operating conditions Te = 16 C, Tg = 100 C"
+nozzle,N3,design Tg,Tg,100,degC,Table 1,
+nozzle,N3,throat diameter,dt,3.902,mm,Table 1,
+nozzle,N3,throat area,At,11.95,mm2,Table 1,
+nozzle,N3,exit diameter,d1,6.412,mm,Table 1,
+nozzle,N3,exit area,A1,32.27,mm2,Table 1,
+nozzle,N3,area ratio,A1/At,2.70,-,Table 1,
+nozzle,N3,diverging angle at nozzle exit,psi1,6.0,deg,Table 1,
+nozzle,N3,converging angle at nozzle enter,psi2,30,deg,Table 1,
+nozzle,N3,diverging part length,ldiv,24.71,mm,Table 1,
+cyl_chamber,A,constant area section diameter,d3,12.155,mm,Table 2,
+cyl_chamber,A,constant section area,A3,115.98,mm2,Table 2,
+cyl_chamber,A,length of constant area mixing chamber,lmch,90.62,mm,Table 2,
+cyl_chamber,A,length of diffuser,ld,142.9,mm,Table 2,
+cyl_chamber,A,diverging angle of diffuser,psi4,8.0,deg,Table 2,
+cyl_chamber,A,exit diameter of diffuser,d4,32.0,mm,Table 2,
+cyl_chamber,A,exit area of diffuser,A4,803.84,mm2,Table 2,
+cyl_chamber,B,constant area section diameter,d3,13.020,mm,Table 2,
+cyl_chamber,B,constant section area,A3,133.07,mm2,Table 2,
+cyl_chamber,B,length of constant area mixing chamber,lmch,98.64,mm,Table 2,
+cyl_chamber,B,length of diffuser,ld,135.75,mm,Table 2,
+cyl_chamber,B,diverging angle of diffuser,psi4,8.0,deg,Table 2,
+cyl_chamber,B,exit diameter of diffuser,d4,32.0,mm,Table 2,
+cyl_chamber,B,exit area of diffuser,A4,803.84,mm2,Table 2,
+cyl_chamber,C,constant area section diameter,d3,14.010,mm,Table 2,
+cyl_chamber,C,constant section area,A3,154.08,mm2,Table 2,
+cyl_chamber,C,length of constant area mixing chamber,lmch,106.65,mm,Table 2,
+cyl_chamber,C,length of diffuser,ld,128.65,mm,Table 2,
+cyl_chamber,C,diverging angle of diffuser,psi4,8.0,deg,Table 2,
+cyl_chamber,C,exit diameter of diffuser,d4,32.0,mm,Table 2,
+cyl_chamber,C,exit area of diffuser,A4,803.84,mm2,Table 2,
+cone_chamber,1,conical section entry diameter,d2,13.848,mm,Table 4,"bored into chamber A per p.216 sentence order (see shestopalov2015.csv)"
+cone_chamber,1,area ratio A2/A3,beta,1.3,-,Table 4,
+cone_chamber,1,entry conical section angle,psi3,2,deg,Table 4,
+cone_chamber,1,length of mixing chamber conical section,lcs,48.85,mm,Table 4,
+cone_chamber,2,conical section entry diameter,d2,14.835,mm,Table 4,"bored into chamber B"
+cone_chamber,2,area ratio A2/A3,beta,1.3,-,Table 4,
+cone_chamber,2,entry conical section angle,psi3,2,deg,Table 4,
+cone_chamber,2,length of mixing chamber conical section,lcs,52.14,mm,Table 4,
+cone_chamber,3,conical section entry diameter,d2,15.954,mm,Table 4,"bored into chamber C"
+cone_chamber,3,area ratio A2/A3,beta,1.3,-,Table 4,
+cone_chamber,3,entry conical section angle,psi3,2,deg,Table 4,
+cone_chamber,3,length of mixing chamber conical section,lcs,55.86,mm,Table 4,
+ejector,1-A,area ratio,A3/At,7.25,-,Table 3 and Table 6,
+ejector,1-A,optimal nozzle exit to mixing-chamber entrance,ln,16.4,mm,Table 6,
+ejector,1-B,area ratio,A3/At,8.32,-,Table 3 and Table 6,
+ejector,1-B,optimal nozzle exit to mixing-chamber entrance,ln,19.3,mm,Table 6,
+ejector,1-C,area ratio,A3/At,9.63,-,Table 3 and Table 6,
+ejector,1-C,optimal nozzle exit to mixing-chamber entrance,ln,22.8,mm,Table 6,
+ejector,2-A,area ratio,A3/At,8.33,-,Table 3 and Table 6,
+ejector,2-A,optimal nozzle exit to mixing-chamber entrance,ln,16.2,mm,Table 6,
+ejector,2-B,area ratio,A3/At,9.55,-,Table 3 and Table 6,
+ejector,2-B,optimal nozzle exit to mixing-chamber entrance,ln,20.6,mm,Table 6,"also p.219 text and Fig. 11 inset"
+ejector,2-C,area ratio,A3/At,11.06,-,Table 3 and Table 6,
+ejector,2-C,optimal nozzle exit to mixing-chamber entrance,ln,24.2,mm,Table 6,
+ejector,3-A,area ratio,A3/At,9.71,-,Table 3,"Table 6 prints 9.70"
+ejector,3-A,area ratio,A3/At,9.70,-,Table 6,"Table 3 prints 9.71"
+ejector,3-A,optimal nozzle exit to mixing-chamber entrance,ln,20.5,mm,Table 6,
+ejector,3-B,area ratio,A3/At,11.14,-,Table 3 and Table 6,
+ejector,3-B,optimal nozzle exit to mixing-chamber entrance,ln,22.9,mm,Table 6,
+ejector,3-C,area ratio,A3/At,12.89,-,Table 3 and Table 6,
+ejector,3-C,optimal nozzle exit to mixing-chamber entrance,ln,26.3,mm,Table 6,
+ejector,2-2,area ratio,A3/At,9.55,-,text p.220,"ejector 2-2 with area ratio A3/At = 9.55 and optimal position of the nozzle ln = 20.6 mm"
+ejector,2-2,optimal nozzle exit to mixing-chamber entrance,ln,20.6,mm,text p.220,
+general,all,divergent nozzle cone angle,psi1,6,deg,text p.214,
+general,all,convergent nozzle cone angle,psi2,30,deg,text p.214,
+general,all,CCMC entering-part angle,psi3,2,deg,text p.214,
+general,all,diffuser angle,psi4,8,deg,text p.214,
+general,all,mixing chamber length range (multiples of d3),lmch/d3,,-,text p.214,"The length of the mixing chamber lmch was 6...10d3"
+general,all,diffuser length range (multiples of d3),ld/d3,,-,text p.214,"the length of the diffuser ld was 10...12d3"
+general,all,ejector assembly length,,510,mm,text p.214,"510 mm in length, 60 mm in height and 130 mm in width"
+general,all,suction inlet duct angle to axis,,30,deg,Fig. 5,"drawn label on the two symmetrical suction ducts; not in text"

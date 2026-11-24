@@ -124,6 +124,7 @@ namespace Ejector.CapeOpen
         internal string DefaultValueCore { get; }
         internal CapeParamMode ModeCore { get; private set; }
         internal string ValueCore { get; private set; }
+        internal void SetInternal(string v) => ValueCore = v;
 
         // ---- ICapeParameter ----
         public object value

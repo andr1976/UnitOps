@@ -74,6 +74,12 @@ namespace Ejector.CapeOpen
             "HEM = homogeneous equilibrium (default); HNE = delayed flashing, x = phi * x_eq in the density (sensitivity studies; Cd is the recommended correction)",
             "HEM", new[] { "HEM", "HNE" }, CapeParamMode.CAPE_INPUT);
         private readonly RealParameter _phi = new RealParameter("FlashingFactor", "HNE flashing factor phi (1 = HEM)", 1.0, 0.01, 1.0, CapeParamMode.CAPE_INPUT);
+        private readonly OptionParameter _mixing = new OptionParameter("MixingModel",
+            "ConstantPressure = mixing at the pressure of a hypothetical throat where the suction stream chokes, then a normal shock (Huang 1999; default); ConstantArea = mixing over the constant-area section. Input with EfficiencySet Custom, else set by the efficiency set.",
+            Presets.ConstantPressure, new[] { Presets.ConstantPressure, Presets.ConstantArea }, CapeParamMode.CAPE_OUTPUT);
+        private readonly RealParameter _phiP = new RealParameter("PrimaryCoreCoefficient",
+            "ConstantPressure only: fraction phi_p of the isentropic motive-core area counted at the hypothetical throat (Huang's phi_p; 1 = none). Input with EfficiencySet Custom.",
+            1.0, 0.3, 1.0, CapeParamMode.CAPE_OUTPUT);
         private readonly RealParameter _curvePoints = new RealParameter("CurvePoints",
             "Operating curve: 0 = the points of the rating scan only (no extra cost); n > 0 = n points re-sampled from the critical point to zero entrainment (extra flashes). In Design mode n > 0 rates the designed geometry.",
             0.0, 0.0, 200.0, CapeParamMode.CAPE_INPUT);
@@ -128,7 +134,7 @@ namespace Ejector.CapeOpen
             foreach (var p in new object[]
                      {
                          _mode, _geometry, _rE, _rMix, _dT, _dE, _dMix, _preset, _etaM, _etaS, _etaMix, _etaD, _cd,
-                         _motiveModel, _phi, _curvePoints,
+                         _motiveModel, _phi, _mixing, _phiP, _curvePoints,
                          _pOut, _er, _lift, _regime, _pt, _pe, _py, _p3, _ue, _u3, _etaEj, _solid, _erCrit, _pbCrit,
                          _mCap, _mMis, _xOut, _nFlash, _tCalc, _curveP, _curveEr,
                      })
@@ -229,6 +235,8 @@ namespace Ejector.CapeOpen
                     EtaM = eff.EtaM, EtaS = eff.EtaS, EtaMix = eff.EtaMix, EtaD = eff.EtaD, CdM = eff.Cd,
                     MotiveModel = _motiveModel.ValueCore == "HNE" ? MotiveModel.HNE : MotiveModel.HEM,
                     PhiNe = _phi.ValueCore,
+                    Mixing = eff.Mixing == Presets.ConstantPressure ? MixingModel.CPM : MixingModel.CAM,
+                    PhiP = eff.PhiP,
                 };
                 double[]? zM = ids.Length > 1 ? mot.Z : null, zS = ids.Length > 1 ? suc.Z : null;
                 var vap = flash.VapourPhases;
@@ -348,10 +356,11 @@ namespace Ejector.CapeOpen
                 Diagnostics.Log(FormattableString.Invariant($"FixedSize: motive capacity differs from the port flow by {r.MotiveMismatch:P1}"));
         }
 
-        private (double EtaM, double EtaS, double EtaMix, double EtaD, double Cd) Efficiencies()
+        private EffSet Efficiencies()
         {
             if (Presets.Values.TryGetValue(_preset.ValueCore, out var v)) return v;
-            return (_etaM.ValueCore, _etaS.ValueCore, _etaMix.ValueCore, _etaD.ValueCore, _cd.ValueCore);
+            return new EffSet(_etaM.ValueCore, _etaS.ValueCore, _etaMix.ValueCore, _etaD.ValueCore, _cd.ValueCore,
+                              _mixing.ValueCore, _phiP.ValueCore);
         }
 
         private bool IsRating() => _mode.ValueCore == ModeRating;
@@ -377,11 +386,14 @@ namespace Ejector.CapeOpen
             var gm = rating ? CapeParamMode.CAPE_INPUT : CapeParamMode.CAPE_OUTPUT;
             if (_geometry.Mode != gm) { _geometry.Mode = gm; changed = true; }
             bool custom = _preset.ValueCore == Presets.Custom;
-            foreach (var p in new[] { _etaM, _etaS, _etaMix, _etaD, _cd }) Set(p, custom);
+            foreach (var p in new[] { _etaM, _etaS, _etaMix, _etaD, _cd, _phiP }) Set(p, custom);
+            var mm = custom ? CapeParamMode.CAPE_INPUT : CapeParamMode.CAPE_OUTPUT;
+            if (_mixing.Mode != mm) { _mixing.Mode = mm; changed = true; }
             if (!custom && Presets.Values.TryGetValue(_preset.ValueCore, out var v))
             {
                 _etaM.SetInternal(v.EtaM); _etaS.SetInternal(v.EtaS); _etaMix.SetInternal(v.EtaMix);
-                _etaD.SetInternal(v.EtaD); _cd.SetInternal(v.Cd);
+                _etaD.SetInternal(v.EtaD); _cd.SetInternal(v.Cd); _phiP.SetInternal(v.PhiP);
+                _mixing.SetInternal(v.Mixing);
             }
             return changed;
         }
@@ -476,11 +488,11 @@ namespace Ejector.CapeOpen
 
         private IEnumerable<RealParameter> PersistedReals() => new[]
         {
-            _rE, _rMix, _dT, _dE, _dMix, _etaM, _etaS, _etaMix, _etaD, _cd, _phi, _curvePoints,
+            _rE, _rMix, _dT, _dE, _dMix, _etaM, _etaS, _etaMix, _etaD, _cd, _phi, _phiP, _curvePoints,
             _pOut, _er, _lift, _pt, _pe, _py, _p3, _ue, _u3, _etaEj, _solid, _erCrit, _pbCrit, _mCap, _mMis, _xOut, _nFlash, _tCalc,
         };
 
-        private IEnumerable<OptionParameter> PersistedOptions() => new[] { _mode, _geometry, _preset, _motiveModel, _regime };
+        private IEnumerable<OptionParameter> PersistedOptions() => new[] { _mode, _geometry, _preset, _motiveModel, _mixing, _regime };
 
         public void Save(IStream pStm, bool fClearDirty)
         {

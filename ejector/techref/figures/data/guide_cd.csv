@@ -1,0 +1,305 @@
+set,fluid,group,P_bar,P_r,state,subcool_K,cd_req,phi_req
+Bodys2020,CO2,A,68.899,0.933933,subcooled liquid,2.21582,1.04357,0.912822
+Bodys2020,CO2,A,68.843,0.933174,subcooled liquid,1.9382,1.05206,0.90006
+Bodys2020,CO2,A,68.563,0.929378,subcooled liquid,1.6377,1.05752,0.893451
+Bodys2020,CO2,A,68.45,0.927846,subcooled liquid,1.62447,1.05337,0.900608
+Bodys2020,CO2,A,68.23,0.924864,subcooled liquid,1.55053,1.0592,0.891351
+Bodys2020,CO2,A,68.196,0.924403,subcooled liquid,1.61871,1.06059,0.888334
+Bodys2020,CO2,A,67.976,0.921421,subcooled liquid,1.31728,1.0691,0.877357
+Bodys2020,CO2,A,67.976,0.921421,subcooled liquid,1.45628,1.06237,0.886901
+Bodys2020,CO2,A,67.815,0.919239,subcooled liquid,1.40851,1.06509,0.882849
+Bodys2020,CO2,A,67.575,0.915986,subcooled liquid,6.96141,1.25388,0.437157
+Bodys2020,CO2,A,67.316,0.912475,subcooled liquid,2.01746,1.04744,0.907182
+Bodys2020,CO2,A,66.62,0.903041,subcooled liquid,4.13824,1.19833,0.631051
+Bodys2020,CO2,A,66.594,0.902688,subcooled liquid,1.47919,1.06169,0.887268
+Bodys2020,CO2,A,66.509,0.901536,subcooled liquid,4.03841,1.20228,0.629493
+Bodys2020,CO2,A,66.492,0.901306,subcooled liquid,1.51625,1.05751,0.893881
+Bodys2020,CO2,A,66.424,0.900384,subcooled liquid,1.23457,1.06009,0.89208
+Bodys2020,CO2,A,66.201,0.897361,subcooled liquid,1.30375,1.0611,0.889718
+Bodys2020,CO2,A,66.144,0.896588,subcooled liquid,1.21615,1.06256,0.888095
+Bodys2020,CO2,A,66.101,0.896006,subcooled liquid,1.16377,1.0701,0.876418
+Bodys2020,CO2,A,66.053,0.895355,subcooled liquid,2.00407,1.08386,0.844674
+Bodys2020,CO2,A,65.91,0.893416,subcooled liquid,1.16851,1.06569,0.883339
+Bodys2020,CO2,A,65.828,0.892305,subcooled liquid,1.2932,1.05847,0.894011
+Bodys2020,CO2,A,65.706,0.890651,subcooled liquid,1.67829,1.04679,0.910807
+Bodys2020,CO2,A,65.603,0.889255,subcooled liquid,1.89788,1.06384,0.879079
+Bodys2020,CO2,A,65.082,0.882193,subcooled liquid,1.37841,1.05538,0.898196
+Bodys2020,CO2,A,64.901,0.879739,subcooled liquid,1.26512,1.05104,0.906397
+Bodys2020,CO2,A,64.756,0.877774,subcooled liquid,1.21575,1.07398,0.86913
+Bodys2020,CO2,A,64.646,0.876283,subcooled liquid,1.82476,1.10439,0.814543
+Bodys2020,CO2,A,64.574,0.875307,subcooled liquid,1.96727,1.10016,0.818881
+Bodys2020,CO2,A,64.397,0.872908,subcooled liquid,0.792862,1.06753,0.883048
+Bodys2020,CO2,A,64.09,0.868746,subcooled liquid,1.73709,1.1154,0.799242
+Bodys2020,CO2,A,63.983,0.867296,subcooled liquid,1.44947,1.08516,0.848678
+Bodys2020,CO2,A,63.127,0.855693,subcooled liquid,1.36379,1.09825,0.829221
+Bodys2020,CO2,A,62.74,0.850447,subcooled liquid,0.986245,1.09804,0.833781
+Bodys2020,CO2,A,62.693,0.84981,subcooled liquid,1.08778,1.12544,0.793479
+Bodys2020,CO2,A,62.591,0.848427,subcooled liquid,0.647254,1.0466,0.917258
+Bodys2020,CO2,A,62.539,0.847722,subcooled liquid,1.00426,1.10473,0.823707
+Bodys2020,CO2,A,62.369,0.845418,subcooled liquid,1.44542,1.1392,0.769369
+Bodys2020,CO2,A,62.367,0.845391,subcooled liquid,2.50203,1.27636,0.59005
+Bodys2020,CO2,A,62.323,0.844794,subcooled liquid,1.83449,1.20276,0.682924
+Bodys2020,CO2,A,62.199,0.843114,subcooled liquid,2.47231,1.35011,0.524998
+Bodys2020,CO2,A,62.184,0.84291,subcooled liquid,2.37288,1.26872,0.600493
+Bodys2020,CO2,A,62.134,0.842232,subcooled liquid,1.80108,1.17415,0.717849
+Bodys2020,CO2,A,62.111,0.841921,subcooled liquid,2.45207,1.28093,0.58667
+Bodys2020,CO2,A,61.886,0.838871,subcooled liquid,2.35115,1.27256,0.597028
+Bodys2020,CO2,A,61.793,0.83761,subcooled liquid,2.97515,1.29366,0.561357
+Bodys2020,CO2,A,61.519,0.833896,subcooled liquid,1.10317,1.13276,0.782586
+Bodys2020,CO2,A,61.422,0.832581,subcooled liquid,2.17804,1.29871,0.575899
+Bodys2020,CO2,A,61.228,0.829952,near-saturated liquid,0.478503,1.04982,0.912506
+Bodys2020,CO2,A,60.965,0.826387,near-saturated liquid,0.183837,1.05018,0.913534
+Bodys2020,CO2,A,60.923,0.825817,near-saturated liquid,0.487126,1.04607,0.918546
+Bodys2020,CO2,A,60.63,0.821846,subcooled liquid,2.44138,1.33733,0.535349
+Bodys2020,CO2,A,60.474,0.819731,subcooled liquid,2.50044,1.35874,0.51632
+Bodys2020,CO2,A,60.401,0.818741,subcooled liquid,2.48545,1.35835,0.516954
+Bodys2020,CO2,A,60.361,0.818199,subcooled liquid,2.13293,1.37316,0.513474
+Bodys2020,CO2,A,60.232,0.816451,subcooled liquid,13.3859,1.20114,0.227684
+Bodys2020,CO2,A,59.876,0.811625,subcooled liquid,1.93198,1.39235,0.503102
+Bodys2020,CO2,A,59.785,0.810392,subcooled liquid,2.71862,1.41449,0.468883
+Bodys2020,CO2,A,59.296,0.803763,near-saturated liquid,0.387041,1.06166,0.893397
+Bodys2020,CO2,A,59.267,0.80337,subcooled liquid,3.02106,1.38524,0.48215
+Bodys2020,CO2,A,59.223,0.802774,subcooled liquid,1.4312,1.40606,0.503156
+Bodys2020,CO2,A,59.217,0.802692,near-saturated liquid,0.213858,1.04512,0.921093
+Bodys2020,CO2,A,59.215,0.802665,near-saturated liquid,0.32041,1.0562,0.902516
+Bodys2020,CO2,A,59.111,0.801255,subcooled liquid,2.56403,1.44803,0.449494
+Bodys2020,CO2,A,59.108,0.801215,subcooled liquid,2.82986,1.48413,0.420493
+Bodys2020,CO2,A,58.477,0.792661,subcooled liquid,10.8832,1.28529,0.239206
+Bodys2020,CO2,A,58.413,0.791794,subcooled liquid,10.8294,1.28748,0.239411
+Bodys2020,CO2,A,58.107,0.787646,subcooled liquid,1.78482,1.4461,0.467525
+Bodys2020,CO2,A,58.055,0.786941,subcooled liquid,2.37556,1.50932,0.415598
+Bodys2020,CO2,A,58.016,0.786413,subcooled liquid,11.2009,1.24511,0.250711
+Bodys2020,CO2,A,57.887,0.784664,subcooled liquid,4.99979,1.53228,0.332264
+Bodys2020,CO2,A,57.706,0.78221,subcooled liquid,10.5141,1.26897,0.256062
+Bodys2020,CO2,A,57.66,0.781587,subcooled liquid,2.26709,1.54793,0.396273
+Bodys2020,CO2,A,57.57,0.780367,subcooled liquid,2.20645,1.50811,0.419772
+Bodys2020,CO2,A,57.451,0.778754,subcooled liquid,2.11622,1.50407,0.424011
+Bodys2020,CO2,A,56.674,0.768222,subcooled liquid,9.34348,1.35008,0.248026
+Bodys2020,CO2,A,55.757,0.755792,subcooled liquid,1.90211,1.60895,0.372001
+Bodys2020,CO2,A,55.71,0.755154,subcooled liquid,6.16838,1.51675,0.293527
+Bodys2020,CO2,A,54.518,0.738997,subcooled liquid,1.83818,1.69814,0.33321
+Bodys2020,CO2,A,53.929,0.731013,subcooled liquid,11.1076,1.26514,0.233226
+Bodys2020,CO2,A,53.082,0.719532,subcooled liquid,5.4368,1.62615,0.272121
+Bodys2020,CO2,A,52.798,0.715682,subcooled liquid,1.68803,1.81919,0.290536
+Bodys2020,CO2,B,69.727,0.945156,subcooled liquid,3.47225,0.985053,nan
+Bodys2020,CO2,B,68.851,0.933282,subcooled liquid,2.85529,1.08646,0.828128
+Bodys2020,CO2,B,68.838,0.933106,subcooled liquid,3.95602,0.990113,nan
+Bodys2020,CO2,B,68.758,0.932021,subcooled liquid,2.83808,1.08188,0.836209
+Bodys2020,CO2,B,68.313,0.925989,subcooled liquid,1.57775,0.941106,nan
+Bodys2020,CO2,B,68.249,0.925122,subcooled liquid,3.43872,0.998764,nan
+Bodys2020,CO2,B,68.2,0.924458,subcooled liquid,1.45628,0.952735,nan
+Bodys2020,CO2,B,68.182,0.924214,subcooled liquid,1.50372,0.978103,nan
+Bodys2020,CO2,B,68.143,0.923685,subcooled liquid,1.32768,0.977823,nan
+Bodys2020,CO2,B,68.032,0.92218,subcooled liquid,1.54432,0.947348,nan
+Bodys2020,CO2,B,67.309,0.91238,subcooled liquid,1.89392,0.968371,nan
+Bodys2020,CO2,B,67.279,0.911973,subcooled liquid,1.07442,0.97465,nan
+Bodys2020,CO2,B,67.041,0.908747,subcooled liquid,3.7925,1.05402,0.871464
+Bodys2020,CO2,B,66.949,0.9075,subcooled liquid,1.94748,0.963706,nan
+Bodys2020,CO2,B,66.559,0.902214,subcooled liquid,2.31023,1.1255,0.776209
+Bodys2020,CO2,B,66.378,0.89976,subcooled liquid,1.22732,0.957816,nan
+Bodys2020,CO2,B,66.175,0.897009,subcooled liquid,3.36761,1.07908,0.830966
+Bodys2020,CO2,B,66.126,0.896344,subcooled liquid,5.08428,1.28541,0.502113
+Bodys2020,CO2,B,66.081,0.895734,subcooled liquid,3.04657,1.0807,0.834027
+Bodys2020,CO2,B,66.079,0.895707,subcooled liquid,1.22725,0.978764,nan
+Bodys2020,CO2,B,66.024,0.894962,subcooled liquid,1.09691,0.961098,nan
+Bodys2020,CO2,B,65.978,0.894338,subcooled liquid,1.1385,0.95555,nan
+Bodys2020,CO2,B,65.646,0.889838,subcooled liquid,4.29446,1.27306,0.543239
+Bodys2020,CO2,B,65.537,0.88836,subcooled liquid,2.52,1.18857,0.687275
+Bodys2020,CO2,B,65.465,0.887384,subcooled liquid,1.45908,0.969292,nan
+Bodys2020,CO2,B,65.43,0.88691,subcooled liquid,1.64577,0.966696,nan
+Bodys2020,CO2,B,65.21,0.883928,subcooled liquid,2.553,1.1576,0.726006
+Bodys2020,CO2,B,65.171,0.883399,subcooled liquid,2.42894,1.18465,0.693919
+Bodys2020,CO2,B,65.166,0.883331,subcooled liquid,2.63459,1.2006,0.669934
+Bodys2020,CO2,B,64.961,0.880553,subcooled liquid,1.27536,0.963311,nan
+Bodys2020,CO2,B,64.912,0.879889,subcooled liquid,1.3045,0.968283,nan
+Bodys2020,CO2,B,64.63,0.876066,subcooled liquid,1.15899,0.957726,nan
+Bodys2020,CO2,B,64.57,0.875253,subcooled liquid,2.31257,1.00982,0.97874
+Bodys2020,CO2,B,64.374,0.872596,subcooled liquid,0.937325,0.965655,nan
+Bodys2020,CO2,B,64.057,0.868299,subcooled liquid,2.9257,1.25809,0.598684
+Bodys2020,CO2,B,64.028,0.867906,subcooled liquid,2.88202,1.26809,0.589707
+Bodys2020,CO2,B,63.935,0.866645,subcooled liquid,3.06486,1.2666,0.586328
+Bodys2020,CO2,B,63.271,0.857645,subcooled liquid,1.01561,0.969685,nan
+Bodys2020,CO2,B,63.238,0.857197,subcooled liquid,0.959982,0.965823,nan
+Bodys2020,CO2,B,63.199,0.856669,subcooled liquid,1.09122,0.975549,nan
+Bodys2020,CO2,B,61.811,0.837854,subcooled liquid,0.923734,0.976616,nan
+Bodys2020,CO2,B,61.747,0.836987,subcooled liquid,0.892967,0.970304,nan
+Bodys2020,CO2,B,61.127,0.828582,subcooled liquid,0.64628,0.997502,nan
+Bodys2020,CO2,B,60.088,0.814499,subcooled liquid,0.931917,1.02277,0.956915
+Bodys2020,CO2,B,59.816,0.810812,subcooled liquid,1.7029,1.07731,0.85679
+Bodys2020,CO2,B,59.806,0.810676,subcooled liquid,0.682712,1.03363,0.93847
+Bodys2020,CO2,B,59.707,0.809334,subcooled liquid,0.84754,1.03967,0.927157
+Bodys2020,CO2,B,59.672,0.80886,subcooled liquid,1.65036,1.07544,0.860384
+Bodys2020,CO2,B,59.415,0.805376,subcooled liquid,1.49106,1.05964,0.888312
+Bodys2020,CO2,B,58.151,0.788242,subcooled liquid,1.58616,1.16118,0.735938
+Bodys2020,CO2,B,58.078,0.787253,subcooled liquid,1.65549,1.16643,0.728013
+Bodys2020,CO2,B,57.074,0.773644,subcooled liquid,0.711717,0.810036,nan
+Bodys2020,CO2,B,56.886,0.771095,near-saturated liquid,0.449286,1.07574,0.870171
+Bodys2020,CO2,B,55.893,0.757635,subcooled liquid,0.920361,1.32151,0.577732
+Bodys2020,CO2,B,55.709,0.755141,subcooled liquid,1.48662,1.41285,0.495207
+Bodys2020,CO2,B,55.236,0.748729,subcooled liquid,2.94071,1.6002,0.354023
+Bodys2020,CO2,B,54.329,0.736435,subcooled liquid,3.21779,1.65447,0.323061
+Bodys2020,CO2,B,54.302,0.736069,subcooled liquid,3.40984,1.64318,0.323387
+Bodys2020,CO2,B,53.254,0.721863,near-saturated liquid,0.0304755,1.10302,0.832349
+Bodys2020,CO2,B,51.724,0.701124,subcooled liquid,2.53942,1.72845,0.307139
+Bodys2020,CO2,B,51.624,0.699768,near-saturated liquid,0.0127765,1.18825,0.723257
+Bodys2020,CO2,B,51.285,0.695173,subcooled liquid,2.12949,1.73725,0.311638
+Bodys2020,CO2,B,50.985,0.691107,subcooled liquid,1.07759,1.6782,0.354243
+Bodys2020,CO2,B,50.898,0.689927,near-saturated liquid,0.0466478,1.28272,0.624817
+Bodys2020,CO2,B,48.218,0.6536,subcooled liquid,2.96537,1.7186,0.30123
+Bodys2020,CO2,B,47.818,0.648178,subcooled liquid,2.65511,1.76978,0.289112
+Bodys2020,CO2,B,47.496,0.643813,subcooled liquid,3.76881,1.71319,0.284074
+Bodys2020,CO2,B,47.384,0.642295,subcooled liquid,3.84438,1.70909,0.28358
+Giacomelli2019,CO2,supercritical,104.1,1.41109,supercritical,nan,1.12177,nan
+Giacomelli2019,CO2,supercritical,102.6,1.39075,supercritical,nan,1.12003,nan
+Giacomelli2019,CO2,supercritical,102.5,1.3894,supercritical,nan,1.04386,nan
+Giacomelli2019,CO2,supercritical,101.9,1.38126,supercritical,nan,1.13012,nan
+Giacomelli2019,CO2,supercritical,101.2,1.37178,supercritical,nan,1.12307,nan
+Giacomelli2019,CO2,supercritical,100.9,1.36771,supercritical,nan,1.12777,nan
+Giacomelli2019,CO2,supercritical,100.3,1.35958,supercritical,nan,1.12783,nan
+Giacomelli2019,CO2,supercritical,100.3,1.35958,supercritical,nan,1.12927,nan
+Giacomelli2019,CO2,supercritical,100.1,1.35687,supercritical,nan,1.12801,nan
+Giacomelli2019,CO2,supercritical,95.3,1.2918,supercritical,nan,1.12668,nan
+Giacomelli2019,CO2,supercritical,95.2,1.29045,supercritical,nan,1.12118,nan
+Giacomelli2019,CO2,supercritical,95,1.28773,supercritical,nan,1.12829,nan
+Giacomelli2019,CO2,supercritical,94.9,1.28638,supercritical,nan,1.12801,nan
+Giacomelli2019,CO2,supercritical,94.8,1.28502,supercritical,nan,1.12719,nan
+Giacomelli2019,CO2,supercritical,94.8,1.28502,supercritical,nan,1.12222,nan
+Giacomelli2019,CO2,supercritical,94.7,1.28367,supercritical,nan,1.123,nan
+Giacomelli2019,CO2,supercritical,94.7,1.28367,supercritical,nan,1.1235,nan
+Giacomelli2019,CO2,supercritical,94.7,1.28367,supercritical,nan,1.12988,nan
+Giacomelli2019,CO2,supercritical,94.7,1.28367,supercritical,nan,1.12988,nan
+Giacomelli2019,CO2,supercritical,94.5,1.28096,supercritical,nan,1.13028,nan
+Giacomelli2019,CO2,supercritical,93.5,1.2674,supercritical,nan,1.13068,nan
+Giacomelli2019,CO2,supercritical,92.8,1.25791,supercritical,nan,1.13657,nan
+Giacomelli2019,CO2,supercritical,92.7,1.25656,supercritical,nan,1.13429,nan
+Giacomelli2019,CO2,supercritical,92.7,1.25656,supercritical,nan,1.14658,nan
+Giacomelli2019,CO2,supercritical,87.6,1.18743,supercritical,nan,1.13044,nan
+Giacomelli2019,CO2,supercritical,87.2,1.182,supercritical,nan,1.12134,nan
+Giacomelli2019,CO2,supercritical,85.9,1.16438,supercritical,nan,1.13786,nan
+Giacomelli2019,CO2,subcritical,96.3,1.30536,subcritical (dense) liquid,nan,1.15363,nan
+Giacomelli2019,CO2,subcritical,95.3,1.2918,subcritical (dense) liquid,nan,1.15761,nan
+Giacomelli2019,CO2,subcritical,95.3,1.2918,subcritical (dense) liquid,nan,1.15799,nan
+Giacomelli2019,CO2,subcritical,95.1,1.28909,subcritical (dense) liquid,nan,1.15746,nan
+Giacomelli2019,CO2,subcritical,94.9,1.28638,subcritical (dense) liquid,nan,1.15696,nan
+Giacomelli2019,CO2,subcritical,84.2,1.14134,subcritical (dense) liquid,nan,1.1733,nan
+Giacomelli2019,CO2,subcritical,84.1,1.13998,subcritical (dense) liquid,nan,1.1798,nan
+Giacomelli2019,CO2,subcritical,84.1,1.13998,subcritical (dense) liquid,nan,1.17727,nan
+Giacomelli2019,CO2,subcritical,83.2,1.12778,subcritical (dense) liquid,nan,1.18886,nan
+Giacomelli2019,CO2,subcooled,73.6,0.997655,subcooled liquid,4.07642,1.20273,nan
+Giacomelli2019,CO2,subcooled,73.4,0.994944,subcooled liquid,4.0581,1.20229,nan
+Giacomelli2019,CO2,subcooled,72.9,0.988167,subcooled liquid,3.86006,1.19566,nan
+Giacomelli2019,CO2,subcooled,71.6,0.970545,subcooled liquid,0.272925,1.12935,nan
+Giacomelli2019,CO2,subcooled,70.9,0.961056,subcooled liquid,0.242455,1.14119,nan
+Giacomelli2019,CO2,subcooled,70.9,0.961056,subcooled liquid,0.342455,1.12971,nan
+Lawrence2012,R134a,R134a,11.428,0.281528,two-phase (flashed),nan,1.61995,nan
+Lawrence2012,R134a,R134a,11.375,0.280222,two-phase (flashed),nan,1.57112,nan
+Lawrence2012,R134a,R134a,11.23,0.27665,two-phase (flashed),nan,1.54665,nan
+Lawrence2012,R134a,R134a,11.004,0.271083,two-phase (flashed),nan,1.49942,nan
+Lawrence2012,R134a,R134a,10.765,0.265195,two-phase (flashed),nan,1.43441,nan
+Lawrence2012,R1234yf,R1234yf,11.313,0.334272,two-phase (flashed),nan,1.88351,nan
+Lawrence2012,R1234yf,R1234yf,11.2,0.330933,two-phase (flashed),nan,1.83591,nan
+Lawrence2012,R1234yf,R1234yf,11.182,0.330401,two-phase (flashed),nan,1.79506,nan
+Lawrence2012,R1234yf,R1234yf,11.189,0.330608,two-phase (flashed),nan,1.76372,nan
+Lawrence2012,R1234yf,R1234yf,11.19,0.330637,two-phase (flashed),nan,1.72976,nan
+Falat2018,R134a,series 1,21.9781,0.541429,superheated vapour,nan,0.982155,nan
+Falat2018,R134a,series 1,21.9231,0.540075,superheated vapour,nan,0.98222,nan
+Falat2018,R134a,series 1,22.0179,0.54241,superheated vapour,nan,0.981675,nan
+Falat2018,R134a,series 1,22.0193,0.542444,superheated vapour,nan,0.981861,nan
+Falat2018,R134a,series 1,21.9759,0.541375,superheated vapour,nan,0.982158,nan
+Falat2018,R134a,series 1,21.9088,0.539722,superheated vapour,nan,0.981768,nan
+Falat2018,R134a,series 1,21.9405,0.540503,superheated vapour,nan,0.982677,nan
+Falat2018,R134a,series 1,21.767,0.536229,superheated vapour,nan,0.982486,nan
+Falat2018,R134a,series 1,22.0405,0.542967,superheated vapour,nan,0.981045,nan
+Falat2018,R134a,series 1,21.9775,0.541415,superheated vapour,nan,0.981501,nan
+Falat2018,R134a,series 1,21.9808,0.541496,superheated vapour,nan,0.981358,nan
+Falat2018,R134a,series 1,21.9842,0.541579,superheated vapour,nan,0.981292,nan
+Falat2018,R134a,series 2,23.048,0.567785,superheated vapour,nan,0.982648,nan
+Falat2018,R134a,series 2,23.0195,0.567083,superheated vapour,nan,0.982334,nan
+Falat2018,R134a,series 2,22.9939,0.566453,superheated vapour,nan,0.981965,nan
+Falat2018,R134a,series 2,22.966,0.565765,superheated vapour,nan,0.981965,nan
+Falat2018,R134a,series 2,23.0037,0.566696,superheated vapour,nan,0.981979,nan
+Falat2018,R134a,series 2,23.0224,0.567156,superheated vapour,nan,0.98202,nan
+Falat2018,R134a,series 2,23.0232,0.567175,superheated vapour,nan,0.982116,nan
+Falat2018,R134a,series 2,23.0374,0.567526,superheated vapour,nan,0.981939,nan
+Falat2018,R134a,series 2,23.0237,0.567186,superheated vapour,nan,0.98195,nan
+Falat2018,R134a,series 2,23.0316,0.567383,superheated vapour,nan,0.981805,nan
+Falat2018,R134a,series 2,23.0359,0.567489,superheated vapour,nan,0.981654,nan
+Falat2018,R134a,series 2,23.0446,0.567702,superheated vapour,nan,0.981734,nan
+Falat2018,R134a,series 2,23.0205,0.567108,superheated vapour,nan,0.981532,nan
+Falat2018,R134a,series 2,23.0757,0.568468,superheated vapour,nan,0.981547,nan
+Falat2018,R134a,series 3,20.2877,0.499786,superheated vapour,nan,0.982003,nan
+Falat2018,R134a,series 3,20.2896,0.499832,superheated vapour,nan,0.982063,nan
+Falat2018,R134a,series 3,20.2877,0.499786,superheated vapour,nan,0.982176,nan
+Falat2018,R134a,series 3,20.2899,0.499839,superheated vapour,nan,0.982062,nan
+Falat2018,R134a,series 3,20.299,0.500065,superheated vapour,nan,0.982017,nan
+Falat2018,R134a,series 3,20.3154,0.500468,superheated vapour,nan,0.982043,nan
+Falat2018,R134a,series 3,20.328,0.500779,superheated vapour,nan,0.982244,nan
+Falat2018,R134a,series 3,20.3294,0.500813,superheated vapour,nan,0.982044,nan
+Falat2018,R134a,series 3,20.3374,0.501009,superheated vapour,nan,0.981829,nan
+Falat2018,R134a,series 3,20.3386,0.50104,superheated vapour,nan,0.982046,nan
+Falat2018,R134a,series 3,20.3274,0.500765,superheated vapour,nan,0.981976,nan
+Falat2018,R134a,series 3,20.3156,0.500473,superheated vapour,nan,0.982011,nan
+Falat2018,R134a,series 3,20.3147,0.500451,superheated vapour,nan,0.981817,nan
+Falat2018,R134a,series 3,20.3196,0.500572,superheated vapour,nan,0.981678,nan
+Falat2018,R134a,series 3,20.3207,0.500599,superheated vapour,nan,0.98198,nan
+Falat2018,R134a,series 3,20.313,0.500409,superheated vapour,nan,0.981605,nan
+Falat2018,R134a,series 3,20.3219,0.500628,superheated vapour,nan,0.981319,nan
+Falat2018,R134a,series 3,20.3251,0.500707,superheated vapour,nan,0.9817,nan
+Falat2018,R134a,series 4,28.5033,0.702176,superheated vapour,nan,0.982686,nan
+Falat2018,R134a,series 4,28.4926,0.701914,superheated vapour,nan,0.982733,nan
+Falat2018,R134a,series 4,28.4037,0.699724,superheated vapour,nan,0.98254,nan
+Falat2018,R134a,series 4,28.4814,0.701638,superheated vapour,nan,0.982638,nan
+Falat2018,R134a,series 4,28.4352,0.700499,superheated vapour,nan,0.982557,nan
+Falat2018,R134a,series 4,28.4601,0.701113,superheated vapour,nan,0.982771,nan
+Falat2018,R134a,series 4,28.4428,0.700687,superheated vapour,nan,0.982467,nan
+Falat2018,R134a,series 4,28.4699,0.701355,superheated vapour,nan,0.982636,nan
+Falat2018,R134a,series 4,28.3821,0.699191,superheated vapour,nan,0.982627,nan
+Falat2018,R134a,series 4,28.5144,0.70245,superheated vapour,nan,0.982578,nan
+Falat2018,R134a,series 4,28.3985,0.699594,superheated vapour,nan,0.982452,nan
+Falat2018,R134a,series 4,28.4128,0.699947,superheated vapour,nan,0.982482,nan
+Falat2018,R134a,series 4,28.3388,0.698124,superheated vapour,nan,0.982532,nan
+Falat2018,R134a,series 4,28.4278,0.700318,superheated vapour,nan,0.982632,nan
+Falat2018,R134a,series 4,28.4492,0.700844,superheated vapour,nan,0.982501,nan
+Falat2018,R134a,series 4,28.4265,0.700285,superheated vapour,nan,0.982482,nan
+Falat2018,R134a,series 4,28.4324,0.700431,superheated vapour,nan,0.982473,nan
+Falat2018,R134a,series 4,28.4683,0.701315,superheated vapour,nan,0.982223,nan
+Falat2018,R134a,series 4,28.4786,0.701569,superheated vapour,nan,0.982294,nan
+Falat2018,R134a,series 4,28.2673,0.696362,superheated vapour,nan,0.982391,nan
+Falat2018,R134a,series 4,28.4555,0.701,superheated vapour,nan,0.982233,nan
+Falat2018,R134a,series 4,28.4695,0.701343,superheated vapour,nan,0.982263,nan
+Falat2018,R134a,series 4,28.2935,0.697007,superheated vapour,nan,0.982336,nan
+Falat2018,R134a,series 4,28.4646,0.701224,superheated vapour,nan,0.982513,nan
+Falat2018,R134a,series 4,28.2925,0.696985,superheated vapour,nan,0.982349,nan
+Falat2018,R134a,series 4,28.4481,0.700816,superheated vapour,nan,0.98237,nan
+Falat2018,R134a,series 4,28.2766,0.696591,superheated vapour,nan,0.982433,nan
+Falat2018,R134a,series 4,28.4359,0.700516,superheated vapour,nan,0.982253,nan
+Falat2018,R134a,series 4,28.239,0.695666,superheated vapour,nan,0.982371,nan
+Falat2018,R134a,series 4,28.4614,0.701145,superheated vapour,nan,0.982158,nan
+Falat2018,R134a,series 4,28.2245,0.695307,superheated vapour,nan,0.982306,nan
+Falat2018,R134a,series 4,28.4382,0.700573,superheated vapour,nan,0.982184,nan
+Falat2018,R134a,series 4,28.1947,0.694575,superheated vapour,nan,0.982307,nan
+Falat2018,R134a,series 4,28.4299,0.700368,superheated vapour,nan,0.982216,nan
+Falat2018,R134a,series 4,28.2811,0.696703,superheated vapour,nan,0.98219,nan
+Falat2018,R134a,series 4,28.4384,0.700579,superheated vapour,nan,0.982211,nan
+Falat2018,R134a,series 4,28.2633,0.696264,superheated vapour,nan,0.982245,nan
+Falat2018,R134a,series 4,28.4599,0.701108,superheated vapour,nan,0.982198,nan
+Falat2018,R134a,series 4,28.2504,0.695947,superheated vapour,nan,0.98221,nan
+Falat2018,R134a,series 4,28.4608,0.70113,superheated vapour,nan,0.982074,nan
+Falat2018,R134a,series 4,28.228,0.695396,superheated vapour,nan,0.982009,nan
+Falat2018,R134a,series 4,28.4827,0.701669,superheated vapour,nan,0.98215,nan
+Falat2018,R134a,series 4,28.2438,0.695785,superheated vapour,nan,0.981939,nan
+Falat2018,R134a,series 5,26.308,0.648097,superheated vapour,nan,0.982201,nan
+Falat2018,R134a,series 5,26.3279,0.648587,superheated vapour,nan,0.982269,nan
+Falat2018,R134a,series 5,26.3654,0.649509,superheated vapour,nan,0.982256,nan
+Falat2018,R134a,series 5,26.3379,0.648832,superheated vapour,nan,0.982195,nan
+Falat2018,R134a,series 5,26.3532,0.649208,superheated vapour,nan,0.982135,nan
+Falat2018,R134a,series 5,26.3247,0.648507,superheated vapour,nan,0.982235,nan
+Falat2018,R134a,series 5,26.3288,0.648609,superheated vapour,nan,0.982163,nan
+Falat2018,R134a,series 5,26.3103,0.648153,superheated vapour,nan,0.982116,nan
+Falat2018,R134a,series 5,26.293,0.647727,superheated vapour,nan,0.982142,nan
+Falat2018,R134a,series 5,26.3019,0.647946,superheated vapour,nan,0.981971,nan
+Falat2018,R134a,series 5,26.316,0.648293,superheated vapour,nan,0.981978,nan
+Falat2018,R134a,series 5,26.3214,0.648426,superheated vapour,nan,0.982006,nan
+Falat2018,R134a,series 5,26.2988,0.64787,superheated vapour,nan,0.982098,nan
+Falat2018,R134a,series 5,26.2946,0.647765,superheated vapour,nan,0.981955,nan
+Falat2018,R134a,series 5,26.2977,0.647842,superheated vapour,nan,0.981673,nan

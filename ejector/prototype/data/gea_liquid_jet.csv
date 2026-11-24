@@ -1,0 +1,281 @@
+# Source: GEA product catalogue "Ejectors, jet pumps, mixers, heaters, compressors", BTC0011-EN,
+# 08/01/2018 (docs/ejector/ejectors-jet-pumps-heaters-mixer-vacuum-gea.pdf; each PDF page is a 2-page spread).
+# Chart: printed p.8 (LEFT half of PDF p.5; spread pp.8-9), Figure 1, liquid jet vacuum pump (water motive),
+# nomogram: mass suction flow of air M0 vs suction pressure p0 for 4 pump sizes and motive water pressures p1.
+# Method: PDF page rendered at 600 dpi with PyMuPDF. The chart is an embedded raster of ~96 dpi, so one
+# source pixel = ~6.2 render px. Curves traced as dark-line centrelines (perpendicular cross-sections,
+# darkness-weighted centroid); cross-sections widened by labels, dashed construction lines or merging curves
+# were rejected, not guessed. Axes calibrated piecewise (linear, or linear in log10) through ALL labelled
+# gridlines; gridline centres located to sub-pixel precision. Review image with the points overlaid:
+# review_gea_liquid_jet_fig1.png (made at digitisation, not kept in the repository; re-plot from these rows to check)
+# How the nomogram is read (and how these numbers were made): the right panel has p0 on a LOG x axis (calibrated
+#   on labelled gridlines 20,30,40,50,60,70,80,100,200,300,400,500,600; unlabelled 90 and 150 read back as
+#   90.4 and 149.9) and an UNLABELLED common ordinate y. Each p1 line is a straight line
+#   y = a + b·log10(p0) (fit rms 1.1-1.5 px, slope b ~ -1170 px/decade for all five). Go up from p0 to the p1 line, then
+#   horizontally left to the vertical line of the pump size (x = 190.5 / 500.0 / 737.5 / 912.0 px for sizes
+#   3/2/1/0). The left panel has parallel straight iso-M0 diagonals (slope 0.8965, fit rms 0.64 px). Their
+#   intercept is linear in log10(M0) (1042 px per decade, residual <= 4 px on the 12 labelled diagonals 4,3,2,1.5,1,
+#   0.6,0.5,0.4,0.3,0.2,0.15,0.1 kg/h). The diagonal through the point (size line, y) gives M0. So the size line
+#   only shifts log10(M0) by a constant: at fixed p0 and p1, M0 for sizes 3/1/0 is about
+#   1.85 / 0.62 / 0.44 times that for size 2. Rows give M0 read this way.
+# Label anomaly: an inline label "0,8" is printed on the diagonal whose spacing gives M0 = 0.90. The next
+#   two diagonals (unlabelled) give 0.80 and 0.69. These three were NOT used for calibration.
+# Rows are limited to (a) the drawn extent of each p1 line and (b) the M0 range bracketed by diagonals that
+#   cross that size line inside the frame: size 3 0.2-3.981, size 2 0.151-3.001, size 1 0.1-1.5, size 0 0.1-1.003 kg/h.
+# Curve labels: "P1= 6 bar (H)", "5 bar (H)", "4 bar (H)", "3 bar (H)", "2 bar (N)", "P1= 1,5 bar (N)". The
+#   "3 bar (H)" and "2 bar (N)" labels sit on the same line, so one curve is labelled "p1=3 bar g (H) / 2 bar g (N)".
+# Conditions quoted verbatim (overdot of Ṁ and sub/superscripts flattened: M0 = Ṁ0) from the spread (p.8): "Diagram fig. 1 gives the mass suction flow in kg/h of air in relation
+#   to the suction pressure at various operating water pressures for 4 pump sizes. The curves are based on an
+#   operating water temperature of 20 °C." Axis: "Suction pressure p0 in mbar abs. (for water at 20 °C)";
+#   "Mass suction flow M0 in kg/h (air)"; "N = Low pressure construction (1.5–2 bar)"; "H = High pressure
+#   construction (3–6 bar)"; "Pressure indications in bar = bar g". Design example: "0.35 kg/h of air has to be
+#   continuously exhausted out of a plant. The suction pressure amounts to 100 mbar abs. A motive water pressure
+#   of 5 bar g is available. The motive water has a temperature of 20 °C." ... "for a suction pressure of
+#   100 mbar and a motive water pressure of 5 bar g, pump size 2 with a mass suction flow of 0.38 kg/h is closest
+#   to the required suction volume."
+# Worked-example check: 100 mbar, 5 bar g, size 2 -> 0.378 kg/h vs stated 0.38 (-0.5 %); along the chart's own
+#   dashed construction line -> 0.382 kg/h.
+# Reading uncertainty: 1 source pixel in y = 1.4 % in M0; estimated +/-3 % in M0.
+# Sampling: p0 = 20,25,30,35,40,45,50,60,70,80,90,100,120,150,200,250,300,400,500,600 mbar where valid.
+curve_label,p0_mbar_abs,M0_kg_per_h_air
+size 0 p1=6 bar g (H),60,0.1159
+size 0 p1=6 bar g (H),70,0.1378
+size 0 p1=6 bar g (H),80,0.1601
+size 0 p1=6 bar g (H),90,0.1828
+size 0 p1=6 bar g (H),100,0.2058
+size 0 p1=6 bar g (H),120,0.2526
+size 0 p1=6 bar g (H),150,0.3246
+size 0 p1=6 bar g (H),200,0.4485
+size 0 p1=6 bar g (H),250,0.5764
+size 0 p1=6 bar g (H),300,0.7074
+size 0 p1=6 bar g (H),400,0.9775
+size 0 p1=5 bar g (H),70,0.112
+size 0 p1=5 bar g (H),80,0.1301
+size 0 p1=5 bar g (H),90,0.1485
+size 0 p1=5 bar g (H),100,0.1672
+size 0 p1=5 bar g (H),120,0.2052
+size 0 p1=5 bar g (H),150,0.2636
+size 0 p1=5 bar g (H),200,0.3642
+size 0 p1=5 bar g (H),250,0.4679
+size 0 p1=5 bar g (H),300,0.5742
+size 0 p1=5 bar g (H),400,0.7932
+size 0 p1=4 bar g (H),80,0.1028
+size 0 p1=4 bar g (H),90,0.1173
+size 0 p1=4 bar g (H),100,0.132
+size 0 p1=4 bar g (H),120,0.162
+size 0 p1=4 bar g (H),150,0.2081
+size 0 p1=4 bar g (H),200,0.2875
+size 0 p1=4 bar g (H),250,0.3694
+size 0 p1=4 bar g (H),300,0.4533
+size 0 p1=4 bar g (H),400,0.6261
+size 0 p1=4 bar g (H),500,0.8044
+size 0 p1=4 bar g (H),600,0.9872
+size 0 p1=3 bar g (H) / 2 bar g (N),100,0.1022
+size 0 p1=3 bar g (H) / 2 bar g (N),120,0.1255
+size 0 p1=3 bar g (H) / 2 bar g (N),150,0.1613
+size 0 p1=3 bar g (H) / 2 bar g (N),200,0.223
+size 0 p1=3 bar g (H) / 2 bar g (N),250,0.2866
+size 0 p1=3 bar g (H) / 2 bar g (N),300,0.3518
+size 0 p1=3 bar g (H) / 2 bar g (N),400,0.4862
+size 0 p1=3 bar g (H) / 2 bar g (N),500,0.6249
+size 0 p1=3 bar g (H) / 2 bar g (N),600,0.7671
+size 0 p1=1.5 bar g (N),150,0.1125
+size 0 p1=1.5 bar g (N),200,0.1554
+size 0 p1=1.5 bar g (N),250,0.1995
+size 0 p1=1.5 bar g (N),300,0.2448
+size 0 p1=1.5 bar g (N),400,0.3379
+size 0 p1=1.5 bar g (N),500,0.434
+size 0 p1=1.5 bar g (N),600,0.5324
+size 1 p1=6 bar g (H),40,0.1038
+size 1 p1=6 bar g (H),45,0.1185
+size 1 p1=6 bar g (H),50,0.1334
+size 1 p1=6 bar g (H),60,0.1638
+size 1 p1=6 bar g (H),70,0.1948
+size 1 p1=6 bar g (H),80,0.2263
+size 1 p1=6 bar g (H),90,0.2583
+size 1 p1=6 bar g (H),100,0.2908
+size 1 p1=6 bar g (H),120,0.3569
+size 1 p1=6 bar g (H),150,0.4587
+size 1 p1=6 bar g (H),200,0.6338
+size 1 p1=6 bar g (H),250,0.8145
+size 1 p1=6 bar g (H),300,0.9997
+size 1 p1=6 bar g (H),400,1.381
+size 1 p1=5 bar g (H),50,0.1085
+size 1 p1=5 bar g (H),60,0.1331
+size 1 p1=5 bar g (H),70,0.1583
+size 1 p1=5 bar g (H),80,0.1839
+size 1 p1=5 bar g (H),90,0.2099
+size 1 p1=5 bar g (H),100,0.2362
+size 1 p1=5 bar g (H),120,0.2899
+size 1 p1=5 bar g (H),150,0.3725
+size 1 p1=5 bar g (H),200,0.5146
+size 1 p1=5 bar g (H),250,0.6612
+size 1 p1=5 bar g (H),300,0.8114
+size 1 p1=5 bar g (H),400,1.121
+size 1 p1=5 bar g (H),500,1.44
+size 1 p1=4 bar g (H),60,0.1051
+size 1 p1=4 bar g (H),70,0.125
+size 1 p1=4 bar g (H),80,0.1452
+size 1 p1=4 bar g (H),90,0.1657
+size 1 p1=4 bar g (H),100,0.1865
+size 1 p1=4 bar g (H),120,0.2289
+size 1 p1=4 bar g (H),150,0.2941
+size 1 p1=4 bar g (H),200,0.4063
+size 1 p1=4 bar g (H),250,0.522
+size 1 p1=4 bar g (H),300,0.6405
+size 1 p1=4 bar g (H),400,0.8848
+size 1 p1=4 bar g (H),500,1.137
+size 1 p1=4 bar g (H),600,1.395
+size 1 p1=3 bar g (H) / 2 bar g (N),80,0.1124
+size 1 p1=3 bar g (H) / 2 bar g (N),90,0.1283
+size 1 p1=3 bar g (H) / 2 bar g (N),100,0.1445
+size 1 p1=3 bar g (H) / 2 bar g (N),120,0.1774
+size 1 p1=3 bar g (H) / 2 bar g (N),150,0.228
+size 1 p1=3 bar g (H) / 2 bar g (N),200,0.3151
+size 1 p1=3 bar g (H) / 2 bar g (N),250,0.405
+size 1 p1=3 bar g (H) / 2 bar g (N),300,0.4971
+size 1 p1=3 bar g (H) / 2 bar g (N),400,0.687
+size 1 p1=3 bar g (H) / 2 bar g (N),500,0.883
+size 1 p1=3 bar g (H) / 2 bar g (N),600,1.084
+size 1 p1=1.5 bar g (N),100,0.1009
+size 1 p1=1.5 bar g (N),120,0.1238
+size 1 p1=1.5 bar g (N),150,0.159
+size 1 p1=1.5 bar g (N),200,0.2196
+size 1 p1=1.5 bar g (N),250,0.282
+size 1 p1=1.5 bar g (N),300,0.3459
+size 1 p1=1.5 bar g (N),400,0.4775
+size 1 p1=1.5 bar g (N),500,0.6133
+size 1 p1=1.5 bar g (N),600,0.7523
+size 2 p1=6 bar g (H),40,0.1662
+size 2 p1=6 bar g (H),45,0.1898
+size 2 p1=6 bar g (H),50,0.2136
+size 2 p1=6 bar g (H),60,0.2622
+size 2 p1=6 bar g (H),70,0.3118
+size 2 p1=6 bar g (H),80,0.3623
+size 2 p1=6 bar g (H),90,0.4136
+size 2 p1=6 bar g (H),100,0.4656
+size 2 p1=6 bar g (H),120,0.5715
+size 2 p1=6 bar g (H),150,0.7344
+size 2 p1=6 bar g (H),200,1.015
+size 2 p1=6 bar g (H),250,1.304
+size 2 p1=6 bar g (H),300,1.601
+size 2 p1=6 bar g (H),400,2.212
+size 2 p1=6 bar g (H),500,2.842
+size 2 p1=5 bar g (H),45,0.1543
+size 2 p1=5 bar g (H),50,0.1736
+size 2 p1=5 bar g (H),60,0.2131
+size 2 p1=5 bar g (H),70,0.2534
+size 2 p1=5 bar g (H),80,0.2944
+size 2 p1=5 bar g (H),90,0.336
+size 2 p1=5 bar g (H),100,0.3782
+size 2 p1=5 bar g (H),120,0.4642
+size 2 p1=5 bar g (H),150,0.5964
+size 2 p1=5 bar g (H),200,0.8239
+size 2 p1=5 bar g (H),250,1.059
+size 2 p1=5 bar g (H),300,1.299
+size 2 p1=5 bar g (H),400,1.795
+size 2 p1=5 bar g (H),500,2.306
+size 2 p1=5 bar g (H),600,2.83
+size 2 p1=4 bar g (H),60,0.1683
+size 2 p1=4 bar g (H),70,0.2001
+size 2 p1=4 bar g (H),80,0.2325
+size 2 p1=4 bar g (H),90,0.2653
+size 2 p1=4 bar g (H),100,0.2987
+size 2 p1=4 bar g (H),120,0.3665
+size 2 p1=4 bar g (H),150,0.4709
+size 2 p1=4 bar g (H),200,0.6505
+size 2 p1=4 bar g (H),250,0.8357
+size 2 p1=4 bar g (H),300,1.026
+size 2 p1=4 bar g (H),400,1.417
+size 2 p1=4 bar g (H),500,1.82
+size 2 p1=4 bar g (H),600,2.233
+size 2 p1=3 bar g (H) / 2 bar g (N),70,0.1549
+size 2 p1=3 bar g (H) / 2 bar g (N),80,0.18
+size 2 p1=3 bar g (H) / 2 bar g (N),90,0.2055
+size 2 p1=3 bar g (H) / 2 bar g (N),100,0.2313
+size 2 p1=3 bar g (H) / 2 bar g (N),120,0.284
+size 2 p1=3 bar g (H) / 2 bar g (N),150,0.365
+size 2 p1=3 bar g (H) / 2 bar g (N),200,0.5044
+size 2 p1=3 bar g (H) / 2 bar g (N),250,0.6483
+size 2 p1=3 bar g (H) / 2 bar g (N),300,0.7959
+size 2 p1=3 bar g (H) / 2 bar g (N),400,1.1
+size 2 p1=3 bar g (H) / 2 bar g (N),500,1.414
+size 2 p1=3 bar g (H) / 2 bar g (N),600,1.736
+size 2 p1=1.5 bar g (N),100,0.1616
+size 2 p1=1.5 bar g (N),120,0.1983
+size 2 p1=1.5 bar g (N),150,0.2546
+size 2 p1=1.5 bar g (N),200,0.3515
+size 2 p1=1.5 bar g (N),250,0.4514
+size 2 p1=1.5 bar g (N),300,0.5538
+size 2 p1=1.5 bar g (N),400,0.7646
+size 2 p1=1.5 bar g (N),500,0.9819
+size 2 p1=1.5 bar g (N),600,1.205
+size 3 p1=6 bar g (H),30,0.2221
+size 3 p1=6 bar g (H),35,0.2642
+size 3 p1=6 bar g (H),40,0.307
+size 3 p1=6 bar g (H),45,0.3504
+size 3 p1=6 bar g (H),50,0.3945
+size 3 p1=6 bar g (H),60,0.4842
+size 3 p1=6 bar g (H),70,0.5758
+size 3 p1=6 bar g (H),80,0.669
+size 3 p1=6 bar g (H),90,0.7637
+size 3 p1=6 bar g (H),100,0.8597
+size 3 p1=6 bar g (H),120,1.055
+size 3 p1=6 bar g (H),150,1.356
+size 3 p1=6 bar g (H),200,1.874
+size 3 p1=6 bar g (H),250,2.408
+size 3 p1=6 bar g (H),300,2.956
+size 3 p1=5 bar g (H),35,0.2148
+size 3 p1=5 bar g (H),40,0.2496
+size 3 p1=5 bar g (H),45,0.2848
+size 3 p1=5 bar g (H),50,0.3206
+size 3 p1=5 bar g (H),60,0.3935
+size 3 p1=5 bar g (H),70,0.4679
+size 3 p1=5 bar g (H),80,0.5436
+size 3 p1=5 bar g (H),90,0.6205
+size 3 p1=5 bar g (H),100,0.6984
+size 3 p1=5 bar g (H),120,0.8571
+size 3 p1=5 bar g (H),150,1.101
+size 3 p1=5 bar g (H),200,1.521
+size 3 p1=5 bar g (H),250,1.955
+size 3 p1=5 bar g (H),300,2.399
+size 3 p1=5 bar g (H),400,3.314
+size 3 p1=4 bar g (H),45,0.225
+size 3 p1=4 bar g (H),50,0.2532
+size 3 p1=4 bar g (H),60,0.3108
+size 3 p1=4 bar g (H),70,0.3695
+size 3 p1=4 bar g (H),80,0.4293
+size 3 p1=4 bar g (H),90,0.49
+size 3 p1=4 bar g (H),100,0.5515
+size 3 p1=4 bar g (H),120,0.6768
+size 3 p1=4 bar g (H),150,0.8695
+size 3 p1=4 bar g (H),200,1.201
+size 3 p1=4 bar g (H),250,1.543
+size 3 p1=4 bar g (H),300,1.894
+size 3 p1=4 bar g (H),400,2.616
+size 3 p1=4 bar g (H),500,3.361
+size 3 p1=3 bar g (H) / 2 bar g (N),60,0.2405
+size 3 p1=3 bar g (H) / 2 bar g (N),70,0.286
+size 3 p1=3 bar g (H) / 2 bar g (N),80,0.3324
+size 3 p1=3 bar g (H) / 2 bar g (N),90,0.3794
+size 3 p1=3 bar g (H) / 2 bar g (N),100,0.4272
+size 3 p1=3 bar g (H) / 2 bar g (N),120,0.5244
+size 3 p1=3 bar g (H) / 2 bar g (N),150,0.674
+size 3 p1=3 bar g (H) / 2 bar g (N),200,0.9315
+size 3 p1=3 bar g (H) / 2 bar g (N),250,1.197
+size 3 p1=3 bar g (H) / 2 bar g (N),300,1.47
+size 3 p1=3 bar g (H) / 2 bar g (N),400,2.031
+size 3 p1=3 bar g (H) / 2 bar g (N),500,2.611
+size 3 p1=3 bar g (H) / 2 bar g (N),600,3.205
+size 3 p1=1.5 bar g (N),70,0.2001
+size 3 p1=1.5 bar g (N),80,0.2324
+size 3 p1=1.5 bar g (N),90,0.2652
+size 3 p1=1.5 bar g (N),100,0.2984
+size 3 p1=1.5 bar g (N),120,0.3661
+size 3 p1=1.5 bar g (N),150,0.4702
+size 3 p1=1.5 bar g (N),200,0.6491
+size 3 p1=1.5 bar g (N),250,0.8336
+size 3 p1=1.5 bar g (N),300,1.023
+size 3 p1=1.5 bar g (N),400,1.412
+size 3 p1=1.5 bar g (N),500,1.813
+size 3 p1=1.5 bar g (N),600,2.224

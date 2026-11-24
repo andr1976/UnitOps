@@ -24,7 +24,7 @@ model result is hand-entered.
 Automated test suite
 ====================
 
-25 tests run with ``python -m pytest`` in ``ejector/prototype``:
+32 tests run with ``python -m pytest`` in ``ejector/prototype``:
 
 .. list-table::
    :header-rows: 1
@@ -84,6 +84,12 @@ Automated test suite
    * - triple-point floor
      - 1
      - a design whose suction expansion reaches the triple point raises ``SolidPhaseRisk``
+   * - constant-pressure mixing
+     - 6
+     - the option is validated; rating the CPM-designed geometry returns the design point (:math:`\varphi_\mathrm{p}` = 1 and 0.88); CPM gives more lift than CAM at equal efficiencies; the critical point is the entrainment maximum, above the suction choke; five Huang ejectors with Huang's coefficients within 12 % in ER* (:ref:`sec-mixing-cpm`)
+   * - water/air properties
+     - 1
+     - enthalpy, entropy and density differences against CoolProp's humid-air routines within 0.02 %; condensing flash round trips; pure components delegated (:ref:`sec-guide-gea`)
 
 .. _sec-val-fluids:
 
@@ -190,6 +196,12 @@ any fitting. Entrainment is over-predicted by 11 %. Lowering
 :math:`P_\mathrm{b}^*`. Both targets come from the same operating points, so
 this tension points to the model structure (the suction choke in the annulus)
 rather than to an operating-point dependence of the efficiencies.
+
+The data, transcribed from Ma *et al.*, agree with Huang's original Tables 3–4
+in ejector, pressures and critical condensing temperature, and to Ma's three
+decimals in ER. Constant-pressure mixing, which is Huang's own model form, is
+compared on the same points in :ref:`parameter_guide`. Fitted there, it
+reproduces the critical ER to 3.8 %.
 
 .. _sec-val-goncalves:
 
@@ -474,7 +486,7 @@ of the SciPy routines the Python code uses, so both implementations take the
 same steps. Three test layers check the port.
 
 **C# against Python on identical thermodynamics.** The C# tests call the same
-CoolProp build (8.0.1) through its C interface. Twenty-two reference cases are
+CoolProp build (8.0.1) through its C interface. Thirty-one reference cases are
 exported from the Python model (``ejector/prototype/export_regression.py``):
 
 * rating of the Giacomelli ejector in the critical, subcritical and backflow
@@ -490,9 +502,13 @@ exported from the Python model (``ejector/prototype/export_regression.py``):
   its inverse rating; a small-ER design and a design for lift beyond the
   maximum; and three cases that must fail (an outlet pressure inside a
   characteristic step, an exit area below :math:`C_d`, a solution on the
-  triple-point floor), where the C# engine must raise the same error.
+  triple-point floor), where the C# engine must raise the same error;
+* constant-pressure mixing: Huang's ejector with Huang's coefficients in the
+  critical and subcritical regimes, the nitrogen nozzle in all three ranges, a
+  design, its inverse rating with an operating curve, and a design for lift on
+  the worked example.
 
-All 411 compared quantities agree with **zero difference**. They cover
+All 598 compared quantities agree with **zero difference**. They cover
 pressures, flows, areas, velocities, outlet enthalpy, ER, ejector efficiency,
 critical ER and back pressure, and every operating-curve point.
 
@@ -510,8 +526,8 @@ for lift.
 (CoolProp or ideal gas) and reports phases and molar properties as a PME
 would. Through it, the unit reproduces the engine run directly on CoolProp:
 
-* **Duty design.** The worked-example design with saturated inlets reaches
-  21.17813 bar, the Python value. The unit's inlets are TP-flashed at
+* **Duty design.** The worked-example design with saturated inlets, Screening
+  efficiencies and constant-area mixing, reaches 21.17813 bar, the Python value. The unit's inlets are TP-flashed at
   saturation and corrected to the saturated end points.
 * **Fixed size.** The fixed-size rating of Giacomelli case 1 at the flows of a
   forward rating at 44 bar returns 44 bar. With a 10 % higher port motive flow

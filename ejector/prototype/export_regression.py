@@ -105,6 +105,30 @@ def main():
     cases.append(dict(name="co2_triple_point_floor", op="design", eff=TYP, motive=inlet("PQ", "CO2", 47e5, 0.0),
                       suction=inlet("PQ", "CO2", 5.3e5, 1.0), m_m=1.0, ER=0.2))
 
+    # constant-pressure mixing (CPM): Huang's coefficients on Huang's geometry (critical and
+    # subcritical), C-D nozzle regimes (core carried along the motive path), design, inverse
+    # rating with curve, design for lift on the duty
+    cpm_h = dict(eta_m=1.0, Cd_m=math.sqrt(0.95), eta_s=0.85, eta_mix=0.82, eta_d=1.0, mixing="CPM",
+                 phi_p=0.88)
+    for Po in (Ps * 1e5, 0.95e5, 1.05e5):
+        cases.append(dict(name=f"cpm_huang_rate_{Po/1e5:.2f}bar", op="rate", eff=cpm_h,
+                          motive=inlet("PQ", "R141b", Pp * 1e5, 1.0),
+                          suction=inlet("PQ", "R141b", Ps * 1e5, 1.0),
+                          A_t=area(Dt * 1e-3), A_e=area(De * 1e-3), A_mix=area(D3 * 1e-3), P_out=Po))
+    cpm_n2 = dict(n2eff, mixing="CPM")
+    for Po in (5.9e5, 6.4e5, 6.6e5):
+        cases.append(dict(name=f"cpm_n2_cd_rate_{Po/1e5:.1f}bar", op="rate", eff=cpm_n2, motive=n2m,
+                          suction=n2s, A_t=At, A_e=1.5 * At, A_mix=6.0 * At, P_out=Po))
+    n2lo_m, n2lo_s = inlet("PT", "Nitrogen", 6e5, 300.0), inlet("PT", "Nitrogen", 1e5, 300.0)
+    cpm_g = dict(eta_m=0.95, eta_s=0.85, eta_mix=0.95, eta_d=0.85, mixing="CPM", phi_p=0.88)
+    cases.append(dict(name="cpm_n2_design", op="design", eff=cpm_g, motive=n2lo_m, suction=n2lo_s,
+                      m_m=1.0, ER=0.5))
+    cases.append(dict(name="cpm_n2_rate_flows", op="rate_flows", eff=cpm_g, motive=n2lo_m, suction=n2lo_s,
+                      m_m=1.0, m_s=0.3, r_e=None, r_mix=None, from_design="cpm_n2_design", A_t=None,
+                      n_curve=10))
+    cases.append(dict(name="cpm_duty_84bar_design_for_lift", op="design_for_lift",
+                      eff=dict(CAL, mixing="CPM"), motive=m84, suction=s15, m_m=13.66, P_out=25e5))
+
     done = {}
     for cs in cases:
         fluid = cs["motive"]["fluid"]
@@ -119,6 +143,9 @@ def main():
                 if cs.get("from_case"):
                     ref = done[cs["from_case"]]
                     cs["m_m"], cs["m_s"] = ref["m_m"], ref["m_s"]
+                if cs.get("from_design"):                 # shape of a designed geometry
+                    ref = done[cs["from_design"]]
+                    cs["r_e"], cs["r_mix"] = ref["A_e"] / ref["A_t"], ref["A_mix"] / ref["A_t"]
                 r = ej.rate_flows(m0, s0, cs["m_m"], cs["m_s"], cs["r_e"], cs["r_mix"], A_t=cs["A_t"],
                                   n_curve=cs["n_curve"])
             elif cs["op"] == "design":

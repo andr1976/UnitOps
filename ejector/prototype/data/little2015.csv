@@ -1,0 +1,106 @@
+# Little A.B., "An understanding of ejector flow phenomena for waste heat driven cooling", PhD thesis,
+# Georgia Institute of Technology, 2015. File docs/ejector/little2015_phd_thesis_gatech.pdf.
+# Source: Table 5.1 (R134a, 11 rows, printed p.129) and Table 5.2 (R245fa, 8 rows, p.130) [PDF page index =
+# printed + 18]; operating set-points from text pp.126-127; geometry Fig. 5.2 (p.127); Appendix C
+# (pp.179-185: Eqs. C.4-C.7, Table C.2). Printed values, no unit conversion.
+# Experiment (p.126): "the heat input to the boiler was changed to vary the superheat at the motive nozzle
+# inlet while maintaining all other parameters constant". Two circular ejectors (one per fluid), aluminium,
+# "fabricated in four separate parts".
+#
+# TABLE COLUMNS (headers as printed): superheat_label [K or "sat..."] = "Superheat [K]" column verbatim;
+# superheat_K = same where numeric (= Tm_inlet - Tsat_boiler to 0.1 K in all numeric rows);
+# x_motive_printed [-] = quality printed in the label of saturated rows; P_boiler_kPa = "Pboiler [kPa]
+# (+/-6 kPa)"; Tsat_boiler_C = "Tsat,boiler [C] (+/-0.25 C)" (Table C.2: "T_boiler sat = f(P_boiler)");
+# Tm_inlet_C = "Tm,inlet [C] (+/-0.25 C) (State 1 in Fig. 1.5 (a))"; hm_inlet_kJkg = "hm,inlet [kJ kg-1]";
+# COP and COP_unc from "COP" (printed as value+/-unc); Qevap_W = "Qevaporator [W] (+/-15 W)
+# (Tcooling = 14 C)" for R134a, "(Tcooling = 12 C)" for R245fa.
+# COP definition (Eq. 5.1, Table C.2): COP = Q_evaporator/(Q_boiler + Q_superheater), heater powers.
+#
+# MOTIVE STATE: P_boiler IS the motive-nozzle-inlet pressure: App. C.1 "The measured pressure at the motive
+# nozzle inlet is 2680.7 kPa" for the last row of Table 5.1 (printed 2681). Superheated rows: "the motive
+# inlet enthalpy can be calculated directly using measured values of temperature and pressure". Saturated
+# rows: "an energy balance on the boiler is necessary to determine enthalpy" (Eq. C.4):
+#   m_motive (h_motive_nozzle_inlet - h_boiler_inlet) = Q_boiler + Q_superheater + Q_loss,boiler_line,
+# with Q_loss,boiler_line = -19.5 W measured at Row 5 and "Assuming that the measured heat loss is
+# approximately constant for all saturated motive inlet conditions". Sample (Eq. C.5, last R134a row):
+# 2223.7 W + (-19.5 W) = (0.014 kg/s)(252100 - 94190 J/kg) -> 252.1 kJ/kg. The heat-loss value used for
+# R245fa is not printed. NOTE: in the "sat." rows Tm_inlet is 0.5-0.7 K (R134a) and 0.8-1.2 K (R245fa)
+# ABOVE Tsat_boiler, yet the rows are treated as two-phase from the energy balance.
+# Motive mass flow: p.126 "the critical mass flow rate of 0.85 kg min-1 was kept constant" (R134a);
+# p.127 "R245fa at the critical mass flow rate of 0.48 kg min-1". Per-row values not tabulated.
+#
+# SUCTION STATE (not per row): R134a "evaporator pressure was maintained at 469 kPa with Tsat = 14 C and
+# 10 K superheat at the evaporator outlet"; R245fa "evaporator pressure was 90 kPa with Tsat = 12 C and
+# 11 K superheat at the evaporator outlet" (pp.126-127). Table C.2 defines the suction inlet as
+# h_suction_inlet = f(T_suction_inlet, P_evaporator), i.e. P_evaporator is the suction pressure (Fig. 4.2
+# shows P and T taps at the suction inlet, state 7). Suction mass flow is MEASURED (Rheonik RHM04 Coriolis,
+# "< 1.6% reading for m_suction", p.103) but NOT tabulated in Ch. 5; MER only in Figs. 5.8-5.9.
+# It cannot be recovered from Qevap: Table C.2 gives a suction-line ambient gain Q_loss,suction_line =
+# 140.9 +/- 16.3 W against Qevap = 252.2 W (m_suction (h_suction_inlet - h_evaporator_inlet) = Qevap + Q_loss).
+#
+# OUTLET STATE: R134a "condenser pressure was maintained at 765 kPa with Tsat = 30 C and 4 K subcooling";
+# R245fa "214 kPa with Tsat = 35 C and 2 K subcooling" (pp.126-127). Fig. 5.3 caption: "All ejector outlet
+# conditions are maintained at the same pressure." Fig. 4.2 shows the P tap at the ejector outlet
+# (state 4). Table C.2: x_ejector_outlet = f(h_ejector_outlet, P_condenser), SPR = P_condenser/P_evaporator;
+# ejector outlet enthalpy from Eq. C.6 with Q_loss,ejector = -25.2 W ("at all conditions where the ejector
+# outlet is saturated, it is assumed that the heat loss from the ejector remains constant").
+#
+# APPENDIX C COLUMNS (filled only where printed; blank = not printed for that row):
+#  row 11 (R134a sat. x=0.73) = Table C.2 (pp.184-185) inputs/results: m_motive_kg_s 0.0142 (+/-0.12%),
+#  m_suction_kg_s 0.0022 (+/-1.6%), P_evap_kPa 468 (+/-0.2), T_suction_inlet_C 22.87 (+/-0.25),
+#  h_suction_inlet_kJkg 267.0 (+/-0.24), suction superheat 9.3 K, P_cond_kPa 765 (+/-0.8),
+#  h_ejector_outlet_kJkg 252.6 (+/-1.4), x_ejector_outlet 0.92 (+/-0.01), MER 0.155 (+/-0.002),
+#  SPR 1.638 (+/-0.002). Table C.2 h_motive_inlet = 252.2 +/- 1.5 vs 252.1 in Table 5.1 (both printed).
+#  QA: 765/468 = 1.635, not 1.638 (printed inputs are rounded).
+#  row 5 (R134a 2.2 K) = Eq. C.7 (p.182), values printed ROUNDED to 1-2 significant figures:
+#  m_motive 0.014 kg/s, m_suction 0.003 kg/s, h_motive 284193 J/kg, h_suction 267063 J/kg,
+#  h_ejector_outlet 279945 J/kg, Q_loss,ejector -25.2 W. Only the two flows are entered in the row (same
+#  unit); the J/kg enthalpies are kept here, unconverted. Suction P/T for row 5 are not printed.
+#
+# GEOMETRY (Fig. 5.2, p.127, "All dimensions are in mm"; raster drawing read at 300-900 dpi; no other
+# geometry text). Label assignment read from extension lines:
+#  R134a (a): throat dia 1.19; nozzle exit dia 1.88 (Detail A, 2:1; extension lines start at nozzle lip);
+#    throat-to-exit (diverging) length 3.81; nozzle exit -> mixing-section inlet 1.98 (NXP); mixing
+#    section dia 3.00, length 30.00; diffuser length 125.90, exit dia 13.58; 53.21 = suction-cone start ->
+#    nozzle exit plane; upstream bores dia 9.53 (motive passage), 38.10 / 60.33 (suction plenum annulus
+#    inner/outer).
+#  R245fa (b): throat dia 1.17; nozzle exit dia 2.67 (Detail A, 1:1); diverging length 8.56; nozzle exit
+#    -> mixing inlet 6.17 (NXP); mixing section dia 4.11, length 28.80; diffuser length 92.93, exit dia
+#    13.44; 52.02 = suction-cone start -> nozzle THROAT end (different datum than in (a)); bores 9.53,
+#    38.10, 60.32.
+#  NOT PRINTED: motive-nozzle converging angle/length and inlet; throat land length; nozzle lip thickness;
+#  suction-cone angle; diffuser angle (only lengths/diameters); suction port size. The 1.88/2.67 vs
+#  3.00/4.11 assignment (nozzle exit vs mixing section) is from the drawing, not from text.
+#
+# UNCERTAINTIES (p.103 Sec. 4.2.1, same facility): T-type thermocouples +/-0.25 C after calibration;
+# P_condenser +/-0.8 kPa, P_evaporator +/-0.2 kPa, P_boiler +/-6 kPa (Rosemount 2088/3051S); Coriolis
+# m_suction < 1.6% reading, m_motive < 0.12% reading; heater power +/-20 W boiler, +/-15 W evaporator,
+# +/-5 W superheater; enthalpy "always < +/-0.5% of the calculated value" (App. C.3); COP per row as
+# printed. Enthalpies are thesis values: QA (CoolProp, not data) R134a values match the ASHRAE reference
+# (h = 0 for saturated liquid at -40 C; IIR - 148.14 kJ/kg) exactly for superheated rows; R245fa values are
+# within ~1 kJ/kg of the IIR reference.
+#
+# CHECKS: Tables 5.1, 5.2, C.2, Eqs. C.5/C.7, Figs. 4.2, 5.2, 5.3 compared with page images (150 dpi; Fig.
+# 5.2 up to 900 dpi). All 19 table rows checked. Text p.128 gives boiler-pressure ranges 3103-2682 kPa
+# (R134a) and 1613-1372 kPa (R245fa) vs tables 3104-2681 and 1604-1375 (tables kept). Table 5.2 rows 2-3:
+# P_boiler 1546 then 1550 (non-monotonic, as printed).
+fluid,table,row,superheat_label,superheat_K,x_motive_printed,P_boiler_kPa,Tsat_boiler_C,Tm_inlet_C,hm_inlet_kJkg,COP,COP_unc,Qevap_W,m_motive_kg_s,m_suction_kg_s,P_evap_kPa,T_suction_inlet_C,h_suction_inlet_kJkg,P_cond_kPa,h_ejector_outlet_kJkg,x_ejector_outlet,MER,SPR,appendixC_source
+R134a,5.1,1,10.6,10.6,,3104,87.8,98.4,300.0,0.137,0.005,398.2,,,,,,,,,,,
+R134a,5.1,2,8.9,8.9,,3097,87.7,96.6,297.1,0.139,0.005,398.5,,,,,,,,,,,
+R134a,5.1,3,7.1,7.1,,3062,87.2,94.2,293.8,0.127,0.005,357.9,,,,,,,,,,,
+R134a,5.1,4,3.8,3.8,,3014,86.4,90.1,287.5,0.128,0.006,349.5,,,,,,,,,,,
+R134a,5.1,5,2.2,2.2,,2979,85.8,88.0,284.2,0.127,0.006,339.7,0.014,0.003,,,,,,,,,Eq. C.7 (rounded flows; enthalpies in J/kg in header)
+R134a,5.1,6,sat. vapor,,,2936,85.1,85.8,280.3,0.129,0.006,337.6,,,,,,,,,,,
+R134a,5.1,7,sat. (x=0.96),,0.96,2893,84.4,85.0,275.5,0.150,0.006,381.1,,,,,,,,,,,
+R134a,5.1,8,sat. (x=0.91),,0.91,2852,83.7,84.3,270.6,0.153,0.006,381.1,,,,,,,,,,,
+R134a,5.1,9,sat. (x=0.86),,0.86,2814,83.1,83.7,265.7,0.151,0.006,365.0,,,,,,,,,,,
+R134a,5.1,10,sat. (x=0.80),,0.80,2757,82.1,82.7,260.3,0.142,0.006,332.8,,,,,,,,,,,
+R134a,5.1,11,sat. (x=0.73),,0.73,2681,80.8,81.3,252.1,0.113,0.007,252.2,0.0142,0.0022,468,22.87,267.0,765,252.6,0.92,0.155,1.638,Table C.2
+R245fa,5.2,1,11.6,11.6,,1604,110.9,122.5,496.4,0.141,0.007,327.7,,,,,,,,,,,
+R245fa,5.2,2,8.4,8.4,,1546,109.1,117.5,490.9,0.143,0.007,322.3,,,,,,,,,,,
+R245fa,5.2,3,4.6,4.6,,1550,109.3,113.9,485.9,0.146,0.007,323.1,,,,,,,,,,,
+R245fa,5.2,4,2.6,2.6,,1517,108.2,110.8,482.4,0.154,0.007,328.6,,,,,,,,,,,
+R245fa,5.2,5,1.3,1.3,,1475,106.9,108.2,479.8,0.156,0.007,321.9,,,,,,,,,,,
+R245fa,5.2,6,sat. (x=0.96),,0.96,1429,105.4,106.6,472.5,0.160,0.008,321.0,,,,,,,,,,,
+R245fa,5.2,7,sat. (x=0.91),,0.91,1415,105.0,105.8,464.7,0.152,0.008,294.7,,,,,,,,,,,
+R245fa,5.2,8,sat. (x=0.84),,0.84,1375,103.6,104.5,455.3,0.120,0.008,222.7,,,,,,,,,,,

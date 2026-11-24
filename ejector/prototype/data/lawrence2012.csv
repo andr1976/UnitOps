@@ -1,0 +1,167 @@
+# Lawrence N., "Analytical and experimental investigation of two-phase ejector cycles using
+# low-pressure refrigerants", MSc thesis, University of Illinois at Urbana-Champaign, 2012
+# (ideals.illinois.edu/items/42285). File docs/ejector/lawrence2012_ms_thesis_uiuc.pdf.
+# Source: Appendix B, Table B.1 "Experimental raw data of COS ejector cycle with evaporator combination
+# CA at 1500 rpm compressor speed and 45 C condenser inlet air temperature with R134a and R1234yf",
+# printed pp. 103-123 (PDF page index 115-135; printed = index - 12). The table is transposed in the
+# thesis (4 variables per page); here 1 row = 1 data point, all 84 printed variables, printed order,
+# printed values, no unit conversion. 10 points: rows 1-5 R134a (run date 120831), 6-10 R1234yf (120917).
+# run_label = row label as printed. NOTE rows 9 and 10 are BOTH printed "Melri6" (not a transcription error).
+#
+# GEOMETRY (p.102, Appendix B text): "The ejector motive nozzle had a throat diameter of 1.0 mm and a
+# diverging length of 40 mm. The ejector mixing section had a diameter of 5 mm and a length of 60 mm."
+# Table 6.1 (p.64) motive nozzles [throat mm, diverging angle (full) deg, diverging length mm, outlet mm]:
+#   0.8/2.3/45/2.7 ; 1.0/2.3/40/2.7 (USED for Table B.1) ; 1.0/2.3/20/1.8 ; 1.3/2.3/35/2.7
+# Table 6.2 (p.64) mixing sections [diameter mm, length mm, mixing ratio L/D -]:
+#   3/25/12 ; 5/60/12 (USED for Table B.1) ; 5/40/8 ; 6/70/12
+#   (read from page image; row 3/25/12 is internally inconsistent: 25/3 = 8.3, printed 12 - not used here)
+# Fig. 6.5 (p.65): diverging length is measured from the throat to the nozzle outlet plane.
+# Fig. 6.6 (p.65): mixing length = constant-diameter section; a short converging inlet upstream of it is
+# drawn but NOT dimensioned.
+# NOT PRINTED (searched whole thesis): diffuser angle / length / outlet diameter; nozzle exit position (NXP)
+# relative to the mixing-section inlet; motive-nozzle inlet diameter and converging angle; suction port /
+# suction-chamber dimensions; mixing-section inlet cone. Needed from the author or Elbel (2007) hardware.
+#
+# CYCLE: COS (condenser outlet split), Fig. 2.4 / Fig. 6.2. Condenser outlet -> receiver -> split:
+# (a) ejector motive nozzle; (b) expansion valve -> low-temp. evaporator -> ejector suction.
+# Ejector outlet -> high-temp. evaporator -> compressor. Evaporator combination CA (C = high-temp.,
+# A = low-temp.). Target: 1500 rpm, evap. air 300 L/s at 25 C, cond. air 400 L/s at 45 C (p.102).
+# Steady state per SAE J2765, 10 min averages (p.66). Charge set for ~5 K condenser-outlet subcooling.
+#
+# EJECTOR STATES (definitions from Table B.1 headers; identities verified on all 10 rows to print precision):
+#  motive inlet : P = Pmnri. Pmnri = Pdro + DPmnd (DP transducer "ejector motive inlet to diffuser
+#                 outlet"). Mass flow Mmnri = Mcpro - Melri (two Coriolis meters in Fig. 6.2: compressor
+#                 outlet and expansion-valve line; Mmnri itself has no meter). Fig. 6.2 draws a
+#                 thermocouple at the ejector motive inlet, but NO motive-inlet temperature is printed; the
+#                 thesis energy balance uses h_motive = hcro (hdro = (Mmnri*hcro + Melri*helro)/Mcpro holds).
+#                 Only condenser-outlet Pcro, Tcro, DTsc, hcro are printed (Pcro - Pmnri = 228-503 kPa).
+#  suction inlet: low-temp. evaporator outlet Pelro, Telro, helro, DTshl (superheat), mass flow Melri
+#                 (Coriolis meter upstream of the expansion valve, Fig. 6.2). Superheated vapour.
+#  outlet       : Pdro (absolute transducer at diffuser outlet), hdro (energy balance, = hehri).
+#  Plift = Pdro - Pelro ; Pi_s = Pdro/Pelro ; Phi_m = Melri/Mmnri (Eqs. 2.1-2.2, p.5: "ratio of
+#  suction mass flow to motive mass flow"; "ratio of diffuser outlet pressure to suction nozzle inlet
+#  pressure" - the data use Pelro as suction pressure). DPsl = Pehro - Pcpri is the COMPRESSOR suction line,
+#  not the ejector suction line. eta_ejec = Elbel & Hrnjak (2008b) efficiency, Eq. (5.6) p.54: "the power
+#  consumed by an isentropic compression of the suction stream from the suction inlet pressure to the
+#  diffuser outlet pressure divided by the power supplied by an isentropic expansion of the motive stream
+#  from the motive inlet pressure to the diffuser outlet pressure", multiplied by Phi_m.
+#  Enthalpies are thesis (EES) values; reference state not stated. QA (CoolProp, not data): R134a values
+#  are ~148 kJ/kg below IIR (consistent with ASHRAE reference); R1234yf within ~1 kJ/kg of IIR.
+#
+# UNCERTAINTIES. Table 6.3 (p.67, absolute): COP +/-0.058; COP_Ratio +/-0.042; Pi_s +/-0.016;
+# Phi_m +/-0.00095; eta_Elbel +/-0.018; W_rec +/-1.1 W; W_rec,max +/-1.7 W; P_lift +/-4.5 kPa.
+# Table A.3 (p.101, refrigerant side): type-T thermocouples +/-0.5 C; abs. P (cond. in/out, comp. out)
+# 0-6891 kPa +/-0.13 % FS; abs. P (comp. inlet) 0-689 kPa +/-0.11 % FS; abs. P (evap. outlets) 0-689 kPa
+# +/-0.13 % FS; abs. P (ejector diffuser outlet) 0-3446 kPa +/-0.13 % FS; DP (high-temp. evap.) +/-345 kPa
+# +/-0.25 % FS; DP (low-temp. evap.) +/-1379 kPa +/-0.25 % FS; DP (ejector motive inlet to diffuser
+# outlet) -690 to 690 kPa +/-0.1 % FS; Coriolis mass flow 0-333 g/s +/-0.2 % reading; torque 0-225 N-m
+# +/-0.07 % FS. QA FLAG: DPmnd = 695.6-834.0 kPa in all 10 rows, i.e. ABOVE the stated 690 kPa range
+# of that DP transducer, so Pmnri rests on an over-range reading.
+#
+# CHECKS: values extracted from the PDF text layer (PyMuPDF find_tables) and compared cell-by-cell with
+# rendered page images (100-150 dpi) for ALL 21 pages of Table B.1 (pp. 103-123, all 10 rows, all 84
+# variables); Tables 6.1, 6.2, 6.3, A.3 and Figs. 6.2, 6.4-6.6 also checked on images. Printed identities
+# re-computed and agreeing within the last printed digit: Plift, Pi_s, Phi_m, Mcpro = Mmnri + Melri,
+# Pmnri = Pdro + DPmnd, DPsl, DPehr, DPelr, DPcr, hdro mixing balance, hehri = hdro, helri = hcro, Qelr,
+# Qehr, Qer, Wcp_ref, COPref = Qer/Wcp_shaft, Pr_cp; and (CoolProp) DTshl = Telro - Tsat(Pelro).
+# QA (CoolProp, not data): with h = h(Pcro,Tcro), the state at Pmnri is two-phase (x ~0.04-0.055 R134a,
+# ~0.01-0.02 R1234yf); Tsat(Pmnri) = 42-44 C < Tcro = 45-49 C. The motive is subcooled at the condenser
+# outlet but NOT demonstrably subcooled at the nozzle inlet.
+#
+# COLUMNS: name [unit] (printed page) printed description
+#   row [-] sequential ; fluid [text] from run label ; run_label [text] as printed
+#   COPref [-] (p.103) Cycle COP based on ref.- side measurements
+#   DPcr [kPa] (p.103) Condenser refrigerant pressure drop
+#   DPsl [kPa] (p.103) Suction line pressure drop
+#   DTsc [K] (p.103) Condenser outlet subcooling
+#   DTshh [K] (p.104) High-temp. evaporator outlet superheat
+#   DTshl [K] (p.104) Low-temp. evaporator outlet superheat
+#   DPacamb [Pa] (p.104) Pressure difference between condenser and ambient
+#   DPacnamb [Pa] (p.104) Pressure difference between condenser nozzle and ambient
+#   DPaeamb [Pa] (p.105) Pressure difference between evaporator and ambient
+#   DPca [Pa] (p.105) Condenser air-side pressure drop
+#   DPcn [Pa] (p.105) Condenser nozzle pressure drop
+#   DPea [Pa] (p.105) Evaporator air-side pressure drop
+#   DPen [Pa] (p.106) Evaporator nozzle pressure drop
+#   DPehr [kPa] (p.106) High-temp. evaporator refrigerant pressure drop
+#   DPelr [kPa] (p.106) Low-temp. evaporator refrigerant pressure drop
+#   DPmnd [kPa] (p.106) Pressure drop ejector motive nozzle inlet to diffuser outlet
+#   eta_cp [-] (p.107) Compressor compression efficiency
+#   eta_ejec [-] (p.107) Ejector efficiency from Elbel and Hrnjak (2008b)
+#   eta_elec [-] (p.107) Compressor drive motor electrical efficiency
+#   eta_isen [-] (p.107) Compressor isentropic efficiency
+#   eta_m [-] (p.108) Compressor mechanical efficiency
+#   eta_v [-] (p.108) Compressor volumetric efficiency
+#   hcpro [kJ/kg] (p.108) Compressor outlet specific enthalpy
+#   hcpri [kJ/kg] (p.108) Compressor inlet specific enthalpy
+#   hcri [kJ/kg] (p.109) Condenser inlet specific enthalpy
+#   hcro [kJ/kg] (p.109) Condenser outlet specific enthalpy
+#   hdro [kJ/kg] (p.109) Diffuser outlet specific enthalpy
+#   hehri [kJ/kg] (p.109) High-temp. evaporator inlet specific enthalpy
+#   helri [kJ/kg] (p.110) Low-temp. evaporator inlet specific enthalpy
+#   hehro [kJ/kg] (p.110) High-temp. evaporator outlet specific enthalpy
+#   helro [kJ/kg] (p.110) Low-temp. evaporator outlet specific enthalpy
+#   Mcpro [g/s] (p.110) Compressor outlet mass flow rate
+#   Melri [g/s] (p.111) Low-temp. evaporator mass flow rate
+#   Mmnri [g/s] (p.111) Motive nozzle inlet mass flow rate
+#   Ncp [rpm] (p.111) Compressor speed
+#   Patm [kPa] (p.111) Atmospheric pressure
+#   Pcai [kPa] (p.112) Condenser inlet air pressure
+#   Pcao [kPa] (p.112) Condenser outlet air pressure
+#   Pcn [kPa] (p.112) Condenser inlet nozzle pressure
+#   Pcpri [kPa] (p.112) Compressor inlet pressure
+#   Pcpro [kPa] (p.113) Compressor outlet pressure
+#   Pcri [kPa] (p.113) Condenser inlet refrigerant pressure
+#   Pcro [kPa] (p.113) Condenser outlet refrigerant pressure
+#   Pdro [kPa] (p.113) Diffuser outlet pressure
+#   Peai [kPa] (p.114) Evaporator inlet air pressure
+#   Peao [kPa] (p.114) Evaporator outlet air pressure
+#   Pen [kPa] (p.114) Evaporator nozzle pressure
+#   Pehri [kPa] (p.114) High-temp. evaporator inlet refrigerant pressure
+#   Pelri [kPa] (p.115) Low-temp. evaporator inlet refrigerant pressure
+#   Pehro [kPa] (p.115) High-temp. evaporator outlet refrigerant pressure
+#   Pelro [kPa] (p.115) Low-temp. evaporator outlet refrigerant pressure
+#   Phi_m [-] (p.115) Mass entrainment ratio
+#   Pi_s [-] (p.116) Suction pressure ratio
+#   Pmnri [kPa] (p.116) Motive nozzle inlet pressure
+#   Plift [kPa] (p.116) Ejector pressure lift
+#   Pr_cp [-] (p.116) Compressor pressure ratio
+#   Qcr [kW] (p.117) Heat rejected in condenser
+#   Qehr [kW] (p.117) High-temp. evaporator capacity
+#   Qelr [kW] (p.117) Low-temp. evaporator capacity
+#   Qer [kW] (p.117) Total evaporator capacity
+#   Refrigerant_printed [text] (p.118) Cycle working fluid [row 3 printed as 'R134a with a stray apostrophe; kept as printed - use column fluid]
+#   Tamb [degC] (p.118) Ambient temperature
+#   Tcai [degC] (p.118) Condenser inlet air temperature
+#   Tcao [degC] (p.118) Condenser outlet air temperature
+#   Tcn [degC] (p.119) Condenser nozzle temperature
+#   Tcpri [degC] (p.119) Compressor inlet temperature
+#   Tcpro [degC] (p.119) Compressor outlet pressure [PRINTED DESCRIPTION SAYS "Compressor outlet pressure" with unit degC - a temperature; printed as-is]
+#   Tcri [degC] (p.119) Condenser inlet refrigerant temperature
+#   Tcro [degC] (p.120) Condenser outlet refrigerant temperature
+#   Teai [degC] (p.120) Evaporator inlet air temperature
+#   Ten [degC] (p.120) Evaporator nozzle temperature
+#   Tehri [degC] (p.120) Low-temp. evaporator inlet refrigerant temperature [PRINTED DESCRIPTION SAYS "Low-temp." - symbol ehri = high-temp. evaporator inlet; printed as-is]
+#   Telri [degC] (p.121) Low-temp. evaporator inlet refrigerant temperature
+#   Tehro [degC] (p.121) High-temp. evaporator outlet refrigerant temperature
+#   Telro [degC] (p.121) Low-temp. evaporator outlet refrigerant temperature
+#   Tshaft [N-m] (p.121) Compressor shaft torque
+#   Vca [m3/s] (p.122) Condenser air volumetric flow rate
+#   Vea [m3/s] (p.122) Evaporator air volumetric flow rate
+#   Wcp_ref [kW] (p.122) Power delivered to refrigerant by compressor
+#   Wcp_shaft [kW] (p.122) Compressor shaft power
+#   Wrec [kW] (p.123) Actual power recovered by ejector
+#   Wrec_max [kW] (p.123) Maximum available ejector power recovery
+#   xehri [-] (p.123) High-temp. evaporator inlet quality
+#   xelri [-] (p.123) Low-temp. evaporator inlet quality
+row,fluid,run_label,COPref,DPcr,DPsl,DTsc,DTshh,DTshl,DPacamb,DPacnamb,DPaeamb,DPca,DPcn,DPea,DPen,DPehr,DPelr,DPmnd,eta_cp,eta_ejec,eta_elec,eta_isen,eta_m,eta_v,hcpro,hcpri,hcri,hcro,hdro,hehri,helri,hehro,helro,Mcpro,Melri,Mmnri,Ncp,Patm,Pcai,Pcao,Pcn,Pcpri,Pcpro,Pcri,Pcro,Pdro,Peai,Peao,Pen,Pehri,Pelri,Pehro,Pelro,Phi_m,Pi_s,Pmnri,Plift,Pr_cp,Qcr,Qehr,Qelr,Qer,Refrigerant_printed,Tamb,Tcai,Tcao,Tcn,Tcpri,Tcpro,Tcri,Tcro,Teai,Ten,Tehri,Telri,Tehro,Telro,Tshaft,Vca,Vea,Wcp_ref,Wcp_shaft,Wrec,Wrec_max,xehri,xelri
+1,R134a,120831 B227 COS Ejec R134a N1500 Teai25 Tcai45 vfea300 vfca400 SC5 Melri1,2.22,23.8,1.9,2.9,24.1,23.9,-4.3,150.7,-33.2,50.0,142.6,409.4,143.0,1.8,-0.9,829.7,0.66,0.04,0.66,0.55,0.83,0.71,328.2,272.2,322.3,121.5,130.2,130.2,121.5,272.3,270.7,13.7,0.8,12.9,1490,99.7,99.7,99.7,99.5,297.1,1411.6,1395.1,1371.3,313.1,99.7,99.3,99.2,300.8,275.5,299.0,276.3,0.06,1.13,1142.8,36.8,4.75,2.71,1.93,0.12,2.05,R134a,29.0,44.9,50.3,50.4,24.5,98.2,92.6,48.7,24.9,21.0,1.3,-1.6,24.6,22.3,6.92,0.401,0.280,0.77,0.92,0.002,0.064,0.39,0.36
+2,R134a,120831 B227 COS Ejec R134a N1500 Teai25 Tcai45 vfea300 vfca400 SC5 Melri2,2.31,18.4,3.0,3.3,22.7,20.9,-4.5,150.2,-33.3,50.0,142.8,408.7,142.9,2.4,-0.3,805.3,0.66,0.08,0.66,0.55,0.84,0.71,326.2,272.0,320.8,121.6,144.0,144.0,121.6,272.0,269.6,14.6,2.2,12.4,1486,99.7,99.7,99.7,99.5,312.5,1426.9,1410.5,1392.1,332.2,99.7,99.3,99.2,317.9,301.6,315.5,301.9,0.18,1.10,1137.5,30.2,4.57,2.85,1.85,0.32,2.17,R134a,28.7,45.1,50.8,50.8,24.6,96.6,91.4,48.8,25.1,20.8,2.8,1.0,24.7,21.7,7.07,0.402,0.280,0.79,0.94,0.005,0.057,0.45,0.35
+3,R134a,120831 B227 COS Ejec R134a N1500 Teai25 Tcai45 vfea300 vfca400 SC5 Melri3,2.39,25.2,1.9,4.0,21.4,18.6,-3.9,152.2,-32.7,50.0,141.9,407.7,142.9,3.3,0.6,774.1,0.66,0.10,0.65,0.56,0.85,0.71,324.5,271.7,319.4,121.4,153.3,153.3,121.4,271.7,269.0,15.3,3.3,12.0,1477,99.7,99.7,99.7,99.5,327.7,1451.5,1433.7,1408.5,348.8,99.7,99.3,99.2,333.0,326.3,329.7,325.7,0.28,1.07,1123.0,23.1,4.43,2.97,1.79,0.48,2.27,'R134a,29.6,45.1,51.2,51.3,24.6,95.3,90.5,48.7,25.0,20.6,4.1,3.1,24.7,21.6,7.20,0.401,0.280,0.81,0.95,0.005,0.050,0.49,0.33
+4,R134a,120831 B227 COS Ejec R134a N1500 Teai25 Tcai45 vfea300 vfca400 SC5 Melri5,2.45,25.9,2.2,4.7,20.6,16.4,-5.6,117.9,-32.6,51.8,146.7,406.5,143.5,4.0,1.9,738.5,0.66,0.11,0.66,0.56,0.85,0.72,323.2,271.5,318.2,120.6,164.0,164.0,120.6,271.5,268.1,16.1,4.7,11.4,1499,99.7,99.7,99.7,99.6,337.5,1464.5,1443.5,1417.6,361.9,99.7,99.3,99.2,343.8,347.4,339.7,345.5,0.42,1.05,1100.4,16.4,4.34,3.12,1.72,0.69,2.40,R134a,27.5,45.0,51.2,51.3,24.7,94.3,89.5,48.2,25.0,20.0,4.9,4.9,24.7,21.1,7.31,0.407,0.280,0.83,0.98,0.005,0.043,0.54,0.32
+5,R134a,120831 B227 COS Ejec R134a N1500 Teai25 Tcai45 vfea300 vfca400 SC5 Melri6,2.55,31.3,3.2,5.1,19.1,13.3,-5.5,118.2,-33.2,51.8,147.1,406.9,142.6,4.4,3.8,695.6,0.66,0.08,0.65,0.56,0.85,0.72,321.0,271.1,316.4,120.4,174.8,174.8,120.4,271.1,266.6,16.9,6.3,10.6,1495,99.7,99.7,99.7,99.6,353.7,1480.9,1456.9,1425.6,380.9,99.7,99.3,99.2,361.3,376.7,356.9,372.8,0.59,1.02,1076.5,8.1,4.19,3.25,1.61,0.91,2.52,R134a,27.2,44.9,51.5,51.5,24.6,92.4,88.1,48.0,25.0,18.8,6.3,7.2,24.6,20.1,7.39,0.408,0.279,0.84,0.99,0.003,0.036,0.59,0.30
+6,R1234yf,120917 B227 COS Ejec R1234yf N1500 Teai25 Tcai45 vfea300 vfca400 Melri1,2.11,16.9,2.2,11.8,28.6,28.5,-5.4,129.2,-40.7,50.8,145.1,410.3,140.7,3.6,-0.9,834.0,0.70,0.04,0.65,0.61,0.86,0.81,437.8,386.9,432.9,261.4,268.4,268.4,261.4,387.0,384.9,16.3,0.9,15.4,1502,99.7,99.7,99.7,99.6,273.4,1557.2,1544.5,1527.6,297.3,99.7,99.3,99.2,279.2,249.1,275.6,250.0,0.06,1.19,1131.3,47.3,5.70,2.74,1.92,0.11,2.03,R1234yf,26.5,45.0,50.3,50.6,24.5,92.0,87.7,45.1,25.0,20.5,-3.0,-6.8,24.6,21.8,7.15,0.405,0.277,0.83,0.96,0.003,0.085,0.44,0.42
+7,R1234yf,120917 B227 COS Ejec R1234yf N1500 Teai25 Tcai45 vfea300 vfca400 Melri3,2.22,20.0,2.5,12.5,26.2,24.0,-5.4,129.5,-39.6,50.8,144.6,409.9,140.5,4.8,0.2,794.6,0.70,0.09,0.65,0.61,0.87,0.80,435.4,386.5,431.1,261.3,280.1,280.1,261.3,386.7,383.7,17.5,2.7,14.8,1492,99.7,99.7,99.7,99.6,297.8,1590.4,1571.0,1551.0,325.4,99.7,99.3,99.2,305.1,287.7,300.3,287.5,0.18,1.13,1120.0,37.8,5.34,2.92,1.86,0.33,2.18,R1234yf,27.6,44.9,50.5,50.8,24.5,90.3,86.4,45.0,25.0,20.5,-0.4,-2.7,24.7,21.3,7.37,0.404,0.277,0.86,0.98,0.007,0.073,0.50,0.40
+8,R1234yf,120917 B227 COS Ejec R1234yf N1500 Teai25 Tcai45 vfea300 vfca400 Melri4,2.26,25.3,1.5,12.9,24.8,21.6,-5.4,129.4,-39.6,50.8,144.6,410.2,139.7,5.4,1.1,775.6,0.68,0.11,0.64,0.60,0.88,0.79,434.6,386.3,430.4,261.5,287.2,287.2,261.5,386.5,383.1,18.2,3.8,14.4,1486,99.7,99.7,99.7,99.6,314.4,1605.5,1596.3,1571.0,342.7,99.7,99.3,99.2,321.3,312.8,315.9,311.7,0.27,1.10,1118.2,30.9,5.11,3.01,1.79,0.46,2.26,R1234yf,29.1,45.0,50.9,51.1,24.6,89.8,86.3,45.1,25.1,20.4,1.2,-0.2,24.8,21.2,7.52,0.404,0.276,0.88,1.00,0.007,0.066,0.53,0.38
+9,R1234yf,120917 B227 COS Ejec R1234yf N1500 Teai25 Tcai45 vfea300 vfca400 Melri6,2.32,22.8,2.9,13.7,23.3,18.5,-5.8,128.7,-39.5,50.7,144.8,408.6,140.2,6.7,3.1,760.3,0.70,0.11,0.65,0.61,0.87,0.81,432.1,385.8,428.4,261.7,296.0,296.0,261.7,385.9,381.9,19.7,5.6,14.1,1502,99.7,99.7,99.7,99.6,325.2,1639.6,1627.2,1604.4,358.6,99.7,99.3,99.2,334.9,340.0,328.2,336.9,0.40,1.06,1118.9,21.8,5.04,3.22,1.76,0.67,2.43,R1234yf,26.0,45.0,51.4,51.7,24.3,88.2,84.9,45.3,25.0,19.9,2.1,2.1,24.4,20.4,7.80,0.405,0.277,0.91,1.05,0.007,0.061,0.58,0.37
+10,R1234yf,120917 B227 COS Ejec R1234yf N1500 Teai25 Tcai45 vfea300 vfca400 Melri6,2.40,29.6,5.0,14.1,21.5,15.4,-5.8,128.8,-39.5,50.6,144.5,408.9,140.9,7.8,4.9,740.6,0.71,0.09,0.65,0.62,0.87,0.82,429.5,385.3,426.1,261.8,302.3,302.3,261.8,385.3,380.7,21.0,7.1,13.8,1493,99.7,99.7,99.7,99.6,341.2,1662.2,1651.0,1621.5,378.4,99.7,99.3,99.2,354.0,370.0,346.2,365.0,0.52,1.04,1119.0,13.4,4.87,3.38,1.73,0.84,2.57,R1234yf,25.9,45.0,51.7,52.0,24.1,86.4,83.4,45.4,24.8,18.6,3.7,4.7,24.2,19.7,8.00,0.405,0.277,0.93,1.07,0.005,0.056,0.61,0.35

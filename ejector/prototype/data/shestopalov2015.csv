@@ -1,0 +1,88 @@
+# Shestopalov K.O., Huang B.J., Petrenko V.O., Volovyk O.S., "Investigation of an experimental ejector
+# refrigeration machine operating with refrigerant R245fa at design and off-design working conditions.
+# Part 1. Theoretical analysis", Int. J. Refrig. 55 (2015) 201-211, doi:10.1016/j.ijrefrig.2015.01.016;
+# "Part 2. Theoretical and experimental results", Int. J. Refrig. 55 (2015) 212-223,
+# doi:10.1016/j.ijrefrig.2015.02.004. Files docs/ejector/shestopalov2015_part1.pdf, _part2.pdf.
+# Source: Part 2 Table 7 (p.220, 9 ejectors with cylindrical mixing chamber, CMC) and Table 8 (p.221,
+# 9 ejectors with conical-cylindrical mixing chamber, CCMC); A3/At from Table 3 (p.217) and Table 6
+# (p.219); ln (nozzle exit to mixing-chamber entrance, optimal NXP) from Table 6 and, for 2-2 only, the
+# text on p.220. Printed values, no unit conversion. Geometry: shestopalov2015_geometry.csv.
+# Fluid R245fa. All 18 rows are the "nominal (critical) conditions": each row is the break-point of a
+# measured omega-vs-Tc curve (p.219: "when the condensing temperature Tc is higher than a certain value,
+# known as the 'critical condensing temperature' Tc*, then omega, COPtherm and Qe will decrease suddenly").
+# Part 1 has no experimental data (theory and refrigerant screening only).
+#
+# STATES (what is and is not printed):
+#  motive : generator temperature Tg only. Generator is a heated vessel with liquid level gauge (p.214);
+#           Fig. 2 (p.214, "actual" cycle) draws state 1 on the saturated-vapour line at Tg, Pg; Part 1
+#           p.209 speaks of "near-isentropic expansion of the saturated vapor ... in the nozzle".
+#           NO nozzle-inlet superheat, Pg or T1 (primary-line thermocouple, Fig. 3) value is printed.
+#  suction: evaporating temperature Te; p.217: "the superheating of entrained vapor in suction pipeline of
+#           the ejector was 5-7 C" (range for all tests, not per row). Psuc measured separately with a
+#           Bourdon gauge (Table 5) and drawn below Pe in Fig. 2; no value printed.
+#  outlet : critical condensing temperature Tc* (condenser, not the ejector outlet). p.214: "The condenser
+#           temperature and the ejector backpressure were automatically controlled by varying the water
+#           flow through the condenser." No condenser or ejector-outlet pressure is printed.
+#  Pressures: Pg, Pe, Pc were measured (gauges/transmitters, Table 5; Fig. 3) and Tg, Te, Tc by RTDs
+#  ("RTD sensors were used to control the generating, evaporating and condensing temperatures", p.216).
+#  The tables give temperatures only; the paper does NOT state that P = Psat(T).
+#  Mass flows: NOT tabulated. Measured by gear-type flow meters and from heater energy balances,
+#  Eqs. (2)-(3): m_p = W_g/(h1-h6), m_s = W_e/(h2-h7). Primary flow vs Tg for N1-N3 is figure-only (Fig. 10).
+#  omega = m_s/m_p (Eq. 1). COPtherm* = Qe/Qg = W_e/W_g (Eq. 6); p.218: generator heat loss "assumed to be
+#  5% of the electrical power input", "the generator heat load Qg from Eq. (5) was 5% lower than measured
+#  power consumption of generator heaters". Qe* = evaporator heater power (heat gains taken as negligible).
+#
+# UNCERTAINTIES (Part 2 Table 5, p.218): Tg RTD 0-200 C +/-0.12%; Te, Tc RTD 0-50 C +/-0.12%; T1-T11
+# K-type -200-320 C +/-1.5 C; Pg, Pe, Pc, Pfp industrial gauges -1-30 bar +/-1.5%; Psuc Bourdon -1-1 bar
+# +/-0.25%; Pc Bourdon -1-2 bar +/-0.25%; refrigerant flow gear meters 0.1-6.0 l/min +/-3.0%; electric
+# power meters 0-30 kW +/-0.6%. p.218: "the maximum uncertainty in the performance parameters is less
+# than +/-5.0%". No per-point uncertainty.
+#
+# QA NOTES (printed inconsistencies, values kept as printed):
+#  - Ejector 3-A A3/At = 9.71 in Table 3 but 9.70 in Table 6 (both kept).
+#  - p.221 says Tc* "decreases 1.2-1.6 C for ejectors with CCMC"; Table 7 minus Table 8 gives 0.0 (1-A vs
+#    1-1, both 34.7), 1.1, 1.2, 1.3, 1.2, 1.6, 0.8, 1.7, 1.7 C. Row 1-1 Tc* may be a typo.
+#  - p.221 "from 15% for ejector 3-1 compared to 3-A up to 54% for ejector 1-1 compared to 1-A" is not
+#    reproduced by the omega* ratios of Tables 7/8 (3-1/3-A = 1.25, 1-1/1-A = 1.47); refers to Fig. 18.
+#  - CCMC chamber k was "made from cylindrical mixing chambers by boring the front part of the constant
+#    area section ... all the dimensions of the new mixing chambers 1, 2 and 3 were the same compared to
+#    previous mixing chambers A, B and C" (p.216); "Geometrical characteristics A3/At of tested ejectors
+#    with CCMC were the same as for ejectors with CMC" (p.220). The 1->A, 2->B, 3->C pairing is given only
+#    by that sentence order (and for 2-2 by "ejector 2-2 with area ratio A3/At = 9.55"); column
+#    base_chamber records it. A3/At for CCMC rows is left blank (not tabulated).
+#  - ln for CCMC is printed only for 2-2 ("optimal position of the nozzle ln = 20.6 mm", p.220).
+#
+# OFF-DESIGN DATA ARE FIGURE-ONLY (not transcribed): Fig. 10 primary mass flow vs Tg (N1-N3, measured +
+# theory); Fig. 11 omega, COPtherm, Qe vs Tc for 2-B at Te = 8/12/16 C, Tg = 95 C; Fig. 12 A3/At vs Tc*
+# (2-A/B/C); Fig. 13 omega*, COP*, Qe* vs Tc* (2-A/B/C, Tg = 95 C); Fig. 14 maps for 2-B over Te 8-16 C
+# and Tg 88-102 C; Fig. 15 omega, COP, Qe vs Tc for 2-2 at Tg = 88/95/102 C, Te = 12 C; Fig. 16 CMC vs
+# CCMC bars at Te = 12, Tg = 95; Fig. 17 maps for 2-2; Fig. 18 2-B vs 2-2.
+#
+# CHECKS: Tables 3, 6, 7, 8 extracted from the PDF text layer and compared value-by-value with 150 dpi
+# page images (Part 2 pp.217, 219, 220, 221): all 18 rows checked.
+#
+# COLUMNS: table = source table; ejector = printed label (nozzle-chamber); mixer = CMC or CCMC;
+# nozzle = N1..N3; chamber = A..C (CMC) or 1..3 (CCMC); base_chamber = cylindrical chamber it was bored
+# from (CCMC only, see note); A3_At_T3 [-] Table 3; A3_At_T6 [-] Table 6; ln_mm [mm] optimal distance
+# nozzle exit -> mixing-chamber entrance; Tg_C, Te_C [degC] generating / evaporating temperature;
+# Tc_crit_C [degC] critical condensing temperature Tc*; omega_crit [-] critical entrainment ratio omega*;
+# COPtherm_crit [-]; Qe_crit_kW [kW] critical cooling capacity Qe*.
+table,ejector,mixer,nozzle,chamber,base_chamber,A3_At_T3,A3_At_T6,ln_mm,Tg_C,Te_C,Tc_crit_C,omega_crit,COPtherm_crit,Qe_crit_kW
+7,1-A,CMC,N1,A,,7.25,7.25,16.4,90,8,34.7,0.241,0.186,3.1
+7,1-B,CMC,N1,B,,8.32,8.32,19.3,90,8,32.8,0.318,0.243,4.1
+7,1-C,CMC,N1,C,,9.63,9.63,22.8,90,8,30.2,0.402,0.309,5.2
+7,2-A,CMC,N2,A,,8.33,8.33,16.2,95,12,36.9,0.345,0.265,4.4
+7,2-B,CMC,N2,B,,9.55,9.55,20.6,95,12,34.2,0.423,0.323,5.4
+7,2-C,CMC,N2,C,,11.06,11.06,24.2,95,12,31.3,0.536,0.411,7.0
+7,3-A,CMC,N3,A,,9.71,9.70,20.5,100,16,37.5,0.471,0.358,5.7
+7,3-B,CMC,N3,B,,11.14,11.14,22.9,100,16,35.6,0.575,0.440,7.0
+7,3-C,CMC,N3,C,,12.89,12.89,26.3,100,16,32.5,0.744,0.570,9.2
+8,1-1,CCMC,N1,1,A,,,,90,8,34.7,0.355,0.270,4.5
+8,1-2,CCMC,N1,2,B,,,,90,8,31.7,0.437,0.334,5.6
+8,1-3,CCMC,N1,3,C,,,,90,8,29.0,0.529,0.407,7.1
+8,2-1,CCMC,N2,1,A,,,,95,12,35.6,0.449,0.340,5.6
+8,2-2,CCMC,N2,2,B,,,20.6,95,12,33.0,0.544,0.413,6.8
+8,2-3,CCMC,N2,3,C,,,,95,12,29.7,0.673,0.516,8.7
+8,3-1,CCMC,N3,1,A,,,,100,16,36.7,0.587,0.447,7.0
+8,3-2,CCMC,N3,2,B,,,,100,16,33.9,0.727,0.556,8.9
+8,3-3,CCMC,N3,3,C,,,,100,16,30.8,0.892,0.689,11.4

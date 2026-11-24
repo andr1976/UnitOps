@@ -42,6 +42,16 @@ Efficiency sets
      - 0.90 / 0.872 / 0.767 / 0.790
      - 1.138
      - the 15 subcritical and subcooled points of the same set
+   * - Vapour, CPM (this work)
+     - 0.90 / 0.85 / 0.908 / 0.85, :math:`\varphi_\mathrm{p}` 0.869
+     - 1
+     - constant-pressure mixing, pooled fit on three single-phase vapour sets (R141b, R134a, R245fa; 150 points, 21 ejectors); transfer errors in :ref:`parameter_guide`
+
+The fitted sets use constant-area mixing except the last. The typical set is the
+CAPE-OPEN unit's default ``Screening`` set, which runs with constant-pressure
+mixing (:ref:`appendix_capeopen`). :ref:`parameter_guide` gives
+the fits of both mixing models on every data set, and recommendations by
+application.
 
 The three R744 sets fit their own data equally well (:ref:`sec-val-giacomelli`).
 They are listed separately because their spread measures how much the
@@ -67,7 +77,7 @@ Experimental data sets
    * - Huang *et al.* 1999 :cite:`huang1999`, via Ma 2017 Table 1 :cite:`ma2017`
      - R141b, 39
      - critical ER and back pressure, 11 geometries
-     - **used**: predictive validation (:ref:`sec-val-huang`); data in ``validate_huang1999.py``
+     - **used**: predictive validation (:ref:`sec-val-huang`) and mixing-model fits (:ref:`parameter_guide`); data in ``validate_huang1999.py``, checked against the original Tables 3–4 (Ma 2017 rounds ER to three decimals)
    * - Giacomelli *et al.* 2019 :cite:`giacomelli2019`
      - R744, 42
      - all flows and pressures; full geometry (Fig. 2)
@@ -85,9 +95,29 @@ Experimental data sets
      - absolute flows, suction 27–32 bar
      - **not used**: the SINTEF ejector tested is not identified, and the mixing-section dimensions are not published
    * - Bodys *et al.* 2020 :cite:`bodys2020`
-     - R744
-     - subcritical motive (about 50–70 bar) on SINTEF geometries
-     - **candidate**: closest to a liquid motive at 47 bar; the accepted manuscript could not be downloaded
+     - R744, 150
+     - motive and suction flow, port states; motive nozzles (Table 1)
+     - **used**: motive flow only (:ref:`sec-guide-cd`). The data are in the free supplementary file (Tables 3–4), all 150 rows checked against it (``data/bodys2020.csv``). The mixing sections are not published, so entrainment cannot be tested
+   * - Falat 2018 :cite:`falat2018`
+     - R134a, 102
+     - all port states and flows along five back-pressure sweeps; full geometry
+     - **used**: mixing-model fits (:ref:`parameter_guide`); ``data/falat2018.csv``. Pressures are absolute by inference (not stated for the port cells)
+   * - Shestopalov *et al.* 2015 :cite:`shestopalov2015a,shestopalov2015b`
+     - R245fa, 9
+     - critical ER and condensing temperature, 9 cylindrical-mixer ejectors
+     - **used**: mixing-model fits; states given as saturation temperatures (motive saturated, suction 5–7 K superheat); ``data/shestopalov2015*.csv``
+   * - Lawrence 2012 :cite:`lawrence2012`
+     - R134a, R1234yf, 10
+     - motive and suction flow, outlet pressure; nozzle and mixer (no diffuser)
+     - **used**: not reproduced by either mixing model (:ref:`sec-guide-mixing`); motive state at the nozzle inlet uncertain
+   * - GEA catalogue :cite:`gea2018`
+     - steam/air, air/air, water/air
+     - manufacturer design charts
+     - **used**: design-mode benchmark (:ref:`sec-guide-gea`); digitised, ``data/gea_*.csv``
+   * - Fabri and Paulon 1958 :cite:`fabri1958`
+     - air, figures
+     - entrainment against pressure ratio, constant-area mixer
+     - **candidate**: needs digitising; ideal-gas CAM benchmark including the subcritical regime
    * - Cunningham 1974 :cite:`cunningham1974`
      - water / air
      - liquid jet pump compressing a non-condensable gas
@@ -108,10 +138,10 @@ Design guidance not yet used
   :cite:`cunningham1974,cunningham1995` give liquid/liquid and liquid/gas jet-pump
   models. With a non-flashing property model they are an analytic cross-check
   for the liquid-motive, gas-suction duty.
-* Constant-pressure-mixing models with a hypothetical throat :cite:`munday1977,huang1999,ma2017`,
-  the one-dimensional compressible-flow model of :cite:`marnier2012`, and gas-ejector design methods
-  :cite:`liao2008` are alternatives for gas–gas ejectors, should a
-  specialised gas mode be wanted.
+* Constant-pressure mixing with a hypothetical throat :cite:`munday1977,huang1999,ma2017`
+  is now a model option (:ref:`sec-mixing-cpm`). The one-dimensional
+  compressible-flow model of :cite:`marnier2012` and gas-ejector design methods
+  :cite:`liao2008` remain alternatives for gas–gas ejectors.
 
 Property models in the reference implementation
 ===============================================

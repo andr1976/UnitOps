@@ -61,7 +61,8 @@ public class AdapterTests
         Assert.Equal(pOut, outlet.Pressure, 6);
         Assert.Equal("Design", P(u, "Regime").value);
         // the engine on the same gas gives the same answer
-        var ej = new EjectorCore.Ejector(gas) { EtaM = 0.9, EtaS = 0.85, EtaMix = 0.9, EtaD = 0.8 };
+        // the default set (Screening) uses constant-pressure mixing
+        var ej = new EjectorCore.Ejector(gas) { EtaM = 0.9, EtaS = 0.85, EtaMix = 0.9, EtaD = 0.8, Mixing = MixingModel.CPM };
         var d = ej.Design(ej.InletPT(10e5, 400.0), ej.InletPT(1.5e5, 300.0), 10.0 * gas.M, 0.3);
         Assert.Equal(d.Pout, pOut, 3);
         Assert.Equal(Geometry.Diameter(d.At), V(u, "ThroatDiameter"), 9);
@@ -84,6 +85,51 @@ public class AdapterTests
         Assert.True(V(r, "CriticalEntrainmentRatio") >= 0.3 * (1 - 1e-6));
         Assert.True(((object[])P(r, "Curve_OutletPressure").value).Length >= 2);
         _out.WriteLine($"design P_out={V(u, "OutletPressure"):F1}  rated P_out={V(r, "OutletPressure"):F1} ({P(r, "Regime").value})");
+    }
+
+    [Fact]
+    public void IdealGas_ConstantPressureMixing_MatchesEngineAndPersists()
+    {
+        var gas = new IdealGasFlash();
+        var mo = FlashMaterialObject.Stream(gas, "N2", 10e5, 400.0, 10.0);
+        var so = FlashMaterialObject.Stream(gas, "N2", 1.5e5, 300.0, 3.0);
+        var u = Unit(mo, so, new FlashMaterialObject(gas, "N2"), ("EfficiencySet", "Custom"),
+                     ("MixingModel", "ConstantPressure"), ("PrimaryCoreCoefficient", 0.88));
+        Assert.Equal(CapeParamMode.CAPE_INPUT, P(u, "MixingModel").Mode);
+        u.Calculate();
+        var ej = new EjectorCore.Ejector(gas)
+        {
+            EtaM = 0.9, EtaS = 0.85, EtaMix = 0.9, EtaD = 0.8, Mixing = MixingModel.CPM, PhiP = 0.88,
+        };
+        var d = ej.Design(ej.InletPT(10e5, 400.0), ej.InletPT(1.5e5, 300.0), 10.0 * gas.M, 0.3);
+        Assert.Equal(d.Pout, V(u, "OutletPressure"), 3);
+        Assert.Equal(Geometry.Diameter(d.Amix), V(u, "MixingDiameter"), 9);
+        // constant-area mixing at the same efficiencies gives less lift (Keenan 1950)
+        var cam = Unit(mo, so, new FlashMaterialObject(gas, "N2"), ("EfficiencySet", "Custom"), ("MixingModel", "ConstantArea"));
+        cam.Calculate();
+        Assert.True(V(u, "OutletPressure") > V(cam, "OutletPressure"));
+        Assert.Contains("constant pressure", u.LastTextReport);
+        // a preset shows (read-only) the mixing model it was fitted with
+        P(u, "EfficiencySet").value = "R744_AllPoints";
+        u.ApplyModes();
+        Assert.Equal(CapeParamMode.CAPE_OUTPUT, P(u, "MixingModel").Mode);
+        Assert.Equal("ConstantArea", P(u, "MixingModel").value);
+        P(u, "EfficiencySet").value = "Screening";
+        u.ApplyModes();
+        Assert.Equal("ConstantPressure", P(u, "MixingModel").value);
+        Assert.Equal(1.0, V(u, "PrimaryCoreCoefficient"), 12);
+        // persistence keeps the mixing settings
+        P(u, "EfficiencySet").value = "Custom";
+        u.ApplyModes();
+        P(u, "MixingModel").value = "ConstantPressure";
+        P(u, "PrimaryCoreCoefficient").value = 0.88;     // Custom starts from the values last shown
+        Assert.Equal(0, CreateStreamOnHGlobal(IntPtr.Zero, true, out var stm));
+        u.Save(stm, true);
+        stm.Seek(0, 0, IntPtr.Zero);
+        var v = new EjectorUnitOperation();
+        v.Load(stm);
+        Assert.Equal("ConstantPressure", P(v, "MixingModel").value);
+        Assert.Equal(0.88, V(v, "PrimaryCoreCoefficient"), 12);
     }
 
     [Fact]
@@ -114,6 +160,7 @@ public class AdapterTests
         var u = new EjectorUnitOperation();
         Assert.Equal(CapeParamMode.CAPE_OUTPUT, P(u, "ThroatDiameter").Mode);          // Design: geometry computed
         Assert.Equal(CapeParamMode.CAPE_OUTPUT, P(u, "MotiveEfficiency").Mode);        // preset Screening
+        Assert.Equal("ConstantPressure", P(u, "MixingModel").value);                // default mixing model
         P(u, "Mode").value = "Rating";
         P(u, "GeometrySpec").value = "FixedSize";
         P(u, "EfficiencySet").value = "Custom";
@@ -162,7 +209,8 @@ public class AdapterTests
         var mo = FlashMaterialObject.Stream(cp, "CO2", 47e5, 0, 13.66 / M, q: 0.0);
         var so = FlashMaterialObject.Stream(cp, "CO2", 15e5, 0, 2.0 / M, q: 1.0);
         var outlet = new FlashMaterialObject(cp, "CO2");
-        var u = Unit(mo, so, outlet);
+        // Screening efficiencies with constant-area mixing (the techref quotes this case, 21.17813 bar)
+        var u = Unit(mo, so, outlet, ("EfficiencySet", "Custom"), ("MixingModel", "ConstantArea"));
         u.Calculate();
         var (ej, m0, s0) = Direct(cp, 0.9, 0.85, 0.9, 0.8, 1.0, e => e.InletPQ(47e5, 0.0), e => e.InletPQ(15e5, 1.0));
         var d = ej.Design(m0, s0, 13.66, 2.0 / 13.66);

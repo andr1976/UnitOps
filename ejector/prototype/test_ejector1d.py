@@ -253,3 +253,86 @@ def test_solution_on_the_triple_point_floor_raises():
     m0 = ej.inlet(47e5, q=0.0)
     with pytest.raises(SolidPhaseRisk):
         ej.design(m0, ej.inlet(5.3e5, q=1.0), 1.0, 0.2)
+
+
+# ------------------------------------------------------------ constant-pressure mixing (CPM)
+def _air_ejector(mixing, **kw):
+    th = Thermo("Air", solid_check=False)
+    ej = Ejector(th, 0.95, 0.85, 0.95, 0.85, mixing=mixing, **kw)
+    return ej, th.pt(6e5, 300.0), th.pt(1e5, 300.0)
+
+
+def test_mixing_option_is_validated():
+    with pytest.raises(ValueError):
+        Ejector(Thermo("Air", solid_check=False), mixing="constant")
+
+
+@pytest.mark.parametrize("phi_p", [1.0, 0.88])
+def test_cpm_design_and_rating_are_consistent(phi_p):
+    """Re-rating the CPM-designed geometry at the design flows returns the design point."""
+    ej, m0, s0 = _air_ejector("CPM", phi_p=phi_p)
+    d = ej.design(m0, s0, 1.0, 0.5)
+    rf = ej.rate_flows(m0, s0, 1.0, 0.5, d.A_e / d.A_t, d.A_mix / d.A_t)
+    assert rf.P_out == pytest.approx(d.P_out, rel=1e-6)
+    r = ej.rate(m0, s0, d.A_t, d.A_e, d.A_mix, P_out=d.P_out)
+    assert r.ER == pytest.approx(0.5, rel=1e-4)
+
+
+def test_cpm_gives_more_lift_than_cam_at_the_same_efficiencies():
+    """Constant-pressure mixing outperforms constant-area mixing in design (Keenan 1950)."""
+    p = {}
+    for mixing in ("CAM", "CPM"):
+        ej, m0, s0 = _air_ejector(mixing)
+        p[mixing] = ej.design(m0, s0, 1.0, 0.5).P_out
+    assert p["CPM"] > p["CAM"] * 1.03
+
+
+def test_cpm_critical_point_is_the_entrainment_maximum():
+    """Compound choking: no point of the CPM characteristic entrains more than ER_critical,
+    and the critical point lies above the suction choke pressure."""
+    ej, m0, s0 = _air_ejector("CPM")
+    d = ej.design(m0, s0, 1.0, 0.5)
+    rf = ej.rate_flows(m0, s0, 1.0, 0.3, d.A_e / d.A_t, d.A_mix / d.A_t, n_curve=30)
+    assert max(er for _, er in rf.curve) <= rf.ER_critical * (1 + 1e-9)
+    r = ej.rate(m0, s0, d.A_t, d.A_e, d.A_mix, P_out=0.5 * d.P_out)
+    assert r.regime == "critical"
+    P_ys = Expansion(ej.th, s0, ej.eta_s).critical(0.01 * s0.P)[0]
+    assert r.P_y > P_ys
+    assert r.ER == pytest.approx(rf.ER_critical, rel=1e-6)
+
+
+def test_cpm_huang1999_subset_with_huang_coefficients():
+    """Real-fluid CPM with Huang's coefficients (Cd = sqrt(eta_p), phi_p 0.88, phi_m(A3/At))
+    reproduces the critical entrainment of five Huang (1999) ejectors within 12 %."""
+    rows = np.loadtxt(validate_huang1999.DATA.strip().splitlines())[[0, 9, 14, 20, 30]]
+    th = Thermo("R141b")
+    for Dt, De, D3, Pp, Ps, er_x, _ in rows:
+        ej = Ejector(th, eta_m=1.0, Cd_m=math.sqrt(0.95), eta_s=0.85, eta_d=1.0, mixing="CPM",
+                     eta_mix=validate_huang1999.huang_phi_m((D3 / Dt) ** 2), phi_p=0.88)
+        m0, s0 = ej.inlet(Pp * 1e5, q=1.0), ej.inlet(Ps * 1e5, q=1.0)
+        r = ej.rate(m0, s0, area(Dt * 1e-3), area(De * 1e-3), area(D3 * 1e-3), P_out=s0.P)
+        assert abs(r.ER_critical / er_x - 1) < 0.12
+
+
+# ------------------------------------------------------------ water / air thermodynamics
+def test_water_air_matches_coolprop_humid_air():
+    import CoolProp.CoolProp as CP
+    from water_air import WaterAirThermo
+    th = WaterAirThermo()
+    W, P = 0.01, 101325.0
+    xw = W / th.Mw / (W / th.Mw + 1 / th.Ma)
+    z = (xw, 1 - xw)
+    a, b = th.pt(P, 293.15, z), th.pt(P, 333.15, z)
+    HA = lambda k, T: CP.HAPropsSI(k, "T", T, "P", P, "W", W)
+    assert (b.h - a.h) * (1 + W) == pytest.approx(HA("H", 333.15) - HA("H", 293.15), rel=2e-4)
+    assert (b.s - a.s) * (1 + W) == pytest.approx(HA("S", 333.15) - HA("S", 293.15), rel=2e-4)
+    assert b.rho == pytest.approx(1 / HA("Vha", 333.15), rel=2e-4)
+    # condensing state: flash round trips, condensate = excess over saturation
+    zc = (0.95, 0.05)              # p_w 0.19 bar > p_sat(330 K) 0.172 bar: condensing
+    st = th.pt(2e4, 330.0, zc)
+    assert 0 < st.q < 1
+    assert th.ph(2e4, st.h, zc).T == pytest.approx(330.0, abs=1e-6)
+    assert th.ps(2e4, st.s, zc).T == pytest.approx(330.0, abs=1e-6)
+    # pure components are delegated to the pure-fluid model
+    assert th.pq(11e5, 1.0, (1.0, 0.0)).T == pytest.approx(
+        CP.PropsSI("T", "P", 11e5, "Q", 1, "Water"), rel=1e-12)

@@ -49,6 +49,8 @@ public class PythonRegressionTests
                 case "Cd_m": ej.CdM = p.Value.GetDouble(); break;
                 case "phi_ne": ej.PhiNe = p.Value.GetDouble(); break;
                 case "motive_model": ej.MotiveModel = Enum.Parse<MotiveModel>(p.Value.GetString()!); break;
+                case "mixing": ej.Mixing = Enum.Parse<MixingModel>(p.Value.GetString()!); break;
+                case "phi_p": ej.PhiP = p.Value.GetDouble(); break;
                 default: throw new InvalidOperationException("unknown efficiency key " + p.Name);
             }
         }
