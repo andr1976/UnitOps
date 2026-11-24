@@ -1,4 +1,4 @@
-% Planned two-assembly architecture of the ejector unit operation (same
+% Two-assembly architecture of the ejector unit operation (same
 % ports-and-adapters split as the membrane unit, separate assemblies). The
 % Python prototype is the reference implementation the core is ported from.
 \begin{tikzpicture}[font=\small, >=Latex,
@@ -6,17 +6,17 @@
   \node[box, docnavy, fill=docnavy!6] (core)
     {\textbf{EjectorCore}\\[1pt]\footnotesize (physics, PME-agnostic)\\[3pt]
      \footnotesize $\bullet$ Expansion (nozzle, choke search)\\
-     $\bullet$ MixingSection (subsonic root)\\
-     $\bullet$ Diffuser\\
-     $\bullet$ Rating / Design / DesignForLift\\
-     $\bullet$ IsentropeTable (flash cache)\\
+     $\bullet$ Mixing (subsonic root), Diffuser\\
+     $\bullet$ Rate / RateFlows (inverse rating)\\
+     $\bullet$ Design / DesignForLift\\
+     $\bullet$ Brent root and minimiser (SciPy ports)\\
      $\bullet$ IFlash port: PH, PS, PT, PQ at $\vec z$};
   \node[box, docred, fill=docred!4, right=2.6cm of core] (ad)
     {\textbf{Ejector.CapeOpen}\\[1pt]\footnotesize (COM / CAPE-OPEN adapter)\\[3pt]
      \footnotesize $\bullet$ EjectorUnitOperation\\
-     $\bullet$ MaterialObjectAdapter\\
+     $\bullet$ StreamAdapter (inlets; outlet PH flash)\\
      $\bullet$ PmeFlash : IFlash (scratch MO)\\
-     $\bullet$ Real / Option parameters\\
+     $\bullet$ Real / Option / Array parameters\\
      $\bullet$ persistence, registration\\
      $\bullet$ HTML / text report};
   \node[box, docslate, fill=docslate!6, below=1.1cm of core, text width=5.0cm] (py)

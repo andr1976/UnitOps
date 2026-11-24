@@ -25,28 +25,31 @@ Efficiency sets
    * - Ma *et al.* (R141b)
      - 0.95 / 0.85 / 0.95 / 0.85
      - 1
-     - used by :cite:`ma2017` for the Huang data; predictive here to 0.9 K in :math:`P_\mathrm{b}^*`, +14 % in ER
+     - used by :cite:`ma2017` (a different, constant-pressure model) for the Huang data; here without fitting: 0.5 K in :math:`P_\mathrm{b}^*`, +11 % in critical ER (which tests :math:`\eta_\mathrm{s}` only)
    * - typical (this work)
      - 0.90 / 0.85 / 0.90 / 0.80
      - 1
-     - a screening assumption; over-predicts the Giacomelli suction flow by 32 % (MAE)
+     - a screening assumption; over-predicts the Giacomelli suction flow by 31 % (MAE)
    * - R744, all points
-     - 0.90 / 0.608 / 0.840 / 0.801
-     - 1.205
+     - 0.90 / 0.610 / 0.825 / 0.820
+     - 1.138
      - fitted on 42 points :cite:`giacomelli2019`: motive 71–104 bar, suction 24–39 bar, lift ≤ 1.6, :math:`D_\mathrm{mix}` = 2 mm
    * - R744, supercritical
-     - 0.90 / 0.632 / 0.844 / 0.798
-     - 1.205
+     - 0.90 / 0.638 / 0.829 / 0.814
+     - 1.138
      - the 27 supercritical-motive points of the same set
    * - R744, subcritical + subcooled
-     - 0.90 / 0.880 / 0.783 / 0.751
-     - 1.205
+     - 0.90 / 0.872 / 0.767 / 0.790
+     - 1.138
      - the 15 subcritical and subcooled points of the same set
 
 The three R744 sets fit their own data equally well (:ref:`sec-val-giacomelli`).
 They are listed separately because their spread measures how much the
-efficiencies change with operating regime. That spread should be carried as an
-uncertainty band in any application outside the data range.
+efficiencies change over the tested range (regime and lift are confounded). That
+spread is the minimum uncertainty to carry outside the data range. It does not
+include :math:`\eta_\mathrm{m}`, which the calibration fixes at 0.90 without
+identifying it, and which moves the worked-example outlet pressure as much as
+the three-set band (:ref:`worked_example`).
 
 .. _sec-datasets:
 

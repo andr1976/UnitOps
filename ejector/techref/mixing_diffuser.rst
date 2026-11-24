@@ -124,6 +124,6 @@ Three measures summarise an operating point:
    \frac{h(P_\mathrm{out}, s_\mathrm{s0}) - h_\mathrm{s0}}{h_\mathrm{m0} - h(P_\mathrm{out}, s_\mathrm{m0})} .
 
 :math:`\eta_\mathrm{ej}` makes ejectors with different fluids and pressure levels
-comparable. The optimum designs of the worked example reach 0.14–0.30
+comparable. The optimum designs of the worked example reach 0.14–0.31
 (:ref:`worked_example`). The **solid margin** :math:`\sigma` (:ref:`sec-solid`)
 is reported with every result.

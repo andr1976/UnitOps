@@ -7,7 +7,7 @@ CSVs into figures/data/.  The make_*.py plotting scripts and the tables in the
 Usage (from this directory):
     python gen_data.py                 # everything (~5 min, calibration dominates)
     python gen_data.py nozzle fluids   # selected sections
-Sections: nozzle fluids huang goncalves giacomelli offdesign duty
+Sections: nozzle fluids huang goncalves giacomelli hne offdesign duty
 'offdesign' and 'duty' read the fitted efficiencies written by 'giacomelli'.
 """
 import csv
@@ -59,17 +59,18 @@ def nozzle():
         rows.append(("N2_10bar_300K", P / 1e5, r, G, G_ig))
     Pt, Gt = ex.critical(1e5)
     print(f"  N2 critical ratio {Pt/st.P:.4f} (theory {(2/(k+1))**(k/(k-1)):.4f})")
-    # (b) flashing CO2 motive: saturated liquid 47 bar (HEM, HNE phi=0.5) and dense 84.5 bar/32 C
+    # (b) flashing CO2 motive: saturated liquid 47 bar (HEM, HNE phi=0.5) and dense 84.5 bar/32 C.
+    # Motive path as in the model: isentropic to the throat, eta_m = 0.9 beyond it.
     th = Thermo("CO2")
     cases = [("CO2_47bar_satliq_HEM", th.pq(47e5, 0.0), 1.0),
              ("CO2_47bar_satliq_HNE0.5", th.pq(47e5, 0.0), 0.5),
              ("CO2_84.5bar_32C_HEM", th.pt(84.5e5, 305.15), 1.0)]
     crit = []
     for name, s0, phi in cases:
-        ex = Expansion(th, s0, 0.9, phi=phi)
+        ej = Ejector(th, eta_m=0.9, motive_model="HEM" if phi == 1.0 else "HNE", phi_ne=phi)
+        ex, Pt, Gt = ej._motive(s0, 6e5)
         for P in np.linspace(8e5, s0.P * 0.999, 160):
             rows.append((name, P / 1e5, P / s0.P, ex.flux(P), float("nan")))
-        Pt, Gt = ex.critical(6e5)
         crit.append((name, s0.P / 1e5, s0.T - 273.15, Pt / 1e5, Gt))
     write("nozzle_flux.csv", ["case", "P_bar", "P_over_P0", "G", "G_ideal_gas"], rows)
     write("nozzle_critical.csv", ["case", "P0_bar", "T0_C", "Pt_bar", "Gstar"], crit)
@@ -107,7 +108,7 @@ def huang():
         for Dt, De, D3, Pp, Ps, er_x, Td_x in pts:
             m0, s0 = ej.inlet(Pp * 1e5, q=1.0), ej.inlet(Ps * 1e5, q=1.0)
             r = ej.rate(m0, s0, area(Dt * 1e-3), area(De * 1e-3), area(D3 * 1e-3), P_out=s0.P)
-            Td = CP.PropsSI("T", "P", r.out.P, "Q", 1, "R141b") - 273.15
+            Td = CP.PropsSI("T", "P", r.P_b_critical, "Q", 1, "R141b") - 273.15
             rows.append((label, Dt, De, D3, Pp, Ps, er_x, r.ER, Td_x, Td, r.m_m * 1e3))
     write("huang1999.csv", ["set", "Dt_mm", "De_mm", "D3_mm", "Pp_bar", "Ps_bar", "ER_exp", "ER_sim",
                             "Td_exp_C", "Td_sim_C", "m_m_sim_gs"], rows)
@@ -118,10 +119,12 @@ def goncalves():
     import validate_goncalves2024 as vg
     th = Thermo("CO2")
     rows = []
-    for inlet in ("p_rho", "p_T"):
-        ej = Ejector(th, eta_m=0.90, eta_s=0.85, eta_mix=0.90, eta_d=0.80)
+    # (p, rho) and (p, T) inlet with the screening set; (p, rho) also with lower eta_mix
+    variants = [("p_rho", 0.90), ("p_T", 0.90), ("p_rho_etamix0.85", 0.85), ("p_rho_etamix0.80", 0.80)]
+    for inlet, emix in variants:
+        ej = Ejector(th, eta_m=0.90, eta_s=0.85, eta_mix=emix, eta_d=0.80)
         for k, (Pm, Tm, rhom, mm, Ps, Ts, ms, Po) in enumerate(vg.RUNS, 1):
-            Tin = CP.PropsSI("T", "P", Pm * 1e3, "D", rhom, "CO2") - 273.15 if inlet == "p_rho" else Tm
+            Tin = CP.PropsSI("T", "P", Pm * 1e3, "D", rhom, "CO2") - 273.15 if inlet.startswith("p_rho") else Tm
             m0, s0 = ej.inlet(Pm * 1e3, T=Tin + 273.15), ej.inlet(Ps * 1e3, T=Ts + 273.15)
             r = ej.rate(m0, s0, area(vg.D_T), area(vg.D_E), area(vg.D_MIX), P_out=Po * 1e3)
             rows.append((inlet, k, Pm / 100, Tm, Tin, mm, r.m_m * 1e3, ms / mm, r.ER, r.regime,
@@ -166,6 +169,59 @@ def giacomelli():
                                  "ms_cross_gs", "ER_exp", "ER_cal", "regime_cal"], rows)
 
 
+# ----------------------------------------------------------------------------- hne
+def hne():
+    """Delayed flashing vs discharge coefficient on the Giacomelli motive flows.
+
+    One constant Cd scaling the HEM critical flux, against one constant HNE
+    factor phi (x = phi * x_eq in the density), each fitted on all 42 points;
+    plus the Cd and phi each point would need on its own.
+    """
+    from scipy.optimize import brentq, minimize_scalar
+    import calibrate_r744 as c
+    pts = c.load_points()
+    th = c.TH
+    A_t = c.GEOM["A_t"]
+    mm = np.array([p["mm"] for p in pts])
+    reg = np.array([p["inlet"] for p in pts])
+    inl = [Ejector(th).inlet(p["PM"], T=p["TM"]) for p in pts]
+
+    def flow(i, phi):
+        ej = Ejector(th, motive_model="HEM" if phi >= 1.0 else "HNE", phi_ne=phi)
+        ex, Pt, G = ej._motive(inl[i], 0.2 * pts[i]["PS"])
+        return G * A_t, Pt, ex
+
+    base = [flow(i, 1.0) for i in range(len(pts))]
+    m1 = np.array([b[0] for b in base])
+    xt = np.array([b[2].at(b[1])[0].q for b in base])     # -1: single phase at the throat
+    cd = float(np.sum(m1 * mm) / np.sum(m1 * m1))
+    e_cd = (cd * m1 / mm - 1) * 100
+    err = lambda phi: np.array([flow(i, phi)[0] for i in range(len(pts))]) / mm - 1
+    phi = minimize_scalar(lambda f: np.sum(err(f) ** 2), bounds=(0.05, 1.0), method="bounded",
+                          options={"xatol": 1e-4}).x
+    e_phi = err(phi) * 100
+    phi_req = []
+    for i in range(len(pts)):
+        f = lambda ph: flow(i, ph)[0] - mm[i]
+        phi_req.append(brentq(f, 0.02, 1.0, xtol=1e-4) if f(1.0) < 0 else float("nan"))
+    write("giacomelli_hne.csv", ["case", "inlet", "PM_bar", "TM_C", "x_throat_HEM", "mm_exp_gs",
+                                 "mm_HEM_gs", "Cd_required", "phi_required", "err_Cd_pct",
+                                 "err_phi_pct"],
+          [(p["case"], p["inlet"], p["PM"] / 1e5, p["TM"] - 273.15, xt[i], mm[i] * 1e3,
+            m1[i] * 1e3, mm[i] / m1[i], phi_req[i], e_cd[i], e_phi[i]) for i, p in enumerate(pts)])
+    summ = []
+    for name, val, e in (("Cd", cd, e_cd), ("phi", phi, e_phi)):
+        row = [name, val, np.abs(e).mean(), np.abs(e).max()]
+        for g in ("supercritical", "subcritical", "subcooled"):
+            row.append(e[reg == g].mean())
+        summ.append(tuple(row))
+    write("giacomelli_hne_summary.csv", ["correction", "value", "MAE_pct", "max_pct",
+                                         "bias_supercritical", "bias_subcritical",
+                                         "bias_subcooled"], summ)
+    print(f"  Cd = {cd:.4f}: MAE {np.abs(e_cd).mean():.2f} %;  phi = {phi:.4f}: MAE "
+          f"{np.abs(e_phi).mean():.2f} %;  phi_req {np.nanmin(phi_req):.2f}-{np.nanmax(phi_req):.2f}")
+
+
 def fitted_sets():
     return {r["fit_set"]: dict(eta_m=float(r["eta_m"]), Cd_m=float(r["Cd_m"]),
                                eta_s=float(r["eta_s"]), eta_mix=float(r["eta_mix"]),
@@ -183,8 +239,8 @@ def offdesign():
     rows = []
     for Po in np.arange(31.0, 54.01, 0.25):
         r = ej.rate(m0, s0, c.GEOM["A_t"], c.GEOM["A_e"], c.GEOM["A_mix"], Po * 1e5, n_scan=40)
-        rows.append((Po, r.regime, r.m_m * 1e3, r.m_s * 1e3, r.ER, r.P_y / 1e5))
-    write("offdesign_case1.csv", ["PO_bar", "regime", "mm_gs", "ms_gs", "ER", "Py_bar"], rows)
+        rows.append((Po, r.regime, r.m_m * 1e3, r.m_s * 1e3, r.ER, r.P_y / 1e5, r.P_b_critical / 1e5))
+    write("offdesign_case1.csv", ["PO_bar", "regime", "mm_gs", "ms_gs", "ER", "Py_bar", "Pb_crit_bar"], rows)
 
 
 # ----------------------------------------------------------------------------- duty
@@ -227,7 +283,7 @@ def duty():
 
 
 SECTIONS = dict(nozzle=nozzle, fluids=fluids_limit, huang=huang, goncalves=goncalves,
-                giacomelli=giacomelli, offdesign=offdesign, duty=duty)
+                giacomelli=giacomelli, hne=hne, offdesign=offdesign, duty=duty)
 
 if __name__ == "__main__":
     for name in (sys.argv[1:] or list(SECTIONS)):

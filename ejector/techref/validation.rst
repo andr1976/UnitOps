@@ -24,7 +24,7 @@ model result is hand-entered.
 Automated test suite
 ====================
 
-13 tests run with ``python -m pytest`` in ``ejector/prototype``:
+25 tests run with ``python -m pytest`` in ``ejector/prototype``:
 
 .. list-table::
    :header-rows: 1
@@ -53,16 +53,37 @@ Automated test suite
      - a CO\ :sub:`2` flash below 5.18 bar raises ``SolidPhaseRisk``
    * - Gonçalves 2024 motive flow
      - 1
-     - three subcooled-liquid CO\ :sub:`2` runs within 5 % (:ref:`sec-val-goncalves`)
+     - three subcooled-liquid CO\ :sub:`2` runs over-predicted by 0–7.5 % with :math:`C_d = 1` (:ref:`sec-val-goncalves`)
    * - mixture composition bookkeeping
      - 1
      - :eq:`eq-mix-composition` for CO\ :sub:`2` + N\ :sub:`2` to :math:`10^{-12}`
    * - Giacomelli 2019 motive :math:`C_d`
      - 1
-     - 42 points: fitted :math:`C_d \in (1.15, 1.25)`, motive-flow MAE < 3 % (:ref:`sec-val-giacomelli`)
+     - 42 points: fitted :math:`C_d \in (1.10, 1.18)`, motive-flow MAE < 3 % (:ref:`sec-val-giacomelli`)
    * - critical ER independent of scan resolution
      - 1
      - Giacomelli case 1, ``n_scan`` = 10, 25, 80 give the same critical ER to :math:`10^{-4}` (:ref:`sec-rating-algorithm`)
+   * - loss-free throat
+     - 1
+     - :math:`G^*` independent of :math:`\eta_\mathrm{m}`; the path is continuous at the throat and lossy only beyond it
+   * - inverse rating
+     - 5
+     - ``rate_flows`` returns the outlet pressure and throat of a forward rating (critical, subcritical, unchoked water jet pump); zero entrainment; excess suction raises
+   * - converging–diverging nozzle regimes
+     - 2
+     - motive flow continuous at :math:`P_\mathrm{t}` and :math:`P_\mathrm{fc}`, exit continuity in every regime; a forward rating meets the specified :math:`P_\mathrm{out}` or raises (:ref:`sec-unchoked-motive`)
+   * - exit area below :math:`C_d`
+     - 1
+     - :math:`1 < A_\mathrm{e}/A_\mathrm{t} < C_d` raises instead of clamping
+   * - design at small ER, design for lift
+     - 1
+     - ER = 0.005 is feasible and above 32 bar; design for 32 bar finds the root beyond the maximum (:ref:`sec-solution-design`)
+   * - critical and backflow results
+     - 1
+     - outlet state and :math:`\eta_\mathrm{ej}` at the specified :math:`P_\mathrm{out}`; backflow outlet equals the motive stream
+   * - triple-point floor
+     - 1
+     - a design whose suction expansion reaches the triple point raises ``SolidPhaseRisk``
 
 .. _sec-val-fluids:
 
@@ -116,11 +137,23 @@ Huang *et al.* :cite:`huang1999` measured 39 critical-mode operating points on
 R141b ejectors: 11 geometries, motive 4.0–6.0 bar and suction 0.40–0.47 bar,
 both saturated vapour. They report the critical entrainment ratio and the
 critical back pressure. The data and geometry used here are those tabulated by
-Ma *et al.* :cite:`ma2017` (Table 1). The model is run **predictively**, with
-Ma's efficiencies :math:`\eta_\mathrm{m}, \eta_\mathrm{s}, \eta_\mathrm{mix}, \eta_\mathrm{d}
-= 0.95, 0.85, 0.95, 0.85`. Rating each geometry at a low back pressure
-returns the critical ER and, as the outlet pressure of the critical state,
-:math:`P_\mathrm{b}^*`.
+Ma *et al.* :cite:`ma2017` (Table 1). The model is run without fitting, with
+the efficiency values :math:`0.95, 0.85, 0.95, 0.85` that Ma *et al.* used.
+Their model is a constant-pressure (hypothetical-throat) model that applies
+:math:`\eta_\mathrm{n}` in both nozzle sections. They used the measured ER to
+obtain the hypothetical throat area, so these values were never used there
+to predict ER, and they do not have the same role as here. Rating each geometry
+at a low back pressure returns the critical ER and :math:`P_\mathrm{b}^*`.
+
+**What this tests.** All 39 points are suction-choked
+(:math:`P_\mathrm{y} = P_\mathrm{y}^*`). The critical ER then depends on the
+suction choke in the annulus and on :math:`\eta_\mathrm{s}` only; changing
+:math:`\eta_\mathrm{m}`, :math:`\eta_\mathrm{mix}` or :math:`\eta_\mathrm{d}`
+leaves it unchanged. :math:`P_\mathrm{b}^*` tests :math:`\eta_\mathrm{m}`,
+:math:`\eta_\mathrm{mix}` and :math:`\eta_\mathrm{d}` at that imposed ER. The
+comparison is a check of the suction-choke assumption and of the
+mixing-diffuser chain in critical mode. Off-design (subcritical) behaviour of
+gas ejectors is not tested.
 
 .. _fig-val-huang:
 
@@ -142,20 +175,21 @@ returns the critical ER and, as the outlet pressure of the critical state,
      - :math:`T_\mathrm{sat}(P_\mathrm{b}^*)` bias / MAE
      - Comment
    * - 0.95/0.85/0.95/0.85 (Ma)
-     - +14.4 / 14.7 / 32.6 %
-     - −0.87 / 0.91 K
+     - +11.2 / 11.6 / 28.9 %
+     - −0.22 / 0.47 K
      - fully predictive
    * - 0.95/**0.70**/0.95/0.85
-     - +3.0 / 6.0 / 19.4 %
-     - −1.34 / 1.34 K
+     - +0.2 / 5.6 / 17.1 %
+     - −0.68 / 0.72 K
      - :math:`\eta_\mathrm{s}` adjusted
 
-The critical back pressure is predicted to within about 1 K of saturation
-temperature, i.e. a few percent in pressure, without any fitting.
-Entrainment is over-predicted by 14 %. Lowering :math:`\eta_\mathrm{s}` to 0.70
-removes most of the bias but costs 0.4 K in :math:`P_\mathrm{b}^*`. The two
-targets pull :math:`\eta_\mathrm{s}` in opposite directions, so the
-efficiencies are not independent of the operating point.
+The critical back pressure is predicted to within 0.5 K of saturation
+temperature on average (2 K at most), i.e. a few percent in pressure, without
+any fitting. Entrainment is over-predicted by 11 %. Lowering
+:math:`\eta_\mathrm{s}` to 0.70 removes the bias but costs 0.25 K in
+:math:`P_\mathrm{b}^*`. Both targets come from the same operating points, so
+this tension points to the model structure (the suction choke in the annulus)
+rather than to an operating-point dependence of the efficiencies.
 
 .. _sec-val-goncalves:
 
@@ -182,33 +216,44 @@ instead, about 9 K colder. This model is run both ways with
      - ER this work, :math:`(P,\rho)`
    * - 1
      - 71.1
-     - 71.9 (+1.1 %)
-     - 41.3 (−42 %)
+     - 75.9 (+6.8 %)
+     - 43.7 (−38.6 %)
      - 0.007
-     - 0.071
+     - 0.114
    * - 2
      - 70.8
-     - 71.0 (+0.2 %)
-     - 41.0 (−42 %)
+     - 74.9 (+5.8 %)
+     - 43.4 (−38.8 %)
      - 0.006
-     - 0.081
+     - 0.122
    * - 3
      - 74.0
-     - 72.4 (−2.1 %)
-     - 41.5 (−44 %)
+     - 76.5 (+3.3 %)
+     - 43.9 (−40.7 %)
      - 0.017
-     - 0.134
+     - 0.158
 
-With the consistent inlet state the HEM motive flow is within ±2 %, better than
-the authors' HEM CFD (−1.5 to −5.7 %). The **inlet-state sensitivity** is the
-key lesson. A 9 K difference in the temperature of a subcooled liquid changes
-the predicted flow by more than 40 %, because the saturation pressure, and with
-it the choke, moves.
+With the consistent inlet state the isentropic HEM throat over-predicts the
+motive flow by 3–7 %. The authors' HEM CFD under-predicted it by 1.5–5.7 %, so
+the two agree in size but not in sign. This 1.5 mm nozzle would need
+:math:`C_d \approx 0.95`, against 1.14 for the 0.9 mm Giacomelli nozzle
+(:ref:`sec-val-giacomelli`). With the R744 calibrated set (:math:`C_d = 1.138`)
+the motive flow is over-predicted by 18–21 %. The data cannot settle whether
+:math:`C_d` transfers between nozzles. The predicted flow changes by about
+4.6 % per kelvin of inlet temperature, so the gap between 0.95 and 1.14
+corresponds to only about 3.5 K of inlet-state uncertainty, and the authors
+report a 9 K inconsistency. The calibrated set has therefore **not been
+validated independently** of the nozzle it was fitted on. The **inlet-state
+sensitivity** is the key lesson. A 9 K difference in the temperature of a
+subcooled liquid changes the predicted flow by about 40 %, because the
+saturation pressure, and with it the choke, moves. With the measured
+temperature the model even predicts backflow for all three runs.
 
-Entrainment is over-predicted (0.07–0.13 against 0.006–0.017), as it was by the
-authors' HEM CFD (about 0.16). These points sit at the zero-entrainment edge of
-the characteristic. Lowering :math:`\eta_\mathrm{mix}` from 0.85 to 0.80 turns
-them into backflow, so they test ER only weakly.
+Entrainment is over-predicted (0.11–0.16 against 0.006–0.017), as it was by the
+authors' HEM CFD (about 0.16). These points sit near the zero-entrainment edge
+of the characteristic: lowering :math:`\eta_\mathrm{mix}` from 0.90 to 0.80
+cuts the predicted ER to 0.04–0.09 (``figures/data/goncalves2024.csv``), so
+they test ER only weakly.
 
 .. _sec-val-giacomelli:
 
@@ -230,10 +275,12 @@ The calibration has two stages, because the motive flow does not depend on the
 suction side once the nozzle is choked:
 
 #. **Motive** :math:`C_d` by linear least squares of measured on HEM-predicted
-   motive flow (:math:`\eta_\mathrm{m} = 0.90` fixed).
+   motive flow. The critical flux is taken on the isentrope
+   (:eq:`eq-motive-path`), so this stage does not depend on
+   :math:`\eta_\mathrm{m}`.
 #. **Suction** :math:`(\eta_\mathrm{s}, \eta_\mathrm{mix}, \eta_\mathrm{d})` by
    nonlinear least squares on the suction mass flow, rating each point at its
-   measured outlet pressure.
+   measured outlet pressure, with :math:`\eta_\mathrm{m} = 0.90` fixed.
 
 As a **cross-regime check**, stage 2 is refitted on the 27 supercritical
 points and used to predict the 15 subcritical and subcooled ones, and the
@@ -246,11 +293,11 @@ other way round.
    :align: center
 
    Giacomelli *et al.* R744 ejector, 42 points. (a) Motive flow: uncalibrated
-   HEM (crosses), and with :math:`C_d = 1.205` by inlet regime. (b) Suction
-   flow: uncalibrated, fitted on all points, and the cross-regime prediction.
-   Data: ``figures/data/giacomelli_sim.csv``.
+   HEM (crosses), and with :math:`C_d = 1.138` by inlet regime. (b) Suction
+   flow: uncalibrated, fitted on all points (0.61 / 0.83 / 0.82), and the
+   cross-regime prediction. Data: ``figures/data/giacomelli_sim.csv``.
 
-.. list-table:: Fitted parameters (:math:`\eta_\mathrm{m} = 0.90`, :math:`C_d = 1.205`), with standard errors and correlations from the Gauss–Newton covariance at the optimum. Source: ``figures/data/giacomelli_fit.csv``.
+.. list-table:: Fitted parameters (:math:`\eta_\mathrm{m} = 0.90`, :math:`C_d = 1.138`), with standard errors and correlations from the Gauss–Newton covariance at the optimum. Source: ``figures/data/giacomelli_fit.csv``.
    :header-rows: 1
    :widths: 22 7 15 15 15 26
 
@@ -262,22 +309,22 @@ other way round.
      - correlations (s–mix, s–d, mix–d)
    * - all points
      - 42
-     - 0.608 ± 0.035
-     - 0.840 ± 0.012
-     - 0.801 ± 0.032
-     - −0.51, −0.16, −0.68
+     - 0.610 ± 0.036
+     - 0.825 ± 0.012
+     - 0.820 ± 0.032
+     - −0.54, −0.14, −0.66
    * - supercritical
      - 27
-     - 0.632 ± 0.049
-     - 0.844 ± 0.016
-     - 0.798 ± 0.041
-     - −0.59, +0.09, −0.77
+     - 0.638 ± 0.054
+     - 0.829 ± 0.015
+     - 0.814 ± 0.040
+     - −0.63, +0.14, −0.77
    * - subcritical + subcooled
      - 15
-     - 0.880 ± 0.119
-     - 0.783 ± 0.015
-     - 0.751 ± 0.034
-     - −0.70, −0.51, −0.20
+     - 0.872 ± 0.117
+     - 0.767 ± 0.014
+     - 0.790 ± 0.033
+     - −0.71, −0.53, −0.17
 
 .. list-table:: Calibration statistics
    :header-rows: 1
@@ -285,53 +332,197 @@ other way round.
 
    * - Quantity
      - Result
-   * - motive flow, HEM, :math:`C_d = 1`
-     - MAE 17.1 % (HEM under-predicts)
-   * - motive flow, :math:`C_d = 1.205`
+   * - motive flow, isentropic HEM throat, :math:`C_d = 1`
+     - MAE 12.2 % (HEM under-predicts)
+   * - motive flow, :math:`C_d = 1.138`
      - MAE 1.7 %; bias +1.1 / −2.5 / −2.4 % (supercritical / subcritical / subcooled)
    * - suction flow, uncalibrated (0.90/0.85/0.90/0.80)
-     - MAE 31.6 %
+     - MAE 31.1 %
    * - suction flow, fitted on all 42
-     - MAE 5.5 % (bias +0.1 %); ER MAE 0.017, max 0.059
+     - MAE 5.9 % (bias +0.2 %); ER MAE 0.017, max 0.061
    * - by inlet regime (all-point fit)
-     - supercritical 6.3 %, subcritical 4.2 %, subcooled 4.1 %
+     - supercritical 6.7 %, subcritical 4.5 %, subcooled 4.1 %
    * - cross-regime: supercritical fit → subcritical/subcooled
-     - MAE 5.3 %
+     - MAE 5.6 %
    * - cross-regime: subcritical/subcooled fit → supercritical
-     - MAE 14.7 %
+     - MAE 14.9 %
    * - regimes at the measured outlet pressure
-     - 13 critical, 29 subcritical
+     - 15 critical, 27 subcritical
 
 Three findings matter for using the model:
 
-* **One discharge coefficient fits all motive regimes.** :math:`C_d = 1.205` brings
-  supercritical, subcritical and subcooled inlets alike to within ±2.5 % bias.
-  HEM's 17 % under-prediction for this small nozzle is therefore a systematic
-  effect (delayed flashing at a 0.9 mm throat), not regime noise.
+* **One discharge coefficient fits all motive regimes.** :math:`C_d = 1.138`
+  brings supercritical, subcritical and subcooled inlets alike to within
+  ±2.5 % bias. The 12 % under-prediction by the isentropic HEM throat is
+  therefore systematic, not regime noise. The motive flows alone cannot say
+  what causes it (:ref:`sec-val-hne`).
 * **The suction-side efficiencies are only partly identifiable.**
   :math:`\eta_\mathrm{mix}` is well determined (±0.012). :math:`\eta_\mathrm{s}`
   and :math:`\eta_\mathrm{d}` are less so, and are correlated with
-  :math:`\eta_\mathrm{mix}`. When the scan-resolution staircase was removed
-  from the objective (:ref:`sec-rating-algorithm`), the optimum moved from
-  0.65 / 0.89 / 0.64 to 0.61 / 0.84 / 0.80 at practically unchanged fit
-  quality.
-* **The efficiencies depend on the operating regime.** The subcritical and
-  subcooled set has :math:`\eta_\mathrm{mix} = 0.78`, about four standard errors
-  below the supercritical 0.84. A set fitted on the subcritical and subcooled
-  points predicts the supercritical ones with 14.7 % MAE. Constant
-  efficiencies are the model's main extrapolation risk. The spread between the
-  three fitted sets is the minimum uncertainty to carry into any application
-  outside the data (:ref:`worked_example`).
+  :math:`\eta_\mathrm{mix}` (correlation down to −0.66). The standard errors
+  and correlations in the table are the measure of how well the 42 points
+  identify them.
+* **The efficiencies are not constant over the tested range, but regime and
+  lift are confounded.** The subcritical and subcooled set has
+  :math:`\eta_\mathrm{mix} = 0.77` against 0.83 for the supercritical set; the
+  difference is three standard errors (:math:`z = 3.0`). A set fitted on the
+  subcritical and subcooled points predicts the supercritical ones with
+  14.9 % MAE. But the subcritical and subcooled points span lifts of only
+  1.04–1.22, against 1.06–1.60 for the supercritical ones. On the 11
+  supercritical points within that lift range the same prediction has 4.6 %
+  MAE. The large error is therefore mostly an extrapolation in lift. Constant
+  efficiencies remain the model's main extrapolation risk. The spread between
+  the three fitted sets is the minimum uncertainty to carry outside the data
+  (:ref:`worked_example`).
 
-The two worst points, cases 15 (−47 %) and 21 (−20 %), have the lowest suction
-pressure in the set (24 bar) and the highest lift (about 1.6). This is the
-corner of the data closest to the worked example, which is a warning in
-itself. All other points are within ±12 %.
+The two worst points, cases 15 (−49 %) and 21 (−19 %), have the lowest suction
+pressure in the set (24 bar) and the highest lift (about 1.6). Both are
+under-predicted, and over the 27 subcritical-regime points the residual
+correlates with lift (:math:`r = -0.43`): the model under-predicts entrainment
+as lift rises. This is the corner of the data closest to the worked example, so
+extrapolating there biases the duty verdict towards "no". All other points are
+within ±12 %.
 
 The rating characteristic of this ejector at case-1 conditions is shown in
 :numref:`fig-offdesign`. The calibrated model places the measurement (37.9 bar,
-ER 0.201) on the critical plateau (ER 0.198), 2.6 bar below the predicted
-critical back pressure.
+ER 0.201) on the critical plateau (ER 0.199), about 3 bar below the predicted
+critical back pressure (40.8 bar).
+
+.. _sec-val-hne:
+
+Delayed flashing or discharge coefficient?
+------------------------------------------
+
+The :math:`C_d` of stage 1 lumps together every reason why the motive flow
+exceeds the isentropic HEM value. If delayed flashing were the main reason, the
+HNE correction :eq:`eq-hne` with a single :math:`\varphi` should fit the motive
+flows as well as a single :math:`C_d` does. :numref:`fig-val-hne` shows the
+:math:`C_d` and the :math:`\varphi` that each point needs on its own, and
+:numref:`tab-val-hne` the result of fitting one value of each to all 42 points.
+
+.. _fig-val-hne:
+
+.. figure:: figures/val_hne.png
+   :width: 100%
+   :align: center
+
+   Correction that reproduces each measured motive flow of the Giacomelli
+   *et al.* ejector on its own: (a) discharge coefficient on the isentropic
+   HEM flux, (b) HNE flashing factor. Dashed: the single value fitted to all
+   42 points. Data: ``figures/data/giacomelli_hne.csv``.
+
+.. _tab-val-hne:
+
+.. list-table:: One correction for all 42 motive flows. Source: ``figures/data/giacomelli_hne_summary.csv``.
+   :header-rows: 1
+   :widths: 22 14 14 14 36
+
+   * - Correction
+     - Value
+     - MAE
+     - Max
+     - Bias: supercritical / subcritical / subcooled
+   * - :math:`C_d`
+     - 1.138
+     - 1.7 %
+     - 9.0 %
+     - +1.1 / −2.5 / −2.4 %
+   * - :math:`\varphi`
+     - 0.628
+     - 6.9 %
+     - 15.6 %
+     - −4.0 / −11.3 / +7.7 %
+
+* **A constant** :math:`C_d` **describes the data; a constant**
+  :math:`\varphi` **does not.** This holds for the heuristic HNE of
+  :eq:`eq-hne` and also for a momentum-consistent one (:ref:`sec-hne`). The :math:`C_d` each point needs is 1.13 on
+  average for the supercritical motive and 1.17 for the subcritical and
+  subcooled motive. The :math:`\varphi` it needs ranges from 0.32 to 0.81 and
+  changes systematically with the inlet regime: 0.32–0.50 subcritical,
+  0.40–0.76 supercritical, 0.63–0.81 subcooled.
+* **Part of the correction has the signature of delayed flashing.** The
+  liquid-like motive needs about 4 % more than the supercritical one. (The
+  labels are Giacomelli *et al.*'s: "subcritical" points lie above the critical
+  pressure but below the critical temperature, at 83–96 bar; "subcooled" points
+  lie just below the critical pressure, at 71–74 bar.) Equilibrium models are
+  known to lose accuracy as the expansion crosses the saturation line further
+  from the critical point. HEM CFD of other R744 ejectors averaged 5.5 %
+  motive-flow error above the critical pressure and 30.5 % below 59 bar
+  :cite:`ringstad2020`. Those classes are by pressure, and no calibration point
+  lies below 70.9 bar, so the comparison is only qualitative.
+* **Most of it does not.** The near-critical supercritical expansions, where
+  metastability should be weakest, still need about 12 %. Non-equilibrium does matter
+  in this 0.9 mm nozzle: the review :cite:`ringstad2020` reports that
+  Giacomelli *et al.*'s non-equilibrium mixture model reproduced its motive flow
+  to about 1 % above the critical pressure, and that the model's evaporation
+  coefficient had a strong effect on the mass flow. But the motive flows cannot
+  separate this from the throat diameter as built: :math:`C_d = 1.138`
+  corresponds to a 0.96 mm instead of a 0.90 mm throat.
+
+:math:`C_d` is therefore the recommended correction. HNE is kept for
+sensitivity studies. A physical relaxation model would need the nozzle length
+profile, which a model of stations does not have.
+
+.. _sec-val-port:
+
+Verification of the C# implementation
+=====================================
+
+The CAPE-OPEN unit computes with ``EjectorCore``, a C# port of the Python
+reference implementation. The root finder and the bounded minimiser are ports
+of the SciPy routines the Python code uses, so both implementations take the
+same steps. Three test layers check the port.
+
+**C# against Python on identical thermodynamics.** The C# tests call the same
+CoolProp build (8.0.1) through its C interface. Twenty-two reference cases are
+exported from the Python model (``ejector/prototype/export_regression.py``):
+
+* rating of the Giacomelli ejector in the critical, subcritical and backflow
+  regimes;
+* inverse rating with a fixed size, and at zero entrainment with a
+  re-sampled operating curve;
+* optimum designs for the worked example with HEM and HNE motive models, and a
+  design for lift;
+* the water jet pump, unchoked and cavitation-limited;
+* an R141b gas ejector;
+* the paths found by an adversarial review: a converging–diverging nitrogen
+  nozzle in all three back-pressure ranges (:ref:`sec-unchoked-motive`) and
+  its inverse rating; a small-ER design and a design for lift beyond the
+  maximum; and three cases that must fail (an outlet pressure inside a
+  characteristic step, an exit area below :math:`C_d`, a solution on the
+  triple-point floor), where the C# engine must raise the same error.
+
+All 411 compared quantities agree with **zero difference**. They cover
+pressures, flows, areas, velocities, outlet enthalpy, ER, ejector efficiency,
+critical ER and back pressure, and every operating-curve point.
+
+**Engine checks on an ideal gas.** These run without CoolProp. The critical
+pressure ratio comes out within :math:`10^{-4}` of 0.5283, and the critical
+flux within :math:`10^{-8}` of the analytic value, with
+:math:`\eta_\mathrm{m} = 0.7`; this confirms that :math:`\eta_\mathrm{m}` does
+not act on the throat. The other checks cover the outlet energy balance, the
+design–rating round trip, and inverse against forward rating. They also cover
+scale invariance (twice the motive flow gives the same outlet pressure and
+twice the throat area), the fixed-size mismatch, the design optimum and design
+for lift.
+
+**The unit, headless.** A mock material object performs real flashes
+(CoolProp or ideal gas) and reports phases and molar properties as a PME
+would. Through it, the unit reproduces the engine run directly on CoolProp:
+
+* **Duty design.** The worked-example design with saturated inlets reaches
+  21.17813 bar, the Python value. The unit's inlets are TP-flashed at
+  saturation and corrected to the saturated end points.
+* **Fixed size.** The fixed-size rating of Giacomelli case 1 at the flows of a
+  forward rating at 44 bar returns 44 bar. With a 10 % higher port motive flow
+  it reports a mismatch of :math:`-0.0909`.
+* **No PS flash.** A package that refuses PS flashes gives, by temperature
+  search, the same 23.98053 bar as the engine.
+* **Excess suction.** An excess suction flow raises an error that names the
+  critical ER.
+
+Persistence and the input/output switching of the parameters are also tested.
+The unit has **not yet been run inside a PME** (COFE, DWSIM).
 
 Coverage and gaps
 =================
@@ -345,9 +536,9 @@ Coverage and gaps
    * - liquid–liquid jet pump
      - verified against the classical equations (loss-free); no experimental data yet
    * - gas–gas ejector
-     - validated, 39 points R141b (predictive)
+     - critical mode only, 39 points R141b: suction-choke ER and :math:`P_\mathrm{b}^*` at imposed ER
    * - flashing / supercritical CO\ :sub:`2` motive, CO\ :sub:`2` vapour suction
-     - validated (3 points, motive flow) and calibrated (42 points)
+     - calibrated (42 points, one 0.9 mm nozzle); motive flow of a second nozzle consistent within inlet-state uncertainty with :math:`C_d = 1` (3 points); calibrated set not independently validated
    * - liquid motive, non-condensable gas suction
      - **not validated**: Cunningham :cite:`cunningham1974` is the candidate data set
    * - mixtures

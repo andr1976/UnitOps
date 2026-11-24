@@ -4,12 +4,14 @@
 Software Architecture
 =====================
 
-.. admonition:: Planned, not yet built
+.. admonition:: Implementation status
 
-   This chapter specifies the CAPE-OPEN implementation. Today the model exists
-   as the Python reference implementation ``ejector/prototype/ejector1d.py``.
-   It is the source of every number in this reference, and the regression
-   baseline for the port.
+   The CAPE-OPEN implementation described here is in ``ejector/src``:
+   ``EjectorCore`` (engine), ``Ejector.CapeOpen`` (adapter) and their test
+   projects. The Python reference implementation
+   ``ejector/prototype/ejector1d.py`` remains the source of every number in this
+   reference and the regression baseline of the port (:ref:`sec-val-port`).
+   Path tabulation (:ref:`sec-flash-cost`) is not implemented yet.
 
 Design principle: separate the physics from the plumbing
 =========================================================
@@ -75,7 +77,7 @@ composition :math:`\vec z`:
      - inlet states from port :math:`(T, P)`
      - ``CalcEquilibrium`` with temperature + pressure
    * - ``PQ(P, q, z)``
-     - saturated inlets (testing, design studies)
+     - inlets the stream reports as two-phase or saturated
      - ``CalcEquilibrium`` with pressure + vapour phase fraction
    * - ``M(z)``
      - mass/molar conversion, :eq:`eq-mix-composition`
@@ -87,22 +89,27 @@ The adapter reads these as overall and per-phase properties after the flash.
 PMEs work in molar units, so enthalpies and entropies are converted with
 :math:`M(\vec z)` at the boundary.
 
-Two robustness rules carry over from the reference implementation:
+Two robustness rules apply in the adapter (the first is new there; the reference implementation calls CoolProp directly):
 
-* **PS fallback.** Not every property package supports an entropy
-  specification. If ``CalcEquilibrium`` declines it, the adapter solves
-  :math:`s(P, T) = s` by a bracketed secant on :math:`T` with TP flashes.
+* **PS and PH fallback.** Not every property package supports an entropy (or
+  enthalpy) specification. If ``CalcEquilibrium`` declines it, the adapter
+  solves :math:`s(P, T) = s` (or :math:`h`) by Brent on :math:`T` with TP
+  flashes. For a pure fluid, a target between the saturated liquid and vapour
+  values is a two-phase state: it is built from the two saturated end points
+  (PQ flashes) on a mass basis, because :math:`s(T)` jumps at the saturation
+  temperature. After three such rescues the adapter stops asking for the
+  specification.
 * **Failed flashes are data, not crashes.** Far below the operating range a
   flash may fail to converge, as CoolProp mixture flashes do at a fraction of a
   bar. The choke search treats such points as missing
   (:ref:`sec-choke-search`). Only failures inside the converged solution are
   reported as CAPE-OPEN errors.
 
-The **solid check** moves to the PME as well. When the property package
-supports a solid phase, the adapter inspects the phases present after each
-flash on the solution path. Otherwise it applies the pure-component
-triple-point test of :ref:`sec-solid` to the dominant component and reports
-the margin.
+The **solid check** uses the package's data. For a pure compound the adapter
+reads the triple-point pressure from the compound constants
+(``triplePointPressure``) and the engine applies the test of :ref:`sec-solid`.
+For mixtures, and for packages without that constant, no check is made yet;
+inspecting the phases present for a solid phase is a planned extension.
 
 .. _sec-flash-cost:
 
@@ -121,20 +128,23 @@ are:
      - Flashes
      - Time, reference implementation
    * - rating, critical regime (Giacomelli case 1)
-     - 2 410
-     - 28 ms
+     - 1 943
+     - 32 ms
    * - rating, subcritical regime
-     - 2 665
-     - 41 ms
+     - 2 111
+     - 34 ms
+   * - inverse rating (both flows given)
+     - 2 127
+     - 31 ms
    * - optimum design (worked example)
-     - 1 419
-     - 10 ms
-   * - design for lift
-     - 15 758
-     - 120 ms
+     - 1 684
+     - 12 ms
+   * - design for lift (maximum over ER first, then the root)
+     - 57 816
+     - 450 ms
    * - optimum design, CO\ :sub:`2` + N\ :sub:`2` mixture
-     - 1 431
-     - 35 s (25 ms per flash)
+     - 1 717
+     - 38 s (22 ms per flash)
 
 A PME flash through COM typically costs a millisecond or more, and mixture
 flashes cost more. Run naively, one Calculate would take seconds, and design
@@ -176,20 +186,18 @@ runs the selected mode and writes the outlet by a PH flash at
 than temperature preserves the exact energy balance across the
 unit (:ref:`sec-diffuser`).
 
-The specification mode (:ref:`sec-flowsheet-specs`) flips each geometry and
-pressure parameter between CAPE-OPEN ``input`` and ``output``, as the
-membrane unit's ``SpecMode`` does for area and stage cut. The internal station
-states (:math:`P, T, x, u` at m0, t, e, s0, y, 3, out) are exposed as array
-output parameters for plotting and for the report. The parameter list is in
-:ref:`appendix_capeopen`.
+``Mode`` (Design / Rating), ``GeometrySpec`` (FixedShape / FixedSize) and
+``EfficiencySet`` flip the geometry and efficiency parameters between CAPE-OPEN
+``input`` and ``output`` (:ref:`sec-flowsheet-specs`), as the membrane unit's
+``SpecMode`` does for area and stage cut. The pressures and velocities at the
+stations are scalar outputs. The operating curve (outlet pressure against ER,
+from the critical point to zero entrainment) is a pair of array outputs, and is
+drawn in the HTML report together with the operating point. The parameter
+list is in :ref:`appendix_capeopen`.
 
-Errors map onto CAPE-OPEN exceptions with readable descriptions:
-
-* an **infeasible duty**, either outside the zero-entrainment limit or with the
-  mixing section unable to pass the flow;
-* a **solid-phase risk** (:math:`\sigma \le 1`);
-* a **motive capacity mismatch** in rating mode.
-
-Each message gives the quantity that would make the duty feasible, such as the
-reachable :math:`P_\mathrm{out}`, the critical ER or the required throat
-diameter, so the user can act on it.
+Errors map onto CAPE-OPEN exceptions with readable descriptions, also exposed
+through ``ECapeUser`` on the unit. Examples are a suction flow above the
+critical entrainment (the message gives the critical ER and the outlet pressure
+where it is reached), a mixing section that cannot pass the flow, and a state
+below the triple point. A motive capacity mismatch in ``FixedSize`` is reported
+as an output, not raised.

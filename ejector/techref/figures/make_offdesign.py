@@ -17,11 +17,10 @@ for name, color in (("critical", NAVY), ("subcritical", RED), ("backflow", SLATE
         ax.plot(Po[k], ER[k], "-", color=color, lw=2.2, label=name)
 ax.plot(float(exp1["PO_bar"]), float(exp1["ER_exp"]), "*", color=AMBER, ms=9, mec=GREY, mew=0.6,
         label="measured, case 1")
-k = np.where(reg == "subcritical")[0]
-if k.size:
-    ax.axvline(Po[k[0]], color=GREY, lw=0.8, ls=":")
-    ax.text(Po[k[0]] - 0.3, 0.05, "critical back\npressure $P_\\mathrm{b}^*$", ha="right",
-            fontsize=7, color=GREY)
+pb = float(rs[0]["Pb_crit_bar"])                    # exact critical back pressure (bisected)
+ax.axvline(pb, color=GREY, lw=0.8, ls=":")
+ax.text(pb - 0.3, 0.13, "critical back\npressure $P_\\mathrm{b}^*$", ha="right",
+        fontsize=7, color=GREY)
 ax.set_xlabel(r"outlet pressure $P_\mathrm{out}$ [bar]")
 ax.set_ylabel("entrainment ratio ER [-]")
 ax.set_ylim(bottom=0)

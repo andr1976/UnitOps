@@ -27,14 +27,14 @@ sx, s0, s1, sc = col(rs, "ms_exp_gs"), col(rs, "ms_uncal_gs"), col(rs, "ms_cal_g
 f = fit["all"]
 b.plot(sx, s0, "x", color=SLATE, label=f"uncalibrated: MAE {mae(s0, sx):.1f} %")
 b.plot(sx, sc, "d", color=AMBER, mfc="white", mew=1.0, ms=3.8,
-       label=f"cross-regime prediction: MAE {mae(sc, sx):.1f} %")
+       label=f"cross-regime: MAE {mae(sc, sx):.1f} %")
 b.plot(sx, s1, "o", color=RED, mfc="white", mew=1.1,
-       label=f"fit, all 42 ({float(f['eta_s']):.2f}/{float(f['eta_mix']):.2f}/{float(f['eta_d']):.2f}): "
-             f"MAE {mae(s1, sx):.1f} %")
-for c in (15, 21):
+       label=f"fit on all 42: MAE {mae(s1, sx):.1f} %")
+for c, dy in ((21, 4), (15, -6)):                # leader lines to the two worst points
     k = col(rs, "case") == c
-    b.annotate(f"case {c}", (sx[k][0], s1[k][0]), xytext=(6, -10), textcoords="offset points",
-               fontsize=6.5, color=GREY)
+    b.annotate(f"case {c}", (sx[k][0], s1[k][0]), xytext=(42, dy), textcoords="offset points",
+               fontsize=6.5, color=GREY, va="center",
+               arrowprops=dict(arrowstyle="-", lw=0.5, color=GREY, shrinkA=0, shrinkB=3))
 parity(b, 0, 25, band=0.15)
 b.set_xlabel(r"measured $\dot m_\mathrm{s}$ [g s$^{-1}$]")
 b.set_ylabel(r"predicted $\dot m_\mathrm{s}$ [g s$^{-1}$]")

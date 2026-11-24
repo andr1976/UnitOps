@@ -31,8 +31,10 @@ for c in crit:
     b.plot(float(c["Pt_bar"]), float(c["Gstar"]) / 1e3, "o", color=color, mfc="white", mew=1.4)
 b.set_xlabel("static pressure $P$ [bar]")
 b.set_ylabel(r"$G$ [t m$^{-2}$ s$^{-1}$]")
-b.set_title(r"(b) CO$_2$ motive, $\eta_\mathrm{m}$ = 0.9 (o = throat $P_\mathrm{t}$, $G^*$)", fontsize=8)
-b.set_ylim(bottom=0)
-b.legend(loc="lower right")
+b.set_title(r"(b) CO$_2$ motive, $\eta_\mathrm{m}$ = 0.9 beyond the throat (o: $P_\mathrm{t}$, $G^*$)",
+            fontsize=8)
+gmax = max(float(c["Gstar"]) for c in crit) / 1e3
+b.set_ylim(0, 1.35 * gmax)                     # headroom: legend above the curves
+b.legend(loc="upper left", fontsize=6.5)
 grid(b)
 save(fig, "nozzle_flux.png")

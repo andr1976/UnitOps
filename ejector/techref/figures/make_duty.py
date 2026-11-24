@@ -27,7 +27,8 @@ ax.axhline(28, color=AMBER, lw=1.2, ls="-.")
 ax.text(0.40, 28.3, "required 28 bar", color=AMBER, fontsize=7)
 ER0 = 2.0 / 13.66
 ax.axvline(ER0, color=GREY, lw=0.8, ls=":")
-ax.text(ER0 + 0.006, 33.5, "duty\nER = 0.146", color=GREY, fontsize=7)
+ax.text(ER0 + 0.006, 0.02, "duty ER = 0.146", color=GREY, fontsize=7,
+        transform=ax.get_xaxis_transform(), va="bottom")
 ax.set_xlabel("entrainment ratio ER [-]")
 ax.set_ylabel(r"optimum-design $P_\mathrm{out}$ [bar]")
 ax.set_xlim(0, 0.5)

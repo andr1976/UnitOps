@@ -43,9 +43,24 @@ follows as
 
    G(P) = \rho(P)\,u(P) .
 
-The same path describes the motive nozzle (:math:`\eta = \eta_\mathrm{m}`) and
-the acceleration of the suction stream into the mixing section
-(:math:`\eta = \eta_\mathrm{s}`) (:ref:`nozzles`).
+The same path describes the acceleration of the suction stream into the mixing
+section (:math:`\eta = \eta_\mathrm{s}` over the whole path) and the motive
+nozzle. In the motive nozzle the converging section is taken as **isentropic**,
+and :math:`\eta_\mathrm{m}` acts only on the expansion beyond the throat
+pressure :math:`P_\mathrm{t}`:
+
+.. math::
+   :label: eq-motive-path
+
+   h(P) = \begin{cases}
+   h_\mathrm{s}(P), & P \ge P_\mathrm{t},\\[2pt]
+   h_\mathrm{s}(P_\mathrm{t}) - \eta_\mathrm{m}\,\bigl(h_\mathrm{s}(P_\mathrm{t}) - h_\mathrm{s}(P)\bigr), & P < P_\mathrm{t}.
+   \end{cases}
+
+Losses in an accelerating, converging flow are small, and placing them beyond
+the throat keeps the critical flux a property of the inlet state alone. What
+the converging section does lose is left to the discharge coefficient
+(:ref:`nozzles`).
 
 .. _sec-choking:
 
@@ -75,11 +90,12 @@ per unit throat area, with :math:`P_\mathrm{t}` the throat pressure.
 :eq:`eq-critical-flux` is used as the **choking criterion** for any fluid. It
 needs no speed of sound, which is ill-defined for a two-phase mixture and
 discontinuous at the phase boundary. Only flashes along the path are needed.
-For :math:`\eta < 1` the path is not isentropic. The maximum of :eq:`eq-critical-flux`
-then still marks choking, with :math:`c` read as the derivative
-:math:`(\dd P/\dd\rho)^{1/2}` along the actual path. This maximum-flux
-condition is the usual way 1D two-phase ejector models locate the motive
-throat state.
+For the motive nozzle the maximum is taken on the isentrope
+(:eq:`eq-motive-path`). For the suction stream, whose path carries
+:math:`\eta_\mathrm{s} < 1` throughout, the maximum still marks choking, with
+:math:`c` read as the derivative :math:`(\dd P/\dd\rho)^{1/2}` along the actual
+path. This maximum-flux condition is the usual way 1D two-phase ejector models
+locate the throat state.
 
 For an ideal gas :eq:`eq-critical-flux` reproduces the textbook critical
 pressure ratio :math:`P^*/P_0 = (2/(k+1))^{k/(k-1)} = 0.528` for
@@ -96,9 +112,11 @@ numerical check.
    Mass flux along the expansion path, :eq:`eq-mass-flux`. (a) Isentropic
    nitrogen from 10 bar, 300 K: the real-fluid path coincides with the
    analytic ideal-gas curve and peaks at :math:`P^*/P_0 = 0.528`. (b)
-   CO\ :sub:`2` motive states with :math:`\eta_\mathrm{m} = 0.9`. Saturated liquid at
-   47 bar under HEM and with delayed flashing (HNE, :math:`\varphi = 0.5`), and
-   dense supercritical fluid at 84.5 bar, 32 °C. Circles mark the throat state
+   CO\ :sub:`2` motive states, isentropic to the throat and
+   :math:`\eta_\mathrm{m} = 0.9` beyond it (:eq:`eq-motive-path`). Saturated
+   liquid at 47 bar under HEM and with delayed flashing (HNE,
+   :eq:`eq-hne`, with the illustrative value :math:`\varphi = 0.5`), and dense
+   supercritical fluid at 84.5 bar, 32 °C. Circles mark the throat state
    :math:`(P_\mathrm{t}, G^*)`. Data: ``figures/data/nozzle_flux.csv``.
 
 .. _sec-hem:
@@ -142,34 +160,70 @@ densities, :math:`x = (1/\rho - 1/\rho_\mathrm{l})/(1/\rho_\mathrm{v} - 1/\rho_\
 Delayed flashing: homogeneous non-equilibrium correction
 ========================================================
 
-In short, fast nozzles the liquid stays superheated (metastable) and flashes
-late. Less vapour forms, so the mixture is denser and the critical flux is
-*higher* than HEM predicts. The classical corrections introduce a
-boiling-delay factor on the vapour generated :cite:`henry1971,diener2004`. The
-model offers the simplest form of this idea, a **homogeneous non-equilibrium
-(HNE)** quality in the density only:
+When a liquid crosses its saturation pressure, vapour does not appear at
+once: bubbles must first nucleate and then grow. In a short, fast nozzle there
+is little time for either. Part of the liquid stays superheated (metastable)
+and flashes late. Less vapour forms than equilibrium predicts, so the mixture
+is denser and the critical flux is *higher* than HEM predicts. The classical
+corrections express this with a non-equilibrium (boiling-delay) factor that
+relates the vapour actually generated to the equilibrium amount
+:cite:`henry1971,diener2004`.
+
+The model offers the simplest form of this idea, a **homogeneous
+non-equilibrium (HNE)** quality. The **flashing factor** :math:`\varphi` is the
+fraction of the equilibrium vapour mass fraction that has actually formed:
 
 .. math::
    :label: eq-hne
 
-   x = \varphi\,x_\mathrm{eq}, \qquad
-   \frac{1}{\rho} = \frac{x}{\rho_\mathrm{v}} + \frac{1-x}{\rho_\mathrm{l}},
+   \varphi = \frac{x}{x_\mathrm{eq}}, \qquad
+   \frac{1}{\rho} = \frac{\varphi\,x_\mathrm{eq}}{\rho_\mathrm{v}}
+                  + \frac{1-\varphi\,x_\mathrm{eq}}{\rho_\mathrm{l}},
    \qquad 0 < \varphi \le 1 ,
 
-while the enthalpy, and hence the velocity :eq:`eq-velocity`, stays on the
-equilibrium path. :math:`\varphi = 1` recovers HEM. For saturated CO\ :sub:`2`
-at 47 bar, :math:`\varphi = 0.5` lowers the throat pressure from 34.2 to 28.1
-bar. It raises :math:`G^*` from 27.0 to 38.9 t m\ :sup:`-2` s\ :sup:`-1`
-(+44 %) (``figures/data/nozzle_critical.csv``).
+with :math:`x_\mathrm{eq}`, :math:`\rho_\mathrm{v}` and :math:`\rho_\mathrm{l}`
+the equilibrium quality and saturated phase densities returned by the PH flash.
+:math:`\varphi` is a constant along the path:
 
-An equally simple alternative is a **discharge coefficient** :math:`C_d` on the
-HEM flux, :math:`\dot m_\mathrm{m} = C_d\,G^*_\mathrm{HEM}\,A_\mathrm{t}`. The
-calibration on 42 R744 points finds :math:`C_d = 1.20`: HEM under-predicts the
-motive flow of that 0.9 mm nozzle by 17 % on average, with nearly the same bias
-for supercritical, subcritical and subcooled inlets (:ref:`sec-val-giacomelli`).
-:math:`C_d` and :math:`\varphi` change the **throat size** for a given flow. Their effect
-on the outlet pressure is small, because the motive momentum per unit mass flow
-is set by the enthalpy drop, which they do not change.
+* :math:`\varphi = 1` recovers HEM, :eq:`eq-hem-density`;
+* :math:`\varphi \to 0` is the frozen limit, in which the liquid expands
+  without flashing;
+* in between, the same fraction of the equilibrium vapour is missing at every
+  pressure.
+
+Only the density is corrected. The enthalpy, and hence the velocity
+:eq:`eq-velocity`, stays on the equilibrium path, so the energy balance is that
+of HEM. This makes the option a **heuristic density correction**, not the
+momentum-consistent non-equilibrium model of the cited works, in which the
+velocity follows from :math:`u^2/2 = \int v_\mathrm{HNE}\,\dd P` with the same
+reduced specific volume. With the heuristic form the maximum of :math:`\rho u`
+no longer coincides with :math:`u = c` as derived in :ref:`sec-choking`, and
+:math:`G^*` comes out higher than in the consistent form: by 8 % at
+:math:`\varphi = 0.628` and 13 % at :math:`\varphi = 0.5` for saturated CO\ :sub:`2`
+at 47 bar, by 4–8 % for Giacomelli case 37. Values of :math:`\varphi` from this
+model can therefore not be compared with literature boiling-delay factors. The
+model cannot predict :math:`\varphi`: it is a fitting parameter, to be calibrated
+on measured motive flows. The value :math:`\varphi = 0.5` in
+:numref:`fig-nozzle-flux` and :numref:`tab-motive-critical` only illustrates the
+size of the effect: for saturated CO\ :sub:`2` at 47 bar it lowers the throat
+pressure from 34.1 to 28.0 bar and raises :math:`G^*` from 28.6 to 41.2
+t m\ :sup:`-2` s\ :sup:`-1` (+44 %; +28 % in the consistent form)
+(``figures/data/nozzle_critical.csv``).
+
+The alternative is a **discharge coefficient** :math:`C_d` on the HEM flux,
+:math:`\dot m_\mathrm{m} = C_d\,G^*_\mathrm{HEM}\,A_\mathrm{t}`. It scales the
+flux by the same factor for every inlet state. The effect of a constant
+:math:`\varphi` instead depends on how much vapour equilibrium would generate
+ahead of the throat, which differs strongly between inlet states. On
+the 42 measured R744 points, a single :math:`C_d` reproduces the motive flow far
+better than a single :math:`\varphi` (:ref:`sec-val-hne`), so :math:`C_d` is
+the recommended correction and HNE is kept for sensitivity studies (the
+conclusion also holds for a momentum-consistent HNE). In **design** mode
+:math:`C_d` and :math:`\varphi` change only the **throat size** for a given flow:
+the outlet pressure hardly moves, because the motive momentum per unit mass
+flow is set by the enthalpy drop, which they do not change. In **rating** mode
+:math:`C_d` sets the motive flow of the given throat, and with it ER and the
+outlet pressure.
 
 How well HEM predicts motive flow depends on the motive state. It works best
 near and above the critical point, and deviations are larger and of less
@@ -179,8 +233,8 @@ inlet state itself is a first-order uncertainty for subcooled liquids.
 Gonçalves *et al.* :cite:`goncalves2024` found that the measured motive
 temperature and the temperature implied by the measured pressure and density
 differ by about 9 K. With the measured temperature this model under-predicts
-the motive flow by 42 %; with the density-implied state the error is 2 % or
-less (:ref:`sec-val-goncalves`).
+the motive flow by about 40 %; with the density-implied state it over-predicts
+it by 3–7 % (:ref:`sec-val-goncalves`).
 
 .. _sec-solid:
 
@@ -194,7 +248,10 @@ expansion would form dry ice in reality, but the EOS would quietly return a
 metastable vapour–liquid state. The model therefore:
 
 * raises ``SolidPhaseRisk`` for any pure-fluid flash below the triple-point
-  pressure, so the solution can never pass through that region silently; and
+  pressure. Every pressure search stops at :math:`1.001\,P_\mathrm{tp}`, so a
+  solution that reaches that floor is an expansion truncated at the triple
+  point: it also raises ``SolidPhaseRisk`` instead of returning a result. The
+  solution can therefore never pass through that region silently; and
 * reports the **solid margin** :math:`\sigma = P_\mathrm{min}/P_\mathrm{tp}`, with
   :math:`P_\mathrm{min} = \min(P_\mathrm{e}, P_\mathrm{y}, P_3)` the lowest static
   pressure in the ejector. The motive exit and the suction at the mixing inlet

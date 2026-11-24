@@ -50,7 +50,9 @@ stations of the one-dimensional model used throughout this reference.
       Ejector schematic with the stations of the one-dimensional model:
       motive inlet m0, throat t and exit e; suction inlet s0 and mixing-section
       inlet y; end of mixing 3; diffuser outlet. Each component carries one
-      loss parameter.
+      loss parameter. The drawing shows the nozzle exit upstream of y; the model
+      places the exit plane at the mixing inlet (the nozzle exit position is not
+      modelled).
 
 .. only:: latex
 
@@ -62,7 +64,9 @@ stations of the one-dimensional model used throughout this reference.
       \caption{Ejector schematic with the stations of the one-dimensional model:
       motive inlet m0, throat t and exit e; suction inlet s0 and mixing-section
       inlet y; end of mixing 3; diffuser outlet. Each component carries one
-      loss parameter.}
+      loss parameter. The drawing shows the nozzle exit upstream of y; the model
+      places the exit plane at the mixing inlet (the nozzle exit position is not
+      modelled).}
       \end{figure}
 
 The **motive nozzle** converts motive pressure into velocity. For a gas or a

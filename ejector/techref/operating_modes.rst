@@ -82,9 +82,9 @@ the suction port is not modelled.
    Rating characteristic of the Giacomelli *et al.* R744 ejector at the
    inlet states of their case 1 (motive 104.1
    bar, 36.9 °C; suction 30.8 bar), with the calibrated efficiencies. The
-   critical plateau (ER 0.198) extends to :math:`P_\mathrm{b}^* \approx 40.5` bar.
-   Entrainment falls to zero near 48.3 bar, above which the model reports
-   backflow (not shown). Star: the measurement at 37.9 bar, ER 0.201.
+   critical plateau (ER 0.199) extends to :math:`P_\mathrm{b}^* = 40.8` bar
+   (dotted). Entrainment falls to zero near 48.6 bar; above it the model
+   reports backflow (grey, ER = 0). Star: the measurement at 37.9 bar, ER 0.201.
    Data: ``figures/data/offdesign_case1.csv``.
 
 A rating result returns the regime, both mass flows, :math:`P_\mathrm{y}`,
@@ -116,7 +116,9 @@ The mixing section and diffuser then give :math:`P_\mathrm{out}(P_\mathrm{y})`.
 :math:`P_\mathrm{y}` gives a fast, momentum-rich suction stream but a small
 annulus, while a high :math:`P_\mathrm{y}` wastes motive momentum. The optimum
 lies in between, generally a little below the suction pressure. The result is
-the best ejector the efficiency set allows for this duty. Rating the designed
+the best ejector of this family for the duty: optimal over :math:`P_\mathrm{y}`,
+with the nozzle ideally expanded and :math:`A_\mathrm{mix} = A_\mathrm{e} + A_\mathrm{sy}`.
+Exit and mixing areas are not free variables of the optimisation. Rating the designed
 geometry at its design outlet pressure recovers the design ER
 (:ref:`sec-val-suite`).
 
@@ -124,12 +126,17 @@ Design for a required lift
 --------------------------
 
 When the outlet pressure is the specification, the optimum-design outlet
-pressure :math:`P_\mathrm{out}^\mathrm{opt}(\mathrm{ER})` is inverted. Because
-:math:`P_\mathrm{out}^\mathrm{opt}` falls monotonically with ER
-(:numref:`fig-duty`), the largest ER that still reaches the requirement is the
-root of :math:`P_\mathrm{out}^\mathrm{opt}(\mathrm{ER}) = P_\mathrm{out}`. If even
-zero entrainment cannot reach it, the duty is infeasible for that motive
-state and efficiency set, and the model says so.
+pressure :math:`P_\mathrm{out}^\mathrm{opt}(\mathrm{ER})` is inverted. Over most
+of the range it falls with ER (:numref:`fig-duty`). At very small ER it rises
+first: the suction annulus is then so small that the constant-area section can
+pass the flow only in a narrow band of :math:`P_\mathrm{y}` just below the
+suction pressure, and the ER → 0 limit is itself infeasible, because
+:math:`\eta_\mathrm{mix}` still removes motive momentum when nothing is
+entrained. The largest ER that reaches the requirement is therefore the root of
+:math:`P_\mathrm{out}^\mathrm{opt}(\mathrm{ER}) = P_\mathrm{out}` on the falling
+branch, beyond the maximum. The duty is infeasible for that motive state and
+efficiency set only if the requirement exceeds the maximum, and the model then
+says so with the maximum it found (:ref:`sec-solution-design`).
 
 .. _sec-scaling:
 
@@ -152,19 +159,34 @@ Specifications inside a flowsheet
 =================================
 
 A sequential-modular PME fixes both inlet streams, flows included, before it
-calls the unit. This changes how the modes map onto a flowsheet:
+calls the unit. The ER is then known on entry, and the **outlet pressure** is
+what the unit computes. The unit offers two ways to get it:
 
-* **Design** maps directly. The port flows give :math:`\dot m_\mathrm{m}` and ER.
-  The unit returns the maximum outlet pressure (or a specified lower one, with
-  the margin reported) and the geometry.
-* **Rating** needs the inverse of the prototype's formulation. The port gives
-  :math:`\dot m_\mathrm{s}`, so the unknown becomes :math:`P_\mathrm{out}`: the
-  root in :math:`P_\mathrm{y}` of :math:`\dot m_\mathrm{s}(P_\mathrm{y}) = \dot m_\mathrm{s}^\mathrm{port}`
-  on the subcritical branch, with an error if the port suction flow exceeds the
-  critical entrainment. The motive capacity :math:`C_d G^* A_\mathrm{t}` will not
-  in general equal the port motive flow. The unit must either report the
-  mismatch, or treat :math:`A_\mathrm{t}` (or the motive pressure) as the free
-  variable.
+* **Design** (the "ideal" ejector). The port flows give :math:`\dot m_\mathrm{m}`
+  and ER, and the optimum design (:ref:`sec-design`) returns the highest outlet
+  pressure the efficiencies allow, together with the geometry that reaches it.
+* **Rating** of a given geometry, by **inverse rating**: the unknown is
+  :math:`P_\mathrm{y}`, from :math:`\mathrm{ER}(P_\mathrm{y}) = \dot m_\mathrm{s}/\dot m_\mathrm{m}`
+  on the branch between the most-entraining feasible point and zero
+  entrainment (:ref:`sec-inverse-rating`). If the port suction flow exceeds
+  the critical entrainment, there is no solution and the unit says so. If it
+  equals it, the ejector delivers the critical back pressure
+  :math:`P_\mathrm{b}^*`, the highest outlet pressure on the critical plateau.
 
-The specification options proposed for the unit are listed in
-:ref:`appendix_capeopen`.
+A choked motive nozzle sets its own flow, :math:`C_d G^* A_\mathrm{t}`, which in
+general differs from the port motive flow. Rating therefore comes in two
+variants:
+
+* **Fixed shape**: the geometry is given as the area ratios
+  :math:`A_\mathrm{e}/A_\mathrm{t}` and :math:`A_\mathrm{mix}/A_\mathrm{t}`, and the
+  throat is sized to pass the port motive flow. Because the model is
+  scale-invariant (:ref:`sec-scaling`), the shape alone fixes
+  :math:`\mathrm{ER}(P_\mathrm{y})` and :math:`P_\mathrm{out}(P_\mathrm{y})`. This
+  always solves, and is the default.
+* **Fixed size**: the diameters are given. The unit still uses the port motive
+  flow, solves the same scaled problem, and reports the capacity of the given
+  throat and its mismatch with the port flow. The flowsheet closes the
+  mismatch, for example with an adjust on the motive pressure, as it would for
+  a fixed-size valve.
+
+The parameters of the unit are listed in :ref:`appendix_capeopen`.

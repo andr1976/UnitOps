@@ -4,18 +4,20 @@ ejector1d -- fast 0D/1D real-fluid ejector (jet pump / eductor) model.
 One model covers gas-gas, liquid-liquid, liquid-motive/gas-suction and flashing
 two-phase ejectors, because every stream is described only by (P, h) and all
 properties come from a homogeneous-equilibrium (HEM) flash.  The thermodynamics
-are reached through a three-call interface (`Thermo.ph`, `Thermo.ps`,
-`Thermo.pt`) so the CAPE-OPEN version can swap CoolProp for PME flashes.
+are reached through four flashes (`Thermo.ph`, `Thermo.ps`, `Thermo.pt`,
+`Thermo.pq`) plus the molar mass, so the CAPE-OPEN version can swap CoolProp
+for PME flashes.
 
 Model (classical constant-area-mixing 1D ejector, cf. Keenan et al. 1950,
-Huang et al. 1999, Liu & Groll 2012, Banasiak & Hafner 2011, Ringstad et al. 2020):
+Huang et al. 1999, Liu & Groll 2013, Banasiak & Hafner 2011, Ringstad et al. 2020):
 
   stations   m0 motive inlet (stagnation)   t motive throat   e motive exit
              s0 suction inlet (stagnation)  y suction at mixing-section inlet
              3  end of constant-area mixing section            out diffuser outlet
 
-  1. Motive nozzle: polytropic expansion with isentropic efficiency eta_m.
-     Choked mass flux G* = max_P rho(P,h(P)) * u(P) (HEM critical flow).
+  1. Motive nozzle: isentropic to the throat, isentropic efficiency eta_m on
+     the expansion beyond it.  Choked mass flux G* = max_P rho*u on the
+     isentrope (HEM critical flow), times a discharge coefficient Cd_m.
      Optional homogeneous non-equilibrium (HNE) delayed-flashing factor.
   2. Suction: expansion s0 -> y with eta_s, capped at its own choked flux.
   3. Constant-area mixing (area A_mix): mass, momentum (mixing efficiency
@@ -43,6 +45,14 @@ import CoolProp.CoolProp as CP
 
 class SolidPhaseRisk(RuntimeError):
     """A state falls below the triple-point pressure (e.g. dry ice for CO2)."""
+
+
+class EntrainmentExceeded(RuntimeError):
+    """rate_flows(): the given suction flow exceeds what the geometry can entrain."""
+
+    def __init__(self, msg, ER_critical, P_b_critical):
+        super().__init__(msg)
+        self.ER_critical, self.P_b_critical = ER_critical, P_b_critical
 
 
 @dataclass
@@ -150,7 +160,8 @@ class Thermo:
         self.n_flash += 1
         self.AS.update(CP.PQ_INPUTS, P, q)
         st = self._out(P, self.AS.hmass(), z)
-        st.q = float(q)
+        if q in (0.0, 1.0):          # exact end points (molar = mass there)
+            st.q = float(q)
         return st
 
 
@@ -162,21 +173,35 @@ class Expansion:
     inlet: State
     eta: float = 1.0
     phi: float = 1.0   # vapour-generation fraction: 1 = HEM, <1 delayed flashing (HNE)
+    P_loss: float = math.inf   # eta acts only below this pressure (isentropic above it)
+    _h_loss: float = field(default=math.nan, init=False, repr=False)
 
     def at(self, P) -> tuple[State, float]:
         """Static state and velocity after expanding to P.
 
         Energy follows the (equilibrium) isentrope with efficiency eta.  With
-        phi < 1 the density of a flashing mixture uses the non-equilibrium
-        quality x = phi * x_eq (homogeneous non-equilibrium, cf. the boiling
-        delay factor N of Henry & Fauske 1971 / Diener & Schmidt 2004): the
+        P_loss set (the motive throat pressure) the path is isentropic down to
+        P_loss and eta acts only on the enthalpy drop below it:
+        h = h_s(P_loss) - eta * (h_s(P_loss) - h_s(P)).  With phi < 1 the
+        density of a flashing mixture uses the non-equilibrium quality
+        x = phi * x_eq (homogeneous non-equilibrium, cf. the boiling delay
+        factor N of Henry & Fauske 1971 / Diener & Schmidt 2004): the
         metastable liquid carries less vapour, so the critical flux rises.
         """
         i = self.inlet
         if P >= i.P:
             return i, 0.0
         h_is = self.th.ps(P, i.s, i.z).h
-        h = i.h - self.eta * (i.h - h_is)
+        if P >= self.P_loss:
+            h = h_is
+        else:
+            if math.isinf(self.P_loss):
+                h_ref = i.h
+            else:
+                if math.isnan(self._h_loss):
+                    self._h_loss = self.th.ps(self.P_loss, i.s, i.z).h
+                h_ref = self._h_loss
+            h = h_ref - self.eta * (h_ref - h_is)
         st = self.th.ph(P, h, i.z)
         if self.phi < 1.0 and 0.0 < st.q < 1.0:
             x = self.phi * st.q
@@ -238,10 +263,24 @@ class Result:
     eta_ejector: float = float("nan")   # Koehler/Elbel expansion-work recovery efficiency
     states: dict = field(default_factory=dict)
     solid_margin: float = float("inf")  # min static pressure / triple-point pressure
+    # rate_flows() only
+    ER_critical: float = float("nan")      # most-entraining feasible ER of the sized geometry
+    P_b_critical: float = float("nan")     # outlet pressure at ER_critical (critical back pressure)
+    motive_capacity: float = float("nan")  # Cd*G*A_t of a fixed-size throat [kg/s]
+    motive_mismatch: float = float("nan")  # motive_capacity / m_m - 1
+    curve: list = field(default_factory=list)  # rating characteristic [(P_out, ER), ...]
 
     def check_solid(self, p_triple: float):
+        """Solid margin; raises SolidPhaseRisk if the solution sits on the search floor
+        (1.001 x the triple-point pressure): every search stops there, so such a
+        result is an expansion truncated at the triple point, not a valid state."""
         Pmin = min(self.P_e, self.P_y, self.P_3)
         self.solid_margin = Pmin / p_triple if p_triple > 0 else float("inf")
+        if p_triple > 0 and Pmin <= 1.0011 * p_triple:
+            raise SolidPhaseRisk(
+                f"the solution reaches the triple-point pressure (lowest static pressure "
+                f"{Pmin/1e5:.3f} bar, triple point {p_triple/1e5:.3f} bar): solid formation "
+                f"would occur; the equation of state has no solid phase")
         return self
 
     def summary(self) -> str:
@@ -259,7 +298,7 @@ class Result:
 class Ejector:
     th: Thermo
     eta_m: float = 0.90      # motive nozzle isentropic efficiency
-    eta_s: float = 0.90      # suction nozzle isentropic efficiency
+    eta_s: float = 0.85      # suction nozzle isentropic efficiency
     eta_mix: float = 0.90    # momentum (mixing) efficiency
     eta_d: float = 0.80      # diffuser isentropic efficiency
     motive_model: str = "HEM"   # 'HEM' | 'HNE' (delayed flashing in motive nozzle)
@@ -272,20 +311,33 @@ class Ejector:
         return self.th.pq(P, q, z) if q is not None else self.th.pt(P, T, z)
 
     def _motive(self, m0: State, P_low: float):
+        """Motive nozzle: isentropic to the throat, eta_m on the expansion beyond it.
+
+        The choked flux G* is the maximum of rho*u on the isentrope; losses in
+        the converging section are left to Cd_m.  Below the throat pressure the
+        path carries eta_m (diverging section).  An unchoked nozzle (no maximum
+        above P_low) is therefore loss-free apart from Cd_m.
+        Returns (exit-path expansion, throat pressure, Cd_m * G*).
+        """
         phi = 1.0 if self.motive_model == "HEM" else self.phi_ne
-        exp = Expansion(self.th, m0, self.eta_m, phi=phi)
-        P_t, G = exp.critical(P_low)
+        P_t, G = Expansion(self.th, m0, 1.0, phi=phi).critical(P_low)
+        exp = Expansion(self.th, m0, self.eta_m, phi=phi, P_loss=P_t)
         return exp, P_t, G * self.Cd_m
 
     # ---- constant-area mixing
-    def _mix(self, A_mix, streams, m_t, h0_t, z_t):
+    def _mix(self, A_mix, streams, m_t, h0_t, z_t, eta=None):
         """streams: list of (pressure*area, momentum flux).  Returns (P3, u3, st3).
 
         Mass, momentum and energy over the constant-area section give one
         residual in P3.  The subsonic (post-shock) root is the highest-pressure
         one, so march down from the u3 -> 0 end until the residual turns positive.
+        If the residual starts to fall without turning positive, its maximum is
+        refined between the grid points before the section is declared choked
+        (a coarse march step would otherwise miss a narrow positive peak).
+        eta overrides eta_mix (eta=1 gives a loss-free normal shock).
         """
-        F_in = sum(pa for pa, _ in streams) + self.eta_mix * sum(mu for _, mu in streams)
+        eta = self.eta_mix if eta is None else eta
+        F_in = sum(pa for pa, _ in streams) + eta * sum(mu for _, mu in streams)
 
         def resid(P3):
             u3 = (F_in - P3 * A_mix) / m_t
@@ -295,9 +347,14 @@ class Ejector:
             st = self.th.ph(P3, h3, z_t)
             return st.rho * u3 * A_mix / m_t - 1.0, u3, st
 
+        def root(lo, hi):
+            P3 = brentq(lambda x: resid(x)[0], lo, hi, xtol=1e-6 * lo)
+            _, u3, st = resid(P3)
+            return P3, u3, st
+
         P_hi = F_in / A_mix * (1 - 1e-9)          # u3 -> 0: residual = -1
         P_lo = max(self.th.p_triple * 1.0001, 1e3)
-        p_prev, r_prev, p = P_hi, -1.0, P_hi
+        p_prev2, p_prev, r_prev, p = P_hi, P_hi, -1.0, P_hi
         while p > P_lo:
             p = max(p * 0.96, P_lo)
             try:
@@ -305,12 +362,19 @@ class Ejector:
             except (ValueError, SolidPhaseRisk):
                 return None
             if r > 0:
-                P3 = brentq(lambda x: resid(x)[0], p, p_prev, xtol=1e-6 * p)
-                _, u3, st = resid(P3)
-                return P3, u3, st
-            if r < r_prev and r_prev > -0.999:   # past the residual maximum: no root
+                return root(p, p_prev)
+            if r < r_prev and r_prev > -0.999:   # past the residual maximum on the grid
+                def neg(x):
+                    try:
+                        return -resid(x)[0]
+                    except (ValueError, SolidPhaseRisk):
+                        return 1.0
+                m = minimize_scalar(neg, bounds=(p, p_prev2), method="bounded",
+                                    options={"xatol": 1e-7 * p})
+                if -m.fun > 0:                    # narrow positive peak between grid points
+                    return root(m.x, p_prev2)
                 return None
-            p_prev, r_prev = p, r
+            p_prev2, p_prev, r_prev = p_prev, p, r
         return None   # mixing section cannot pass the flow (choked / infeasible)
 
     # ---- diffuser
@@ -361,27 +425,85 @@ class Ejector:
         return dict(m_s=m_s, st_y=st_y, u_y=u_y, P3=P3, u3=u3, st3=st3, out=out)
 
     # ==================================================================== RATING
-    def _motive_state(self, mexp, P_t, G_t, A_t, A_e, P_y, P_low):
-        """Motive flow, throat/exit pressures for mixing-inlet pressure P_y.
+    def _cd_exit(self, mexp, P_t, G_t, r_e, P_low, cache):
+        """Exit conditions of a converging-diverging motive nozzle, A_e/A_t = r_e > 1.
 
-        Choked if P_y < P_t* (exit pressure then from the supersonic area-flux
-        relation G(P_e) A_e = m_m); otherwise the nozzle runs subsonic and is
-        treated as converging, exhausting at P_y (liquid jet pumps live here).
+        Cd acts at the throat only; the diverging section carries the HEM flux,
+        so a choked nozzle has the exit mass flux Ge = Cd*G*/r_e. That requires
+        Ge <= G* (r_e >= Cd), otherwise the corrected flow cannot pass the exit
+        and a ValueError is raised (no silent clamp).
+          P_sup  supersonic exit pressure, G(P_sup) = Ge (design expansion)
+          P_fc   first-critical back pressure, subsonic branch G(P_fc) = Ge:
+                 the nozzle is choked for P_y < P_fc, exit-controlled above it
+          P_se   back pressure with a normal shock standing at the exit (the
+                 post-shock pressure of the supersonic exit state); between P_se
+                 and P_fc the shock sits inside and the exit is subsonic at P_y.
+        Depends on r_e only (fluxes), so it is cached per r_e.
         """
-        if P_y >= P_t:
-            G = mexp.flux(P_y) * self.Cd_m
+        key = round(r_e, 12)
+        if key in cache:
+            return cache[key]
+        G_star = mexp.flux(P_t)                       # isentropic G* (G_t = Cd * G*)
+        Ge = G_t / r_e
+        if Ge > G_star * (1 + 1e-9):
+            raise ValueError(
+                f"nozzle exit/throat area ratio {r_e:.4f} is below the discharge coefficient "
+                f"{self.Cd_m:.4f}: with Cd applied at the throat, the equilibrium flow in the "
+                f"diverging section cannot pass the corrected motive flow")
+        try:
+            P_sup = brentq(lambda P: mexp.flux(P) - Ge, P_low, P_t, xtol=1e-6 * P_t)
+        except ValueError:
+            raise ValueError(f"motive nozzle over-expands below the search floor "
+                             f"({P_low / 1e5:.3f} bar) at A_e/A_t = {r_e:.3f}")
+        P_fc = brentq(lambda P: mexp.flux(P) - Ge, P_t, mexp.inlet.P * (1 - 1e-12),
+                      xtol=1e-7 * P_t)
+        st_sup, u_sup = mexp.at(P_sup)
+        shock = self._mix(1.0, [(P_sup, Ge * u_sup)], Ge, mexp.inlet.h, mexp.inlet.z, eta=1.0)
+        P_se = min(shock[0], P_fc) if shock else P_fc
+        ex = dict(Ge=Ge, P_sup=P_sup, st_sup=st_sup, u_sup=u_sup, P_fc=P_fc, P_se=P_se)
+        cache[key] = ex
+        return ex
+
+    def _motive_state(self, mexp, P_t, G_t, A_t, A_e, P_y, P_low, cache=None):
+        """Motive flow, throat pressure, exit pressure, exit state and jet velocity.
+
+        Converging nozzle (A_e <= 1.0001 A_t): choked below P_t (exit = throat),
+        otherwise subsonic and exhausting at P_y.
+        Converging-diverging nozzle (see _cd_exit): choked below P_fc with the
+        supersonic exit state below P_se, a subsonic post-shock exit at P_y
+        between P_se and P_fc; exit-controlled subsonic flow G(P_y)*A_e above
+        P_fc. Mass flow and exit state are continuous at P_fc and the motive
+        flow is continuous everywhere.
+        """
+        r_e = A_e / A_t
+        if r_e <= 1.0001:
+            if P_y >= P_t:
+                G = mexp.flux(P_y) * self.Cd_m
+                st_e, u_e = mexp.at(P_y)
+                return G * A_t, P_y, P_y, st_e, u_e
+            st_e, u_e = mexp.at(P_t)
+            return G_t * A_t, P_t, P_t, st_e, u_e
+        ex = self._cd_exit(mexp, P_t, G_t, r_e, P_low, {} if cache is None else cache)
+        if P_y >= ex["P_fc"]:                          # unchoked: the exit controls the flow
             st_e, u_e = mexp.at(P_y)
-            return G * A_t, P_y, P_y, st_e, u_e
+            return st_e.rho * u_e * A_e, P_y, P_y, st_e, u_e
         m_m = G_t * A_t
-        P_e = P_t
-        if A_e > A_t * 1.0001:
-            target = m_m / A_e
-            try:
-                P_e = brentq(lambda P: mexp.flux(P) - target, P_low, P_t, xtol=1e-6 * P_t)
-            except ValueError:
-                P_e = P_low   # over-expansion beyond P_low: clamp
-        st_e, u_e = mexp.at(P_e)
-        return m_m, P_t, P_e, st_e, u_e
+        if P_y < ex["P_se"]:                           # supersonic exit (over- or under-expanded jet)
+            return m_m, P_t, ex["P_sup"], ex["st_sup"], ex["u_sup"]
+        # normal shock inside the diverging section: subsonic exit at P_y, same h0 and mass flux
+        h0, z = mexp.inlet.h, mexp.inlet.z
+        f = lambda h: self.th.ph(P_y, h, z).rho * math.sqrt(max(2.0 * (h0 - h), 0.0)) - ex["Ge"]
+        h_isen = mexp.at(P_y)[0].h                     # isentropic subsonic state: flux > Ge
+        h = brentq(f, h_isen, h0 - 1e-9 * max(abs(h0), 1.0), xtol=1e-9 * max(abs(h0), 1.0))
+        st_e = self.th.ph(P_y, h, z)
+        return m_m, P_t, P_y, st_e, math.sqrt(2.0 * (h0 - h))
+
+    def _throat_flux(self, mexp, P_t, G_t, r_e, P_y, P_low, cache):
+        """Motive flow per unit throat area at P_y (sizing a fixed shape to a given flow)."""
+        if r_e <= 1.0001:
+            return G_t if P_y < P_t else mexp.flux(P_y) * self.Cd_m
+        ex = self._cd_exit(mexp, P_t, G_t, r_e, P_low, cache)
+        return G_t if P_y < ex["P_fc"] else mexp.flux(P_y) * r_e
 
     def rate(self, m0: State, s0: State, A_t: float, A_e: float, A_mix: float,
              P_out: float, n_scan: int = 40) -> Result:
@@ -390,20 +512,22 @@ class Ejector:
         mexp, P_t, G_t = self._motive(m0, P_low)
         sexp = Expansion(self.th, s0, self.eta_s)
         P_ys, G_s_max = sexp.critical(P_low)
+        cache = {}
 
         def run(py):
-            m_m, pt, pe, st_e, u_e = self._motive_state(mexp, P_t, G_t, A_t, A_e, py, P_low)
+            m_m, pt, pe, st_e, u_e = self._motive_state(mexp, P_t, G_t, A_t, A_e, py, P_low, cache)
             r = self._pass(m0, s0, m_m, pe, st_e, u_e, A_e, A_mix, py, sexp, G_s_max)
             if r:
                 r.update(m_m=m_m, P_t=pt, P_e=pe, st_e=st_e, u_e=u_e)
             return r
 
-        def make(regime, py, r):
-            ER = r["m_s"] / r["m_m"]
-            return Result(regime, r["m_m"], r["m_s"], ER, r["out"].P, P_t=r["P_t"],
+        def make(regime, py, r, out=None, ER=None):
+            ER = r["m_s"] / r["m_m"] if ER is None else ER
+            out = r["out"] if out is None else out
+            return Result(regime, r["m_m"], r["m_s"], ER, out.P, P_t=r["P_t"],
                           P_e=r["P_e"], P_y=py, P_3=r["P3"], A_t=A_t, A_e=A_e,
                           A_mix=A_mix, u_e=r["u_e"], u_y=r["u_y"], u_3=r["u3"],
-                          out=r["out"], eta_ejector=self._eta_ejector(m0, s0, r["out"], ER),
+                          out=out, eta_ejector=self._eta_ejector(m0, s0, out, ER),
                           states=dict(m0=m0, s0=s0, e=r["st_e"], y=r["st_y"], mix=r["st3"])
                           ).check_solid(self.th.p_triple)
 
@@ -428,19 +552,143 @@ class Ejector:
                 else:
                     lo = mid
             Pys[k0], rows[k0], Pout[k0] = hi, r_hi, r_hi["out"].P
+        ER_c, Pb_c = rows[k0]["m_s"] / rows[k0]["m_m"], Pout[k0]
+        z0 = lambda r: self._mixed_z(m0, s0, r["m_m"], r["m_s"])
         if P_out <= Pout[k0]:
-            res = make("critical", Pys[k0], rows[k0])   # suction choked / max entrainment
-            res.P_out = P_out                            # excess lift lost in shocks
-            return res
-        # subcritical: P_y with P_out_calc(P_y) = P_out
-        for k in range(k0, len(Pys) - 1):
-            if ok[k] and ok[k + 1] and (Pout[k] - P_out) * (Pout[k + 1] - P_out) <= 0:
-                py = brentq(lambda p: run(p)["out"].P - P_out, Pys[k], Pys[k + 1],
-                            xtol=1e-6 * s0.P)
-                return make("subcritical", py, run(py))
-        res = make("backflow", Pys[-1], rows[-1])
-        res.m_s, res.ER, res.P_out = 0.0, 0.0, P_out
+            # critical: flows as at the critical point; the excess lift is lost in shocks
+            # downstream, so the outlet stream is the mixed stagnation enthalpy at P_out
+            r = rows[k0]
+            out = self.th.ph(P_out, r["out"].h, z0(r))
+            res = make("critical", Pys[k0], r, out=out)
+        else:
+            res = None
+            for k in range(k0, len(Pys) - 1):
+                if ok[k] and ok[k + 1] and (Pout[k] - P_out) * (Pout[k + 1] - P_out) <= 0:
+                    py = brentq(lambda p: run(p)["out"].P - P_out, Pys[k], Pys[k + 1],
+                                xtol=1e-6 * s0.P)
+                    r = run(py)
+                    if abs(r["out"].P - P_out) > 1e-4 * P_out:
+                        # Brent converged onto a jump of P_out(P_y) (nozzle regime change)
+                        raise RuntimeError(
+                            f"specified outlet pressure {P_out/1e5:.4f} bar falls in a discontinuity "
+                            f"of the characteristic between {Pout[k]/1e5:.4f} and "
+                            f"{Pout[k+1]/1e5:.4f} bar (motive nozzle regime change near "
+                            f"P_y = {py/1e5:.4f} bar); computed {r['out'].P/1e5:.4f} bar")
+                    res = make("subcritical", py, r)
+                    break
+            if res is None:
+                # backflow: no entrainment; the outlet is the motive stream at P_out
+                r = rows[-1]
+                out = self.th.ph(P_out, m0.h, m0.z)
+                res = make("backflow", Pys[-1], r, out=out, ER=0.0)
+                res.m_s, res.u_y = 0.0, 0.0
+        res.ER_critical, res.P_b_critical = ER_c, Pb_c
         return res
+
+    # ======================================================= RATING, BOTH FLOWS GIVEN
+    def rate_flows(self, m0: State, s0: State, m_m: float, m_s: float, r_e: float,
+                   r_mix: float, A_t: float | None = None, n_scan: int = 40,
+                   n_curve: int = 0) -> Result:
+        """Inverse rating: both inlet flows given, outlet pressure computed.
+
+        This is what a sequential-modular flowsheet needs: the ports fix both
+        inlet flows.  The geometry is a fixed SHAPE, A_e/A_t = r_e and
+        A_mix/A_t = r_mix, sized so that the nozzle passes m_m.  The model is
+        scale-invariant, so the shape alone fixes ER(P_y) and P_out(P_y); P_y
+        is found from ER(P_y) = m_s/m_m between the most-entraining feasible
+        point (ER_critical, outlet pressure P_b_critical) and P_y -> P_s0
+        (ER -> 0).  At ER = ER_critical the ejector delivers P_b_critical (the
+        highest back pressure on the critical plateau).
+
+        Fixed SIZE: pass the actual throat area A_t (the shape is then the
+        caller's A_e/A_t and A_mix/A_t).  The solution still uses m_m, and the
+        result reports the capacity Cd*G*A_t of that throat and its mismatch
+        motive_capacity/m_m - 1, for the flowsheet to close (e.g. by adjusting
+        the motive pressure upstream).
+
+        result.curve: the rating characteristic of the sized geometry, (P_out,
+        ER) along the P_y scan from the critical point to zero entrainment
+        (re-sampled on n_curve points between the two if n_curve > 0).
+        Raises EntrainmentExceeded if m_s/m_m > ER_critical.
+        """
+        if not (1.0 <= r_e < r_mix):
+            raise ValueError("need 1 <= A_e/A_t < A_mix/A_t")
+        ER_req = m_s / m_m
+        P_low = max(self.th.p_triple * 1.001, 0.01 * min(s0.P, m0.P))
+        mexp, P_t, G_t = self._motive(m0, P_low)
+        sexp = Expansion(self.th, s0, self.eta_s)
+        P_ys, G_s_max = sexp.critical(P_low)
+
+        cache = {}
+
+        def run(py):
+            At = m_m / self._throat_flux(mexp, P_t, G_t, r_e, py, P_low, cache)
+            Ae, Amix = r_e * At, r_mix * At
+            mm, pt, pe, st_e, u_e = self._motive_state(mexp, P_t, G_t, At, Ae, py, P_low, cache)
+            r = self._pass(m0, s0, mm, pe, st_e, u_e, Ae, Amix, py, sexp, G_s_max)
+            if r:
+                r.update(m_m=mm, P_t=pt, P_e=pe, st_e=st_e, u_e=u_e, A_t=At, A_e=Ae,
+                         A_mix=Amix, ER=r["m_s"] / mm)
+            return r
+
+        Pys = list(np.linspace(P_ys, s0.P * 0.99999, n_scan))
+        rows = [run(py) for py in Pys]
+        ok = [r is not None for r in rows]
+        if not any(ok):
+            raise RuntimeError("no feasible mixing solution (mixing section too small?)")
+        k0 = ok.index(True)
+        if k0 > 0:                       # bisect the feasibility boundary (cf. rate())
+            lo, hi, r_hi = Pys[k0 - 1], Pys[k0], rows[k0]
+            while hi - lo > 1e-6 * s0.P:
+                mid = 0.5 * (lo + hi)
+                r = run(mid)
+                if r:
+                    hi, r_hi = mid, r
+                else:
+                    lo = mid
+            Pys[k0], rows[k0] = hi, r_hi
+        ER_c, Pb_c = rows[k0]["ER"], rows[k0]["out"].P
+        curve = [(r["out"].P, r["ER"]) for r, o in zip(rows[k0:], ok[k0:]) if o]
+        if n_curve > 0:
+            curve = []
+            for py in np.linspace(Pys[k0], s0.P, n_curve):
+                r = run(py)
+                if r:
+                    curve.append((r["out"].P, r["ER"]))
+
+        def make(regime, py, r):
+            res = Result(regime, r["m_m"], r["m_s"], r["ER"], r["out"].P, P_t=r["P_t"],
+                         P_e=r["P_e"], P_y=py, P_3=r["P3"], A_t=r["A_t"], A_e=r["A_e"],
+                         A_mix=r["A_mix"], u_e=r["u_e"], u_y=r["u_y"], u_3=r["u3"], out=r["out"],
+                         eta_ejector=self._eta_ejector(m0, s0, r["out"], r["ER"]),
+                         states=dict(m0=m0, s0=s0, e=r["st_e"], y=r["st_y"], mix=r["st3"]),
+                         ER_critical=ER_c, P_b_critical=Pb_c, curve=curve)
+            if A_t is not None:
+                res.motive_capacity = m_m * A_t / r["A_t"]
+                res.motive_mismatch = A_t / r["A_t"] - 1.0
+            return res.check_solid(self.th.p_triple)
+
+        tol = 1e-9
+        if ER_req > ER_c * (1 + 1e-6):
+            raise EntrainmentExceeded(
+                f"suction flow {m_s:.4g} kg/s (ER {ER_req:.4f}) exceeds the critical "
+                f"entrainment of this geometry, ER* = {ER_c:.4f}", ER_c, Pb_c)
+        if ER_req >= ER_c * (1 - 1e-6):
+            return make("critical", Pys[k0], rows[k0])
+        # subcritical branch: ER falls from ER_c (k0) towards 0 at P_y -> P_s0
+        ERs = [r["ER"] if r else math.nan for r in rows]
+        Pys.append(s0.P)                 # zero entrainment at P_y = P_s0
+        ERs.append(0.0)
+        for k in range(k0, len(Pys) - 1):
+            a, b = ERs[k], ERs[k + 1]
+            if np.isfinite(a) and np.isfinite(b) and (a - ER_req) * (b - ER_req) <= 0:
+                if ER_req <= tol:
+                    py = s0.P
+                else:
+                    py = brentq(lambda p: run(p)["ER"] - ER_req, Pys[k], Pys[k + 1],
+                                xtol=1e-7 * s0.P)
+                return make("subcritical", py, run(py))
+        raise RuntimeError("rate_flows: no bracket for the requested entrainment")
 
     # ==================================================================== DESIGN
     def design(self, m0: State, s0: State, m_m: float, ER: float,
@@ -479,7 +727,10 @@ class Ejector:
                 return 0.0
 
         if P_y is None:
-            Pys = np.linspace(max(P_ys, P_low), s0.P * 0.995, 30)
+            # 30 linear points, plus a log-spaced cluster just below P_s0: at small ER the
+            # feasible window is a narrow band there (the annulus is otherwise too small)
+            Pys = np.unique(np.r_[np.linspace(max(P_ys, P_low), s0.P * 0.995, 30),
+                                  s0.P * (1.0 - np.geomspace(4e-3, 1e-4, 10))])
             vals = [neg_pout(p) for p in Pys]
             k = int(np.argmin(vals))
             lo, hi = Pys[max(k - 1, 0)], Pys[min(k + 1, len(Pys) - 1)]
@@ -496,15 +747,46 @@ class Ejector:
                       ).check_solid(self.th.p_triple)
 
     def design_for_lift(self, m0, s0, m_m, P_out, ER_max=20.0) -> Result:
-        """Largest ER whose optimum design still reaches P_out."""
-        f = lambda er: self.design(m0, s0, m_m, er).P_out - P_out
-        lo = 1e-4
-        if f(lo) < 0:
-            raise RuntimeError("required lift not reachable even at zero entrainment")
-        hi = 0.1
-        while f(hi) > 0 and hi < ER_max:
-            lo, hi = hi, hi * 2
-        er = brentq(f, lo, hi, xtol=1e-5)
+        """Largest ER whose optimum design still reaches P_out.
+
+        The optimum-design outlet pressure is not monotone in ER: at very small
+        ER the constant-area section can hardly pass the flow and P_out_opt
+        rises with ER before it falls. So the maximum is located first (grid in
+        ER, then a bounded refinement); P_out is unreachable only if it exceeds
+        that maximum. The answer is the root on the falling branch.
+        """
+        def p_opt(er):
+            try:
+                return self.design(m0, s0, m_m, er).P_out
+            except (RuntimeError, ValueError, SolidPhaseRisk):
+                return -math.inf
+
+        grid = [1e-4, 3e-4, 1e-3, 2e-3, 5e-3, 0.01, 0.02, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2,
+                6.4, 12.8, ER_max]
+        vals, kbest = [], 0
+        for k, er in enumerate(grid):
+            vals.append(p_opt(er))
+            if vals[k] > vals[kbest]:
+                kbest = k
+            if k > kbest and vals[k] < P_out <= vals[kbest]:
+                break
+        lo, hi = grid[max(kbest - 1, 0)], grid[min(kbest + 1, len(vals) - 1)]
+        if lo < hi:
+            m = minimize_scalar(lambda e: -p_opt(e), bounds=(lo, hi), method="bounded",
+                                options={"xatol": 1e-6})
+            er_best, p_best = (m.x, -m.fun) if -m.fun > vals[kbest] else (grid[kbest], vals[kbest])
+        else:
+            er_best, p_best = grid[kbest], vals[kbest]
+        if p_best < P_out:
+            raise RuntimeError(f"required outlet pressure {P_out/1e5:.3f} bar not reachable: the "
+                               f"highest optimum-design outlet pressure is {p_best/1e5:.3f} bar "
+                               f"(at ER {er_best:.4g})")
+        k_hi = next((k for k in range(kbest + 1, len(vals)) if vals[k] < P_out), None)
+        if k_hi is None:
+            raise RuntimeError(f"required outlet pressure {P_out/1e5:.3f} bar is reached up to "
+                               f"ER_max = {ER_max}")
+        er = brentq(lambda e: p_opt(e) - P_out, max(er_best, grid[k_hi - 1]), grid[k_hi],
+                    xtol=1e-5)
         return self.design(m0, s0, m_m, er)
 
 

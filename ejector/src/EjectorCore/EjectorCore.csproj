@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <RootNamespace>EjectorCore</RootNamespace>
+    <AssemblyName>EjectorCore</AssemblyName>
+    <Description>One-dimensional real-fluid ejector / jet-pump calculation engine (constant-area mixing, HEM flashing flow). Port of ejector/prototype/ejector1d.py. PME-agnostic: all thermodynamics through IFlash; no COM/CAPE-OPEN dependencies.</Description>
+  </PropertyGroup>
+
+</Project>

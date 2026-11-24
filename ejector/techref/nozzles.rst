@@ -21,9 +21,11 @@ Motive nozzle
 Choked motive flow
 ------------------
 
-The motive expansion uses :eq:`eq-expansion-path` with :math:`\eta = \eta_\mathrm{m}`
-from the stagnation state m0. Its critical flux :math:`G^*` and throat pressure
-:math:`P_\mathrm{t}` follow from :eq:`eq-critical-flux`. When the mixing-inlet
+The motive expansion follows :eq:`eq-motive-path` from the stagnation state m0:
+isentropic up to the throat, with :math:`\eta_\mathrm{m}` acting only beyond it.
+The critical flux :math:`G^*` and throat pressure :math:`P_\mathrm{t}` follow
+from :eq:`eq-critical-flux` on the isentrope, so they depend on the inlet
+state alone and not on :math:`\eta_\mathrm{m}`. When the mixing-inlet
 pressure lies below the throat pressure, :math:`P_\mathrm{y} < P_\mathrm{t}`, the
 nozzle is choked and passes
 
@@ -33,13 +35,14 @@ nozzle is choked and passes
    \dot m_\mathrm{m} = C_d\,G^*\,A_\mathrm{t} ,
 
 independent of anything downstream. The discharge coefficient :math:`C_d`
-(default 1) corrects the HEM critical flux for non-equilibrium and
-non-uniform flow (:ref:`sec-hne`). :numref:`tab-motive-critical` lists the
+(default 1) corrects the isentropic HEM critical flux for everything the 1D
+throat state misses: losses in the converging section, non-uniform flow, and
+non-equilibrium (:ref:`sec-hne`). :numref:`tab-motive-critical` lists the
 throat states of the CO\ :sub:`2` motive conditions used in this reference.
 
 .. _tab-motive-critical:
 
-.. list-table:: Critical (throat) state of CO\ :sub:`2` motive nozzles, :math:`\eta_\mathrm{m} = 0.9`, :math:`C_d = 1`. Source: ``figures/data/nozzle_critical.csv``.
+.. list-table:: Critical (throat) state of CO\ :sub:`2` motive nozzles: isentropic HEM path, :math:`C_d = 1`. Source: ``figures/data/nozzle_critical.csv``.
    :header-rows: 1
    :widths: 40 20 20 20
 
@@ -49,16 +52,16 @@ throat states of the CO\ :sub:`2` motive conditions used in this reference.
      - :math:`G^*` [t m\ :sup:`-2` s\ :sup:`-1`]
    * - 47 bar, saturated liquid, HEM
      - 11.7
-     - 34.2
-     - 27.0
+     - 34.1
+     - 28.6
    * - 47 bar, saturated liquid, HNE :math:`\varphi = 0.5`
      - 11.7
-     - 28.1
-     - 38.9
+     - 28.0
+     - 41.2
    * - 84.5 bar, 32 °C, HEM
      - 32.0
-     - 64.3
-     - 43.9
+     - 64.1
+     - 46.4
 
 Supersonic exit
 ---------------
@@ -77,27 +80,35 @@ and the exit velocity :math:`u_\mathrm{e}` follows from :eq:`eq-velocity`. For
 under- or over-expanded. The pressure mismatch enters the mixing momentum
 balance as the force :math:`P_\mathrm{e}A_\mathrm{e}` (:ref:`sec-mixing`).
 
+Here :math:`G(P)` is the flux on the path :eq:`eq-motive-path`: it equals
+:math:`G^*` at the throat and carries the loss :math:`\eta_\mathrm{m}` beyond it,
+so the exit velocity :math:`u_\mathrm{e}` is the only place where
+:math:`\eta_\mathrm{m}` enters.
+
 .. admonition:: Where the discharge coefficient acts
 
    :eq:`eq-motive-exit` uses the *HEM* flux :math:`G(P)` without :math:`C_d`.
    :math:`C_d` is a throat correction: the fluid is assumed to relax to
-   equilibrium in the diverging section, where the residence time is longer. A
-   consequence is that the HEM exit can pass the corrected flow only if
+   equilibrium in the diverging section, where the residence time is longer.
+   The HEM exit can then pass the corrected flow only if
    :math:`A_\mathrm{e}/A_\mathrm{t} \ge C_d`. For the Giacomelli nozzle
-   (:math:`A_\mathrm{e}/A_\mathrm{t} = 1.31`, :math:`C_d = 1.20`) this holds. If it
-   does not, the reference implementation clamps :math:`P_\mathrm{e}` at the lowest
-   pressure of the search range, which is not physical. Before the C# port,
-   choose between this throat-only interpretation and a uniform
-   :math:`C_d` along the nozzle (:ref:`sec-numerics-open`).
+   (:math:`A_\mathrm{e}/A_\mathrm{t} = 1.31`, :math:`C_d = 1.14`) this holds. A
+   nozzle with :math:`1 < A_\mathrm{e}/A_\mathrm{t} < C_d` is rejected with an
+   error. An earlier version clamped :math:`P_\mathrm{e}` at the floor of the
+   search range instead, which silently doubled the entrainment. A converging
+   nozzle (:math:`A_\mathrm{e} = A_\mathrm{t}`) exhausts at the throat state and
+   is not affected. Applying :math:`C_d` uniformly along the nozzle would remove
+   the restriction, but it would also make the design results depend on
+   :math:`C_d`; the choice is open (:ref:`sec-numerics-open`).
 
 .. _sec-unchoked-motive:
 
-Unchoked motive flow
---------------------
+Back pressure above the throat pressure
+---------------------------------------
 
-If :math:`P_\mathrm{y} \ge P_\mathrm{t}` the motive nozzle does not choke. This
-is the normal state of a liquid jet pump whose motive does not flash. The nozzle
-is then treated as converging and exhausts at the mixing-inlet pressure:
+**Converging nozzle.** If :math:`P_\mathrm{y} \ge P_\mathrm{t}` the nozzle does
+not choke. This is the normal state of a liquid jet pump whose motive does not
+flash. The nozzle exhausts at the mixing-inlet pressure:
 
 .. math::
    :label: eq-motive-unchoked
@@ -107,7 +118,46 @@ is then treated as converging and exhausts at the mixing-inlet pressure:
 The motive flow now depends on :math:`P_\mathrm{y}`, and so on the back pressure.
 This is the coupling that makes the incompressible jet pump's motive flow
 respond to its discharge pressure. :ref:`sec-val-fluids` verifies it against the
-classical jet-pump equations.
+classical jet-pump equations. The expansion lies on the isentropic part of
+:eq:`eq-motive-path`, so the flow is continuous when the nozzle starts to choke.
+Nozzle friction in a liquid jet pump can only enter through :math:`C_d < 1`.
+That reduces the flow but leaves the jet velocity at its loss-free value, so the
+jet momentum is over-estimated by a factor :math:`\sqrt{1+K_\mathrm{n}}` for a
+nozzle loss coefficient :math:`K_\mathrm{n}` (about 2.5 % for
+:math:`K_\mathrm{n} = 0.05`).
+
+**Converging–diverging nozzle.** A diverging section keeps the throat choked
+for back pressures well above :math:`P_\mathrm{t}`, as in any de Laval nozzle.
+The model distinguishes three ranges, all with the exit mass flux
+:math:`G_\mathrm{e} = C_d G^* A_\mathrm{t}/A_\mathrm{e}`:
+
+* :math:`P_\mathrm{y} < P_\mathrm{se}`: choked, **supersonic exit** at the
+  design expansion :eq:`eq-motive-exit`. The jet may be over- or
+  under-expanded; the mismatch acts in the mixing momentum balance.
+  :math:`P_\mathrm{se}` is the pressure behind a normal shock standing at the
+  exit. It is computed with the constant-area solver (:ref:`sec-mixing-root`)
+  applied to the exit state alone, loss-free.
+* :math:`P_\mathrm{se} \le P_\mathrm{y} < P_\mathrm{fc}`: choked, with a **normal
+  shock inside** the diverging section. The exit is subsonic at
+  :math:`P_\mathrm{e} = P_\mathrm{y}`, with the same stagnation enthalpy and exit
+  mass flux, and a higher entropy than the isentrope.
+* :math:`P_\mathrm{y} \ge P_\mathrm{fc}`: **unchoked**. The exit controls the
+  flow, :math:`\dot m_\mathrm{m} = G(P_\mathrm{y})\,A_\mathrm{e}`. The
+  first-critical pressure :math:`P_\mathrm{fc}` is the subsonic-branch pressure
+  where :math:`G(P_\mathrm{fc})A_\mathrm{e} = C_d G^* A_\mathrm{t}`.
+
+The motive flow is continuous everywhere, and the exit state is continuous at
+:math:`P_\mathrm{fc}`. At :math:`P_\mathrm{se}` the jet switches from the
+supersonic state to the post-shock state. The two conserve mass, momentum and
+energy, but :math:`\eta_\mathrm{mix}` multiplies only the momentum flux, so the
+mixing balance sees a small step. For nitrogen from 10 to 6 bar with
+:math:`A_\mathrm{e}/A_\mathrm{t} = 1.5`, the step is 0.11 bar in outlet pressure.
+It vanishes for :math:`\eta_\mathrm{mix} = 1`. A forward rating whose
+specified outlet pressure falls in such a step raises an error rather than
+return a different pressure (:ref:`sec-rating-algorithm`). Earlier versions
+treated every nozzle as converging above :math:`P_\mathrm{t}`: the jet then
+broke continuity at the exit, and the outlet pressure jumped by up to 0.4 bar at
+:math:`P_\mathrm{t}` without warning.
 
 .. _sec-suction:
 

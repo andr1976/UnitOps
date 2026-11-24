@@ -17,7 +17,7 @@ Ejector Unit Operation: Technical Reference
       \vspace{1cm}
 
       \begin{tabular}{ll}
-      \textbf{Version:}  & 0.1 (draft) \\
+      \textbf{Version:}  & 0.2 (draft) \\
       \textbf{Date:}     & November 2026 \\
       \textbf{Author:}   & Anders Andreasen \\
       \end{tabular}
@@ -26,11 +26,12 @@ Ejector Unit Operation: Technical Reference
 
       \noindent\textbf{Revision History}
 
-      \begin{tabular}{lll}
+      \begin{tabular}{llp{0.7\linewidth}}
       \toprule
       Version & Date       & Description \\
       \midrule
       0.1     & 2026-11    & Initial draft: models, numerics, planned architecture, validation, calibration \\
+      0.2     & 2026-11    & Loss-free motive throat; delayed flashing vs.\ discharge coefficient; C\# unit implemented; fixes from an adversarial review (nozzle regimes, exit-area check, small-ER design, solid guard) \\
       \bottomrule
       \end{tabular}
 
@@ -41,8 +42,10 @@ Ejector Unit Operation: Technical Reference
    The models, numerics and validation in this reference are those of the
    **Python reference implementation** (``ejector/prototype/ejector1d.py``),
    and every "this work" number is produced by it (:ref:`validation`). The
-   CAPE-OPEN unit operation itself is **not yet built**. :ref:`architecture`
-   and :ref:`appendix_capeopen` are its specification.
+   CAPE-OPEN unit (``ejector/src``) is implemented: a C# engine that
+   reproduces the Python results exactly on identical thermodynamics, and an
+   adapter tested headless (:ref:`sec-val-port`). It has **not yet been run
+   inside a process modelling environment**.
 
 .. toctree::
    :maxdepth: 2

@@ -63,9 +63,9 @@ def run(eta_m=0.95, eta_s=0.85, eta_mix=0.95, eta_d=0.85, verbose=True):
         m0 = ej.inlet(Pp * 1e5, q=1.0)
         s0 = ej.inlet(Ps * 1e5, q=1.0)
         r = ej.rate(m0, s0, area(Dt * 1e-3), area(De * 1e-3), area(D3 * 1e-3), P_out=s0.P)
-        # critical mode: r.out is the diffuser outlet at maximum (choked)
-        # entrainment, i.e. its pressure is the critical back pressure
-        Pb_crit = r.out.P
+        # critical mode: P_b_critical is the outlet pressure at maximum (choked)
+        # entrainment, i.e. the critical back pressure
+        Pb_crit = r.P_b_critical
         Td = CP.PropsSI("T", "P", Pb_crit, "Q", 1, "R141b") - 273.15
         err_er.append((r.ER - er_x) / er_x * 100)
         err_pb.append(Td - Td_x)
